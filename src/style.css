@@ -1,3 +1,9 @@
+:root{
+  --primary-color: #646cff;
+  --submit-color: #646cff;
+  --text-color: #fff;
+  color: var(--text-color);
+}
 .register-form label {
   font-size: 0.9rem;
   font-weight: 700;
@@ -8,6 +14,7 @@
   width: 100%;
   padding: 0.5rem 0.75rem;
   border-radius: 0.25rem;
+  background-color: #ffffff64;
   border: 1px solid #ced4da;
 }
 
@@ -15,8 +22,28 @@
   padding: 0.6rem 2.5rem;
   border-radius: 50px;
   font-size: 1.1rem;
+  background-color: var(--submit-color);
   /* font-weight: 500; */
   cursor: pointer;
+}
+
+.register {
+  background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
+  background-size: 400% 400%;
+  animation: gradient 20s ease infinite;
+  height: 100vh;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* :root {

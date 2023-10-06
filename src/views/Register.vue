@@ -1,8 +1,9 @@
 <template>
-    <div class="register container mt-5 text-black w-50">
+    <div class="register">
+    <div class="container pt-5 w-50">
         <div class="logo d-flex justify-content-center">
             <img src="../assets/fake-logo.png" alt="logo" :style="{width: '30px', height: '30px'}">
-            <h5 class="pt-1 ms-2 fw-bold">GoPodcast</h5>
+            <h5 class="pt-1 ms-2 fw-bold text-black">GoPodcast</h5>
         </div>
         <h5 id="slogan" class="text-center mt-5 f-italic" style="font-size: 1.8rem;">Podcasts, Play, Repeat!</h5>
         <!-- <div class="border-bottom my-5 col-xl-7 mx-auto border-2"></div> -->
@@ -19,7 +20,7 @@
             <div class="form-group mb-2">
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" placeholder="Password">
-                <small id="pswHelp" class="form-text text-muted">The password must be blablabla.</small>
+                <small id="pswHelp" class="opacity-50">The password must be blablabla.</small>
             </div>
             <div class="form-group mb-2">
                 <label for="confirmPassword">Confirm password</label>
@@ -38,7 +39,12 @@
             <p class="text-center">Already have an account? <router-link to="/login">Log in</router-link></p>
         </div>
     </div>
+</div>
 </template>
+
+<style>
+
+</style>
 
 <script>
 export default {
@@ -61,6 +67,4 @@ export default {
 }
 </script>
 
-<style>
 
-</style>
