@@ -2,6 +2,7 @@
   --primary-color: #646cff;
   --submit-color: #646cff;
   --text-color: #fff;
+  --contrast-color: #000;
   color: var(--text-color);
 }
 .register-form label {
