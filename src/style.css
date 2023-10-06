@@ -1,4 +1,25 @@
-:root {
+.register-form label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.register-form input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+}
+
+.register-form .btn-submit{
+  padding: 0.6rem 2.5rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  /* font-weight: 500; */
+  cursor: pointer;
+}
+
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -86,4 +107,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
