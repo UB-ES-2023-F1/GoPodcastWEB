@@ -2,8 +2,10 @@
     <div class="register">
     <div class="container pt-5 w-50">
         <div class="logo d-flex justify-content-center">
-            <img src="../assets/fake-logo.png" alt="logo" :style="{width: '30px', height: '30px'}">
-            <h5 class="pt-1 ms-2 fw-bold text-black">GoPodcast</h5>
+            <router-link to="/GoPodcast" class="d-flex align-items-center" style="text-decoration: none; align-items:normal;">
+            <img src="../assets/logo_white.png" alt="logo" :style="{width: '25px', height: '24px'}">
+            <h5 class="ms-2 fw-lighter text-white" style="font-size: 1.3rem;">GoPodcast</h5>
+            </router-link>
         </div>
         <h5 id="slogan" class="text-center mt-5 f-italic" style="font-size: 1.8rem;">Podcasts, Play, Repeat!</h5>
         <!-- <div class="border-bottom my-5 col-xl-7 mx-auto border-2"></div> -->

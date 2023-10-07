@@ -28,6 +28,13 @@
   cursor: pointer;
 }
 
+.register-form .btn-submit:hover{
+  border: 0.5px solid var(--submit-color);
+  background-color: #262c91;
+  /* transform: scale(1.02); */
+  transition: 0.3s;
+}
+
 .register {
   background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
   background-size: 400% 400%;
@@ -46,6 +53,7 @@
     background-position: 0% 50%;
   }
 }
+
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
