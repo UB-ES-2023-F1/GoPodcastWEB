@@ -16,6 +16,7 @@
                     <label for="email">Email address</label>
                     <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required>
                 </div>
+                
                 <div class="form-group left mb-2">
                     <label for="password">Password</label>
                     <div class="password-input">
