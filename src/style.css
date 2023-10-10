@@ -4,6 +4,7 @@
   --text-color: #fff;
   --contrast-color: #000;
   color: var(--text-color);
+
 }
 
 .register-form label {
@@ -26,6 +27,7 @@
   font-size: 1.1rem;
   background-color: var(--submit-color);
   /* font-weight: 500; */
+
   cursor: pointer;
 }
 
@@ -33,6 +35,7 @@
   border: 0.5px solid var(--submit-color);
   background-color: #262c91;
   /* transform: scale(1.02); */
+
   transition: 0.3s;
 }
 
@@ -69,14 +72,12 @@
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
-  /* font-weight: 500; */
   cursor: pointer;
 }
 
 .login-form .btn-submit:hover {
   border: 0.5px solid var(--submit-color);
   background-color: #262c91;
-  /* transform: scale(1.02); */
   transition: 0.3s;
 }
 
@@ -102,12 +103,15 @@
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
+  
 }
 
 
