@@ -1,5 +1,5 @@
 <template>
-    <div class="register">
+    <div class="register-login">
     <div class="container pt-5 w-50">
         <div class="logo d-flex justify-content-center">
             <router-link to="/GoPodcast" class="d-flex align-items-center" style="text-decoration: none; align-items:normal;">
@@ -11,7 +11,7 @@
         <!-- <div class="border-bottom my-5 col-xl-7 mx-auto border-2"></div> -->
         <p class="text-center mt-5 fw-bold" :style="{fontSize: '1.2rem'}">Sign up to listen to your favorite podcasts</p>
         
-        <form @submit.prevent="submitForm" class="register-form col-xl-7 mx-auto mt-4">
+        <form @submit.prevent="submitForm" class="register-login-form col-xl-7 mx-auto mt-4">
             <!-- <div class="form-group mb-2">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" placeholder="Username" required>
