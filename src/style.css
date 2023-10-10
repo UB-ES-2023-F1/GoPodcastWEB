@@ -3,8 +3,8 @@
   --submit-color: #646cff;
   --text-color: #fff;
   --contrast-color: #000;
+  
   color: var(--text-color);
-
 }
 
 .register-form label {
@@ -26,6 +26,7 @@
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
+
   /* font-weight: 500; */
 
   cursor: pointer;
@@ -34,6 +35,7 @@
 .register-form .btn-submit:hover {
   border: 0.5px solid var(--submit-color);
   background-color: #262c91;
+
   /* transform: scale(1.02); */
 
   transition: 0.3s;
@@ -67,18 +69,18 @@
   border: 1px solid #ced4da;
 }
 
+.login-form .btn-submit:hover {
+  border: 0.5px solid var(--submit-color);
+  background-color: #262c91;
+  transition: 0.3s;
+}
+
 .login-form .btn-submit {
   padding: 0.6rem 2.5rem;
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
   cursor: pointer;
-}
-
-.login-form .btn-submit:hover {
-  border: 0.5px solid var(--submit-color);
-  background-color: #262c91;
-  transition: 0.3s;
 }
 
 .password-input {
@@ -111,9 +113,7 @@
   100% {
     background-position: 0% 50%;
   }
-  
 }
-
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
