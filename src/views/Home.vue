@@ -1,6 +1,6 @@
 <template>
     <div class="home container-fluid m-0 p-0">
-    <div class="row w-100">
+    <div class="row w-100 m-0">
         <!-- Sidebar -->
         <div class="sidebar col-lg-3 col-md-3 p-3 text-white">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -40,8 +40,7 @@
             </ul>
         </div>
         <!-- Main content-->
-        <div class="home-content col-lg-9 col-md-9 col-sm-9 p-0">
-            <div class="col-lg-6">
+        <div class="home-content col-lg-9 col-md-9 col-sm-9 p-0 ps-5">
                 <div class="search">
                     <input type="text" placeholder="Search">
                     <button>Search</button>
@@ -52,65 +51,30 @@
                 <div class="signin">
                     <button>Sign in</button>
                 </div>
-            </div>
-            <div class="">
+            
                 <div class="featured">
                     <h2>Featured Podcasts</h2>
-                    <div class="podcasts">
-                        <div class="podcast">
-                            <img src="../assets/podcasts/podcast1.jpg" alt="Podcast">
-                            <span class="name">Pop Hits</span>
-                        </div>
-                        <div class="podcast">
-                            <img src="../assets/podcasts/podcast2.jpg" alt="Podcast">
-                            <span class="name">Rock Classics</span>
-                        </div>
-                        <div class="podcast">
-                            <img src="../assets/podcasts/podcast3.jpg" alt="Podcast">
-                            <span class="name">Hip Hop Essentials</span>
-                        </div>
-                        <div class="podcast">
-                            <img src="../assets/podcasts/podcast4.jpg" alt="Podcast">
-                            <span class="name">Hip Hop Essentials</span>
-                        </div>
-                        <div class="podcast">
-                            <img src="../assets/podcasts/podcast5.jpg" alt="Podcast">
-                            <span class="name">Hip Hop Essentials</span>
-                        </div>
-                        <div class="podcast">
-                            <img src="../assets/podcasts/podcast6.jpg" alt="Podcast">
-                            <span class="name">Hip Hop Essentials</span>
-                        </div>
-                    </div>
+                    <PodcastList />
                 </div>
-                <div class="categories">
-                    <h2>Browse Categories</h2>
-                    <div class="category">
-                        <img src="../assets/categories/category1.jpg" alt="Category">
-                        <span class="name">Pop</span>
-                    </div>
-                    <div class="category">
-                        <img src="../assets/categories/category2.jpg" alt="Category">
-                        <span class="name">Rock</span>
-                    </div>
-                    <div class="category">
-                        <img src="../assets/categories/category3.jpg" alt="Category">
-                        <span class="name">Hip Hop</span>
-                    </div>
-                    <div class="category">
-                        <img src="../assets/categories/category4.jpg" alt="Category">
-                        <span class="name">Electronic</span>
-                    </div>
-                    <div class="category">
-                        <img src="../assets/categories/category5.jpg" alt="Category">
-                        <span class="name">Classical</span>
-                    </div>
-                </div>
-            </div>
+                <CategoryList />
+            
         </div>
     </div>
 </div>
 </template>
+
+<script>
+import CategoryList from '../components/CategoryList.vue';
+import PodcastList from '../components/PodcastList.vue';
+
+export default {
+    name: 'Home',
+    components: {
+    PodcastList,
+    CategoryList
+},
+};
+</script>
 
 <style>
 .home {
@@ -125,8 +89,9 @@
 
 .home-content {
     margin-top: 2em;
-    height: 100vh;
+    height: inherit;
     overflow: hidden;
+    align-items: start;
 }
 
 .search {
@@ -197,56 +162,10 @@ h2 {
     margin-bottom: 20px;
 }
 
-.podcasts {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
 
-.podcast {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-left: 1.2em;
-}
-
-.podcast img {
-    width: 200px;
-    height: 200px;
-    border-radius: 5%;
-    margin-bottom: 10px;
-}
-
-.podcast .name {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.categories {
-    margin-top: 50px;
-}
-
-.category {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.category img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 20px;
-}
-
-.category .name {
-    font-size: 18px;
-    font-weight: 600;
-}
 
 .featured {
     margin-bottom: 50px;
+    width: inherit;
 }
 </style>
