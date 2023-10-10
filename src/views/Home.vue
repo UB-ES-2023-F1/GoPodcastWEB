@@ -2,54 +2,21 @@
     <div class="home container-fluid m-0 p-0">
     <div class="row w-100 m-0">
         <!-- Sidebar -->
-        <div class="sidebar col-lg-3 col-md-3 p-3 text-white">
-            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                <img src="../assets/logo_white.png" alt="logo" class="mx-auto" :style="{ width: '40px', height: '40px' }">
-            </a>
-            <hr>
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item align-items-center">
-                    <a href="#" class="nav-link active" aria-current="page">
-                        <img src="../assets/icons/ic_home.png" alt="home" style="width: 20px; height: 20px;">
-                        Home
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-white">
-                        <img src="../assets/icons/ic_discover.png" alt="discover" style="width: 20px; height: 20px;">
-                        Discover
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-white">
-                        <img src="../assets/icons/ic_vinyl.png" alt="library" style="width: 20px; height: 20px;">
-                        My library
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-white">
-                        <img src="../assets/icons/ic_community.png" alt="community" style="width: 20px; height: 20px;">
-                        Community
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-black">
-                        About us
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <Sidebar />
         <!-- Main content-->
         <div class="home-content col-lg-9 col-md-9 col-sm-9 p-0 ps-5">
-                <div class="search">
-                    <input type="text" placeholder="Search">
-                    <button>Search</button>
-                </div>
-                <div class="signup">
-                    <button>Sign up</button>
-                </div>
-                <div class="signin">
-                    <button>Sign in</button>
+                <div class="row w-100 m-0">
+                    <div class="search col-6">
+                        <input type="text" placeholder="Search">
+                        <button>Search</button>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                    <div class="signin  d-flex justify-content-end me-3">
+                        <button>Sign in</button>
+                    </div>
+                    <div class="signup d-flex me-2">
+                        <button>Sign up</button>
+                    </div></div>
                 </div>
             
                 <div class="featured">
@@ -66,23 +33,20 @@
 <script>
 import CategoryList from '../components/CategoryList.vue';
 import PodcastList from '../components/PodcastList.vue';
+import Sidebar from '../components/Sidebar.vue';
 
 export default {
     name: 'Home',
     components: {
     PodcastList,
-    CategoryList
+    CategoryList,
+    Sidebar
 },
 };
 </script>
 
 <style>
 .home {
-    height: 100vh;
-    overflow: hidden;
-}
-
-.sidebar {
     height: 100vh;
     overflow: hidden;
 }
@@ -96,8 +60,6 @@ export default {
 
 .search {
     display: flex;
-    align-items: center;
-    justify-content: center;
     margin-bottom: 50px;
 }
 
@@ -108,6 +70,7 @@ export default {
     border-radius: 50px 0 0 50px;
     padding: 0 20px;
     font-size: 18px;
+    background-color: rgba(0, 0, 0, 0.625);
 }
 
 .search button {
@@ -115,54 +78,52 @@ export default {
     height: 50px;
     border: none;
     border-radius: 0 50px 50px 0;
-    background-color: #1db954;
+    background-color: #2933ff;
     color: #fff;
     font-size: 18px;
     cursor: pointer;
 }
 
-.signup {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 50px;
-}
 
 .signup button {
-    width: 200px;
+    width: 150px;
     height: 50px;
     border: none;
     border-radius: 50px;
-    background-color: #1db954;
+    background-color: #2933ff;
     color: #fff;
     font-size: 18px;
     cursor: pointer;
 }
 
-.signin {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.signup button:hover {
+    transform: scale(1.1);
+    transition: all 0.35s ease-in-out;
 }
 
 .signin button {
-    width: 200px;
+    width: 150px;
     height: 50px;
     border: none;
     border-radius: 50px;
-    background-color: #fff;
-    color: #1db954;
+    background-color: #000000;
+    color: #ffffff;
     font-size: 18px;
     cursor: pointer;
 }
+
+.signin button:hover {
+    background-color: #ffffff;
+    color: #000000;
+    transition: all 0.35s ease-in-out;
+}
+
 
 h2 {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 20px;
 }
-
-
 
 .featured {
     margin-bottom: 50px;
