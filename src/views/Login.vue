@@ -14,13 +14,13 @@
             <form class="register-login-form col-xl-7 mx-auto mt-4">
                 <div class="form-group left mb-2">
                     <label for="email">Email address</label>
-                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+                    <input v-model="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required>
                 </div>
-                
+
                 <div class="form-group left mb-2">
                     <label for="password">Password</label>
                     <div class="password-input">
-                        <input :type="showPassword ? 'text' : 'password'" class="form-control" id="password" placeholder="Password" required>
+                        <input :type="showPassword ? 'text' : 'password'" v-model="password" class="form-control" id="password" placeholder="Password" required>
                         <span class="password-toggle" @click="passwordVisibility">
                             <i class="fas" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'" id="togglePasswordIcon" style="color: #bbb;"></i>
                         </span>
@@ -29,7 +29,7 @@
                 <div class="justify-content-center d-flex mt-3">
                     <button type="submit" class="btn-submit btn btn-dark mt-3">Log In</button>
                 </div>
-        </form>
+            </form>
             
             
             <div class="justify-content-center d-flex mt-3">
