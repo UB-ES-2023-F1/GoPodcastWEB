@@ -47,7 +47,8 @@
   .podcasts {
     display: flex;
     align-items: center;
-
+    padding-top: 25px;
+    padding-bottom: 20px;
     /* width: 80vw; */
 }
 
@@ -56,6 +57,7 @@
     width: 100vw;
     height: 300px;
   }
+  
   .podcast {
     display: flex;
     flex-direction: column;
@@ -76,5 +78,14 @@
     font-weight: 600;
   }
   
+  .podcast:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .podcast:hover img {
+    box-shadow: 0 0 15px rgba(0, 72, 255, 0.784);
+  }
   </style>
   
