@@ -56,4 +56,5 @@ rules:
   new-line-at-end-of-file: disable
   new-lines:
     type: platform
+    level: warning
   trailing-spaces: disable
