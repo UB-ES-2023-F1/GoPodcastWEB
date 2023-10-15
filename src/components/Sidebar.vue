@@ -49,7 +49,7 @@ export default {
 
 <style>
 .sidebar {
-    height: 100vh;
+    height: inherit;
     overflow: hidden;
     font-size: 1.25rem;
     letter-spacing: 0.05rem;

@@ -57,18 +57,18 @@
     width: 100vw;
     height: 300px;
   }
-  
+
   .podcast {
     display: flex;
     flex-direction: column;
     /* align-items: center;
     justify-content: center; */
-    margin-left: 30px;
+    margin-left: 45px;
   }
   
   .podcast img {
-    width: 200px;
-    height: 200px;
+    width: 210px;
+    height: 210px;
     border-radius: 5%;
     margin-bottom: 10px;
   }
@@ -76,6 +76,7 @@
   .podcast .name {
     font-size: 18px;
     font-weight: 600;
+    text-align: center;
   }
   
   .podcast:hover {
