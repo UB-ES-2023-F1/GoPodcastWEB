@@ -1,11 +1,13 @@
 <template>
+    <div class="categories-container">
+    <h2>Browse Categories</h2>
     <div class="categories">
-        <h2>Browse Categories</h2>
-        <div v-for="category in categories" :key="category.id" class="category">
+        <div v-for="category in categories" :key="category.id" class="category" ref="categoriesContainer">
             <img :src="'src/assets/'+category.image_url" :alt="category.title">
-            <span class="name">{{ category.title }}</span>
+            <span class="name text-center">{{ category.title }}</span>
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -14,37 +16,64 @@ export default {
         return {
             categories : [
                 { id: 1, image_url: 'categories/category1.jpg', title: 'Pop' },
-                { id: 2, image_url: 'categories/category2.jpg', title: 'Rock' },
-                { id: 3, image_url: 'categories/category3.jpg', title: 'Hip Hop' },
-                { id: 4, image_url: 'categories/category4.jpg', title: 'Electronic' },
-                { id: 5, image_url: 'categories/category5.jpg', title: 'Classical' },
+                { id: 2, image_url: 'categories/category2.jpg', title: 'Suspense' },
+                { id: 3, image_url: 'categories/category3.jpg', title: 'Historia' },
+                { id: 4, image_url: 'categories/category3.jpg', title: 'Tech' },
+                { id: 5, image_url: 'categories/category2.jpg', title: 'Music' },
+                { id: 6, image_url: 'categories/category1.jpg', title: 'Comedy' },
+                { id: 7, image_url: 'categories/category2.jpg', title: 'Suspense' },
+                { id: 8, image_url: 'categories/category3.jpg', title: 'Historia' },
+                { id: 9, image_url: 'categories/category3.jpg', title: 'Tech' },
+                { id: 10, image_url: 'categories/category2.jpg', title: 'Music' },
+                { id: 11, image_url: 'categories/category1.jpg', title: 'Comedy' },
             ],
         };
-    },
-};
+    }
+  };
 </script>
 
 <style>
-.categories {
-    margin-top: 50px;
-}
 
-.category {
+.categories {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    padding-top: 25px;
+    padding-bottom: 20px;
+    width: 64vw;
+    height: 180px;
+    overflow: hidden;
+    flex-flow: row wrap;
+    /* width: 80vw; */
 }
-
-.category img {
-    width: 50px;
-    height: 50px;
+  
+  .category{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+    padding-bottom: 5em;
+  }
+  
+  .category img {
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    margin-right: 20px;
-}
-
-.category .name {
+    margin-bottom: 10px;
+  }
+  
+  .category.name {
     font-size: 18px;
     font-weight: 600;
-}
+  }
+  
+  .category:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .category:hover img {
+    box-shadow: 0 0 15px rgba(162, 0, 255, 0.784);
+  }
 </style>

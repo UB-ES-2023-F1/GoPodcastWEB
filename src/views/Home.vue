@@ -5,7 +5,7 @@
         <Sidebar />
         <!-- Main content-->
         <div class="home-content col-lg-9 col-md-9 col-sm-9 p-0 ps-5">
-                <div class="row w-100 m-0">
+                <div class="row w-100 mt-5">
                     <div class="search col-6">
                         <input type="text" placeholder="Search">
                         <button>Search</button>
@@ -15,7 +15,9 @@
                         <button>Sign in</button>
                     </div>
                     <div class="signup d-flex me-2">
+                        <router-link to="/register">
                         <button>Sign up</button>
+                    </router-link>
                     </div></div>
                 </div>
             
@@ -52,10 +54,11 @@ export default {
 }
 
 .home-content {
-    margin-top: 2em;
+    /* margin-top: 0em; */
     height: inherit;
     overflow: hidden;
     align-items: start;
+    justify-content: flex-start;
 }
 
 .search {
