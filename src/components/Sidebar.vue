@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar col-lg-3 col-md-3 p-3 text-white">
+    <div class="sidebar col-lg-2 col-md-3 p-3 text-white">
         <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <img src="../assets/logo_white.png" alt="logo" class="mx-auto logo" :style="{ width: '50px', height: '50px' }">
         </a>
@@ -30,7 +30,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link text-black">
+                <a href="#" class="nav-link opacity-50">
                     About us
                 </a>
             </li>

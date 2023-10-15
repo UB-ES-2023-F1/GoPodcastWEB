@@ -42,7 +42,7 @@ export default {
     padding-bottom: 20px;
     padding-left: 30px;
     padding-right: 30px;
-    width: 70vw;
+    width: 80vw;
     height: 180px;
     overflow: hidden;
     flex-flow: row wrap;

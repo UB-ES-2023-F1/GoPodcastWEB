@@ -4,7 +4,7 @@
         <!-- Sidebar -->
         <Sidebar />
         <!-- Main content-->
-        <div class="home-content col-lg-9 col-md-9 col-sm-9 p-0 ">
+        <div class="home-content col-lg-10 col-md-9 col-sm-12 p-0 ">
                 <div class="row w-100 mt-5 ps-5">
                     <div class="search col-6">
                         <input type="text" placeholder="Search">
@@ -96,7 +96,7 @@ export default {
 }
 
 .search button {
-    width: 100px;
+    width: 5em;
     height: 50px;
     border: none;
     border-radius: 0 50px 50px 0;
@@ -108,7 +108,7 @@ export default {
 
 
 .signup button {
-    width: 150px;
+    width: 10vw;
     height: 50px;
     border: none;
     border-radius: 50px;
@@ -124,7 +124,7 @@ export default {
 }
 
 .signin button {
-    width: 150px;
+    width: 10vw;
     height: 50px;
     border: none;
     border-radius: 50px;
