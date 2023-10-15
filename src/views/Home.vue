@@ -4,8 +4,8 @@
         <!-- Sidebar -->
         <Sidebar />
         <!-- Main content-->
-        <div class="home-content col-lg-9 col-md-9 col-sm-9 p-0 ps-5">
-                <div class="row w-100 mt-5">
+        <div class="home-content col-lg-9 col-md-9 col-sm-9 p-0 ">
+                <div class="row w-100 mt-5 ps-5">
                     <div class="search col-6">
                         <input type="text" placeholder="Search">
                         <button>Search</button>
@@ -22,10 +22,16 @@
                 </div>
             
                 <div class="featured">
-                    <h2>Featured Podcasts</h2>
+                    <h2 class="ps-5">Featured Podcasts</h2>
                     <PodcastList />
                 </div>
+                <div class="more-content ps-5 pt-4">
                 <CategoryList />
+                <div class="mt-5 pt-2">
+                    <h2>Most Listened Podcasts</h2>
+                    <PopularList />
+                </div>
+            </div>
             
         </div>
     </div>
@@ -35,6 +41,7 @@
 <script>
 import CategoryList from '../components/CategoryList.vue';
 import PodcastList from '../components/PodcastList.vue';
+import PopularList from '../components/PopularList.vue';
 import Sidebar from '../components/Sidebar.vue';
 
 export default {
@@ -42,6 +49,7 @@ export default {
     components: {
     PodcastList,
     CategoryList,
+    PopularList,
     Sidebar
 },
 };
@@ -49,8 +57,8 @@ export default {
 
 <style>
 .home {
-    height: 100vh;
-    overflow: hidden;
+    height: 100%;
+    /* overflow: hidden; */
 }
 
 .home-content {
@@ -59,6 +67,17 @@ export default {
     overflow: hidden;
     align-items: start;
     justify-content: flex-start;
+}
+
+.home-content .more-content{
+    width: 100%;
+    height: 100%;
+    padding-left: 0px;
+    background-color: #04001d;
+}
+
+.home-content .more-content h2{
+    color: #525dff;
 }
 
 .search {
@@ -129,7 +148,8 @@ h2 {
 }
 
 .featured {
-    margin-bottom: 50px;
+    margin-top: 30px;
+    margin-bottom: 35px;
     width: inherit;
 }
 </style>
