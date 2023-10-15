@@ -15,17 +15,17 @@ export default {
     data() {
         return {
             categories : [
-                { id: 1, image_url: 'categories/category1.jpg', title: 'Pop' },
-                { id: 2, image_url: 'categories/category2.jpg', title: 'Suspense' },
-                { id: 3, image_url: 'categories/category3.jpg', title: 'Historia' },
-                { id: 4, image_url: 'categories/category3.jpg', title: 'Tech' },
-                { id: 5, image_url: 'categories/category2.jpg', title: 'Music' },
-                { id: 6, image_url: 'categories/category1.jpg', title: 'Comedy' },
-                { id: 7, image_url: 'categories/category2.jpg', title: 'Suspense' },
-                { id: 8, image_url: 'categories/category3.jpg', title: 'Historia' },
-                { id: 9, image_url: 'categories/category3.jpg', title: 'Tech' },
-                { id: 10, image_url: 'categories/category2.jpg', title: 'Music' },
-                { id: 11, image_url: 'categories/category1.jpg', title: 'Comedy' },
+                { id: 1, image_url: 'categories/categorySport.jpg', title: 'Pop' },
+                { id: 2, image_url: 'categories/categoryRanking.jpg', title: 'Suspense' },
+                { id: 3, image_url: 'categories/categoryEntertainment.jpg', title: 'Historia' },
+                { id: 4, image_url: 'categories/categorySport.jpg', title: 'Sport' },
+                { id: 5, image_url: 'categories/categoryMusic.jpg', title: 'Music' },
+                { id: 6, image_url: 'categories/categoryEntertainment.jpg', title: 'Entertainment' },
+                { id: 7, image_url: 'categories/categoryRanking.jpg', title: 'Ranking' },
+                { id: 8, image_url: 'categories/categorySport.jpg', title: 'Sport' },
+                { id: 9, image_url: 'categories/categoryMusic.jpg', title: 'Music' },
+                { id: 10, image_url: 'categories/categoryEntertainment.jpg', title: 'Entertainment' },
+                { id: 11, image_url: 'categories/categoryRanking.jpg', title: 'Ranking' },
             ],
         };
     }
@@ -40,7 +40,9 @@ export default {
     justify-content: space-between;
     padding-top: 25px;
     padding-bottom: 20px;
-    width: 64vw;
+    padding-left: 30px;
+    padding-right: 30px;
+    width: 70vw;
     height: 180px;
     overflow: hidden;
     flex-flow: row wrap;
@@ -51,7 +53,8 @@ export default {
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-left: 30px;
+    /* margin-left: 30px; */
+    margin-right: 30px;
     padding-bottom: 5em;
   }
   
