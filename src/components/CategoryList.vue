@@ -14,6 +14,7 @@
 export default {
     data() {
         return {
+            // Com encara no tenim l'endpoint, dummy data:
             categories : [
                 { id: 1, image_url: 'categories/categorySport.jpg', title: 'Pop' },
                 { id: 2, image_url: 'categories/categoryRanking.jpg', title: 'Suspense' },
@@ -28,6 +29,24 @@ export default {
                 { id: 11, image_url: 'categories/categoryRanking.jpg', title: 'Ranking' },
             ],
         };
+    },
+    getCategirues () {
+      const pathCategories = 'http://localhost:8000/categories'
+
+      axios.get(pathCategories)
+        .then((res) => {
+          var categories = res.data.filter((category) => {
+            return category.id != null
+          })
+          console.log(categories)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    created () {
+      // Descomentar cuando tengamos los endpoints listos
+      // this.getCategories() 
     }
   };
 </script>

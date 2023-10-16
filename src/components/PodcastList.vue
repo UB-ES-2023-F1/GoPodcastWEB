@@ -13,6 +13,7 @@
   export default {
     data() {
       return {
+        // Com encara no tenim l'endpoint, dummy data:
         podcasts: [
           { id: 1, image_url: 'podcasts/podcast1.jpg', title: 'podcast1' },
           { id: 2, image_url: 'podcasts/podcast2.jpg', title: 'podcast2' },
@@ -28,11 +29,50 @@
         ],
       };
     },
+    getPodcasts () {
+      const pathPodcasts = 'http://localhost:8000/podcasts/'
+
+      axios.get(pathPodcasts)
+        .then((res) => {
+          var podcasts = res.data.filter((podcast) => {
+            return podcast.id != null
+          })
+          console.log(podcasts)
+          var promises = []
+          for (let i = 0; i < podcasts.length; i++) {
+            const promise = axios.get(pathPodcasts + podcasts[i].title)
+              .then((resPodcast) => {
+                delete podcasts[i].title
+                console.log('resComp')
+                console.log(resPodcast.data)
+                podcasts[i].info = {
+                  'description': resPodcast.data.description,
+                  'category': resPodcast.data.category
+                  // 'image': resPodcast.data.image_url
+                }
+              })
+              .catch((error) => {
+                console.error(error)
+              })
+            console.log('Pushed promise: ')
+            console.log(promise)
+            promises.push(promise)
+          }
+          Promise.all(promises).then((_) => {
+            console.log(podcasts)
+            this.podcasts = podcasts
+          })
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    created () {
+      // Descomentar cuando tengamos los endpoints listos
+      // this.getPodcasts() 
+    },
     mounted() {
-      // Obtener el contenedor de los podcasts
       const podcastsContainer = this.$refs.podcastsContainer;
-  
-      // Configurar un evento de desplazamiento horizontal cuando se desplace el ratón
       podcastsContainer.addEventListener('wheel', (e) => {
         if (e.deltaY !== 0) {
           podcastsContainer.scrollLeft += e.deltaY;
@@ -73,7 +113,7 @@
     margin-bottom: 10px;
   }
   
-  .podcast .name {
+  .podcast .title {
     font-size: 18px;
     font-weight: 600;
     text-align: center;
