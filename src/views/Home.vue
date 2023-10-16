@@ -12,12 +12,10 @@
                     </div>
                     <div class="col-6 d-flex justify-content-end">
                     <div class="signin  d-flex justify-content-end me-3">
-                        <button>Sign in</button>
+                        <button @click="$router.push('/login');">Sign in</button>
                     </div>
                     <div class="signup d-flex me-2">
-                        <router-link to="/register">
-                        <button>Sign up</button>
-                    </router-link>
+                        <button @click="$router.push('/register');">Sign up</button>
                     </div></div>
                 </div>
             
