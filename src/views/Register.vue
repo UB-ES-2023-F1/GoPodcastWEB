@@ -11,6 +11,11 @@
             <p class="text-center mt-5 fw-bold" :style="{ fontSize: '1.2rem' }">Sign up to listen to your favorite podcasts
             </p>
             <form @submit.prevent="submitForm" class="register-form col-xl-7 mx-auto mt-4">
+                <div class="form-group mb-2">
+                    <label for="username">Username</label>
+                    <input type="username" class="form-control" id="username" aria-describedby="usernameHelp"
+                        placeholder="Enter username" v-model="username" required>
+                </div>
                 <div class="form-group left mb-2">
                     <label for="email">Email address</label>
                     <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
@@ -43,12 +48,13 @@
 <style></style>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
     name: 'Register',
     data() {
         return {
+            username: null,
             email: null,
             password: null,
             confirmPassword: null
@@ -125,20 +131,21 @@ export default {
         onSubmit() {
             if (this.validatePassword() && this.validateEmail()){
                 const parameters = {
+                    username: this.username,
                     email: this.email,
                     password: this.password
                 }
                 console.log(parameters)
-                //   const path = 'http://localhost:5117/account' // Descomentar y modificar por el endpoint correcto
-                //   axios.post(path, parameters)
-                //     .then((res) => {
-                //       alert('Account created')
-                //       this.backToLogin()
-                //     })
-                //     .catch((error) => {
-                //       alert('Error creating account')
-                //       console.error(error)
-                //     })
+                  const path = 'http://localhost:5117/user' // Descomentar y modificar por el endpoint correcto
+                  axios.post(path, parameters)
+                    .then((res) => {
+                      alert('Account created')
+                      this.backToLogin()
+                    })
+                    .catch((error) => {
+                      alert('Error creating account')
+                      console.error(error)
+                    })
             }
             
         },
