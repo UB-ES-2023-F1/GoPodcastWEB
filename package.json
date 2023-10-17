@@ -9,10 +9,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@johmun/vue-tags-input": "^2.1.0",
     "bootstrap": "^5.3.2",
     "bootstrap-vue": "^2.23.1",
+    "cropperjs": "^1.6.1",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.5"
+    "vue-advanced-cropper": "^2.8.8",
+    "vue-cropper": "^0.6.4",
+    "vue-cropperjs": "^5.0.0",
+    "vue-image-cropper": "^1.0.6",
+    "vue-router": "^4.2.5",
+    "vue-the-mask": "^0.11.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
