@@ -21,7 +21,7 @@
                     <input type="password" class="form-control" id="password" placeholder="Password" v-model="password"
                         required>
                     <small id="pswHelp" class="opacity-50" v-if="this.password">
-                        Password must be at least 8-20 characters long, contain at least 1 big letter, 1 small letter and 1
+                        Password must be at least 6 characters long, contain at least 1 big letter, 1 small letter and 1
                         number</small>
                 </div>
                 <div class="form-group mb-2">
@@ -56,9 +56,9 @@ export default {
     },
     methods: {
         validatePassword() {
-            // The password must be at least 8 characters long
-            if (this.password.length < 8 || this.password.length > 20) {
-                alert('Password must be at least 8-20 characters long')
+            // The password must be at least 6 characters long
+            if (this.password.length < 6) {
+                alert('Password must be at least 6 characters long')
                 document.getElementById('password').style.borderColor = 'red'
                 document.getElementById('confirmPassword').style.borderColor = 'red'
                 return false
