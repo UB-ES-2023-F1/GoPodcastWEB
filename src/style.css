@@ -4,7 +4,53 @@
   --text-color: #fff;
   --contrast-color: #000;
   color: var(--text-color);
+  scroll-behavior: smooth;
 }
+
+.home {
+  /* background: linear-gradient(to top, #2767df, #112454, #000000, #000000); */
+  background: linear-gradient(to top, #18002a, #1b003f, #003339, #000000);
+  /* background: linear-gradient(to top, #18002a, #100025, #002e59, #000000); */
+  /* background: linear-gradient(to bottom, #063487, #0b2b7b, #000000, #000000); */
+  /* background: linear-gradient(to bottom, #0059ff, #00237b, #000000, #000000); */
+  background-size: 400% 400%;
+  animation: gradient 20s ease infinite;
+  height: 100vh;
+}
+
+.home-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.sidebar{
+  background: rgba(0, 0, 0, 0.689);
+  background-size: 400% 400%;
+  height: 100vh;
+}
+
+.register {
+  background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
+  background-size: 400% 400%;
+  animation: gradient 20s ease infinite;
+  height: 100vh;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .register-form label {
   font-size: 0.9rem;
   font-weight: 700;
@@ -35,24 +81,7 @@
   transition: 0.3s;
 }
 
-.register {
-  background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
-  background-size: 400% 400%;
-  animation: gradient 20s ease infinite;
-  height: 100vh;
-}
 
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
 
 
 /* :root {
