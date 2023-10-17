@@ -7,25 +7,25 @@ import PublishPodcast from '../views/PublishPodcast.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/register',
     name: 'Register',
-    component: Register
+    component: () => import('../views/Register.vue')
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: () => import('../views/Login.vue')
   },
   {
     path: '/publish',
     name: 'PublishPodcast',
-    component: PublishPodcast
+    component: () => import('../views/Publish.vue')
   }
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
-})
+});
 
-export default router
+export default router;
