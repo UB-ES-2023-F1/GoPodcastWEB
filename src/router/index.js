@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/register',
+    path: '/',
     name: 'Register',
     component: () => import('../views/Register.vue')
   },
@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/publish',
     name: 'PublishPodcast',
-    component: () => import('../views/Publish.vue')
+    component: () => import('../views/PublishPodcast.vue')
   }
 ]
 
