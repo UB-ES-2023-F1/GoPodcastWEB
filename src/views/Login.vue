@@ -7,8 +7,8 @@
                     <h5 class="ms-2 fw-lighter text-white" style="font-size: 1.3rem;">GoPodcast</h5>
                 </router-link>
             </div>
-            <h5 id="slogan" class="text-center mt-5 f-italic" style="font-size: 1.8rem;">Play, Enjoy, Repeat!</h5>
-            <p class="text-center mt-5 fw-bold" :style="{fontSize: '1.2rem'}">Log in to listen to your favorite podcasts</p>
+            <h5 id="slogan" class="text-center mt-5 f-italic" style="font-size: 1.8rem;">Podcasts, Play, Repeat!</h5>
+            <p class="text-center mt-5" :style="{fontSize: '1.2rem'}">Log in to listen to your favorite podcasts</p>
             
         
             <form @submit.prevent="submitForm" class="login-form col-xl-7 mx-auto mt-4">
