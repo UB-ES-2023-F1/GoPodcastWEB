@@ -148,20 +148,10 @@
   font-weight: bold;
 }
 
-/*
-.publish {
-  background-color: #222;
-  color: #fff;
-  background-size: 400% 400%;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-*/
 .publish {
   background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
   background-size: 400% 400%;
   animation: gradient 20s ease infinite;
-  height: 100vh;
 }
 
 .publish-form label {

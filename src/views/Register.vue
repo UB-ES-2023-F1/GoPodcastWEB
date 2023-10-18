@@ -3,7 +3,7 @@
         <div class="container pt-5 w-50">
             <div class="logo d-flex justify-content-center">
                 <router-link to="/" class="d-flex align-items-center" style="text-decoration: none; align-items:normal;">
-                    <img src="../assets/logo_white.png" alt="logo" :style="{ width: '25px', height: '24px' }">
+                    <img src="../assets/logo_white.png" alt="logo" :style="{ width: '25px', height: '25px' }">
                     <h5 class="ms-2 fw-lighter text-white" style="font-size: 1.3rem;">GoPodcast</h5>
                 </router-link>
             </div>
