@@ -11,7 +11,7 @@
                 <div class="row">
                 <div class="col-md-6 mx-auto">
                     
-                    <form @submit.prevent="publicarPodcast" class="register-login-form">
+                    <form @submit.prevent="publicarPodcast" class="publish-form">
                     
                     <image-cropper v-model="imagenPortada" />
                     <div class="mb-3"></div>
@@ -79,3 +79,4 @@ export default {
   margin-bottom: 10px;
 }
 </style>
+

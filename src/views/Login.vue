@@ -1,5 +1,5 @@
 <template>
-    <div class="register-login">
+    <div class="login">
         <div class="container pt-5 w-50">
             <div class="logo d-flex justify-content-center">
                 <router-link to="/GoPodcast" class="d-flex align-items-center" style="text-decoration: none; align-items:normal;">
@@ -11,7 +11,7 @@
             <p class="text-center mt-5 fw-bold" :style="{fontSize: '1.2rem'}">Log in to listen to your favorite podcasts</p>
             
         
-            <form class="register-login-form col-xl-7 mx-auto mt-4">
+            <form class="login-form col-xl-7 mx-auto mt-4">
                 <div class="form-group left mb-2">
                     <label for="email">Email address</label>
                     <input v-model="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required>
