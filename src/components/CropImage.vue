@@ -55,6 +55,7 @@
               const croppedImageUrl = URL.createObjectURL(blob);
               this.croppedImage = croppedImageUrl;
               this.cropper.destroy(); // Destruye la instancia de Cropper
+              this.$emit('image-cropped', blob);
             });
           }
           this.showCropButton = false;

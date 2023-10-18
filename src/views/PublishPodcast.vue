@@ -13,7 +13,7 @@
                         
                         <form @submit.prevent="publicarPodcast" class="publish-form">
                         
-                            <image-cropper v-model="imagenPortada" />
+                            <image-cropper v-model="imagenPortada" @image-cropped="handleImageCropped" />
                             <div class="mb-3"></div>
                         
                             <div class="form-group">
@@ -52,6 +52,7 @@
 
 <script>
 import CropImage from '../components/CropImage.vue';
+import axios from 'axios';
 
 export default {
     components: {
@@ -67,6 +68,9 @@ export default {
         };
     },
     methods: {
+        handleImageCropped(blob){
+            this.imagenPortada = blob;
+        },
         onSubmit() {
             const parameters = {
                 imagenPortada: this.imagenPortada,
@@ -87,6 +91,25 @@ export default {
                 console.error(error)
             })  
         },
+
+/*            FUTURA IMPLEMENTACIÓN:
+onSubmit() {
+    const formData = new FormData();
+    formData.append('imagenPortada', this.imagenPortada, 'imagen.png'); // 'imagen.png' es el nombre del archivo en el servidor
+
+    // Luego, haz la solicitud HTTP para cargar la imagen
+    const path = 'http://localhost:5173/podcast'; // Modifica esto por tu endpoint correcto
+    axios.post(path, formData)
+      .then((res) => {
+        alert('Podcast Posted');
+        this.backToHome();
+      })
+      .catch((error) => {
+        alert('Error posting podcast');
+        console.error(error);
+      });
+},
+}*/
         backToHome() {
             this.$router.push('/')
         }
