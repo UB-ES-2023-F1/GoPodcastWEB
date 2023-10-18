@@ -1,24 +1,34 @@
-:root{
+:root {
   --primary-color: #646cff;
+
   --submit-color: #646cff;
+
   --text-color: #fff;
+
   --contrast-color: #000;
+
   color: var(--text-color);
+
   scroll-behavior: smooth;
 }
 
 .home {
   /* background: linear-gradient(to top, #2767df, #112454, #000000, #000000); */
-  background: linear-gradient(to top, #18002a, #1b003f, #003339, #000000);
+  
+  background: linear-gradient(to top, #18002a, #1b003f, #003339, #000);
+
   /* background: linear-gradient(to top, #18002a, #100025, #002e59, #000000); */
+  
   /* background: linear-gradient(to bottom, #063487, #0b2b7b, #000000, #000000); */
+  
   /* background: linear-gradient(to bottom, #0059ff, #00237b, #000000, #000000); */
+
   background-size: 400% 400%;
   animation: gradient 20s ease infinite;
   height: 100vh;
 }
 
-.home-content{
+.home-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -26,9 +36,8 @@
   height: 100vh;
 }
 
-
-.sidebar{
-  background: rgba(0, 0, 0, 0.689);
+.sidebar {
+  background: rgba(0, 0, 0, 68.9%);
   background-size: 400% 400%;
   height: 100vh;
 }
@@ -41,12 +50,15 @@
 }
 
 @keyframes gradient {
+
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -66,40 +78,42 @@
   border: 1px solid #ced4da;
 }
 
-.register-form .btn-submit{
+.register-form .btn-submit {
   padding: 0.6rem 2.5rem;
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
+
   /* font-weight: 500; */
   cursor: pointer;
 }
 
-.register-form .btn-submit:hover{
+.register-form .btn-submit:hover {
   border: 0.5px solid var(--submit-color);
   background-color: #262c91;
+
   /* transform: scale(1.02); */
   transition: 0.3s;
 }
 
-
-.register-form .btn-submit-bold{
+.register-form .btn-submit-bold {
   padding: 0.6rem 2.5rem;
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
+
   /* font-weight: 500; */
   cursor: pointer;
   font-weight: bold;
 }
 
-.register-form .btn-submit-bold:hover{
+.register-form .btn-submit-bold:hover {
   border: 0.5px solid var(--submit-color);
   background-color: #262c91;
+
   /* transform: scale(1.02); */
   transition: 0.3s;
 }
-
 
 .login {
   background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
@@ -122,27 +136,30 @@
   border: 1px solid #ced4da;
 }
 
-.login-form .btn-submit{
+.login-form .btn-submit {
   padding: 0.6rem 2.5rem;
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
+
   /* font-weight: 500; */
   cursor: pointer;
 }
 
-.login-form .btn-submit:hover{
+.login-form .btn-submit:hover {
   border: 0.5px solid var(--submit-color);
   background-color: #262c91;
+
   /* transform: scale(1.02); */
   transition: 0.3s;
 }
 
-.login-form .btn-submit-bold{
+.login-form .btn-submit-bold {
   padding: 0.6rem 2.5rem;
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
+
   /* font-weight: 500; */
   cursor: pointer;
   font-weight: bold;
@@ -157,6 +174,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 */
+
 .publish {
   background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
   background-size: 400% 400%;
@@ -178,18 +196,20 @@
   border: 1px solid #ced4da;
 }
 
-.publish-form .btn-submit{
+.publish-form .btn-submit {
   padding: 0.6rem 2.5rem;
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
+
   /* font-weight: 500; */
   cursor: pointer;
 }
 
-.publish-form .btn-submit:hover{
+.publish-form .btn-submit:hover {
   border: 0.5px solid var(--submit-color);
   background-color: #262c91;
+
   /* transform: scale(1.02); */
   transition: 0.3s;
 }
@@ -202,19 +222,21 @@
   border: 1px solid #ced4da;
 }
 
-.publish-form .btn-submit-bold{
+.publish-form .btn-submit-bold {
   padding: 0.6rem 2.5rem;
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
+
   /* font-weight: 500; */
   cursor: pointer;
   font-weight: bold;
 }
 
-.publish-form .btn-submit-bold:hover{
+.publish-form .btn-submit-bold:hover {
   border: 0.5px solid var(--submit-color);
   background-color: #262c91;
+
   /* transform: scale(1.02); */
   transition: 0.3s;
 }
@@ -242,7 +264,7 @@
   color: #fff;
   padding: 12px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 50%);
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -318,9 +340,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -342,9 +366,11 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+  
   button {
     background-color: #f9f9f9;
   }
