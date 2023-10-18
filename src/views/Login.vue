@@ -8,7 +8,7 @@
                 </router-link>
             </div>
             <h5 id="slogan" class="text-center mt-5 f-italic" style="font-size: 1.8rem;">Podcasts, Play, Repeat!</h5>
-            <p class="text-center mt-5 fw-bold" :style="{fontSize: '1.2rem'}">Log in to listen to your favorite podcasts</p>
+            <p class="text-center mt-5" :style="{fontSize: '1.2rem'}">Log in to listen to your favorite podcasts</p>
             
         
             <form class="login-form col-xl-7 mx-auto mt-4">
