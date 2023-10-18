@@ -7,7 +7,6 @@
                 <h5 class="ms-2  text-white" style="font-size: 2rem;">GoPodcast</h5>
                 </router-link>
             </div>
-            
             <div class="contenedor-reducido">
                 <div class="row">
                 <div class="col-md-6 mx-auto">
