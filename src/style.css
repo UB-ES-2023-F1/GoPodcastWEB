@@ -1,8 +1,9 @@
-:root{
+:root {
   --primary-color: #646cff;
   --submit-color: #646cff;
   --text-color: #fff;
   --contrast-color: #000;
+
   color: var(--text-color);
   scroll-behavior: smooth;
 }
@@ -57,7 +58,7 @@
   margin-bottom: 0.5rem;
 }
 
-.register-form input {
+.register-login-form input {
   width: 100%;
   padding: 0.5rem 0.75rem;
   border-radius: 0.25rem;
@@ -65,23 +66,45 @@
   border: 1px solid #ced4da;
 }
 
-.register-form .btn-submit{
+.register-login-form textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  background-color: #ffffff64;
+  border: 1px solid #ced4da;
+}
+
+.register-login-form .btn-submit {
   padding: 0.6rem 2.5rem;
   border-radius: 50px;
   font-size: 1.1rem;
   background-color: var(--submit-color);
+
   /* font-weight: 500; */
+
   cursor: pointer;
 }
 
-.register-form .btn-submit:hover{
-  border: 0.5px solid var(--submit-color);
-  background-color: #262c91;
-  /* transform: scale(1.02); */
-  transition: 0.3s;
+.register-login-form .btn-submit-bold {
+  padding: 0.6rem 2.5rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: var(--submit-color);
+
+  /* font-weight: 500; */
+
+  cursor: pointer;
 }
 
+.register-login-form .btn-submit:hover {
+  border: 0.5px solid var(--submit-color);
+  background-color: #262c91;
 
+  /* transform: scale(1.02); */
+
+  transition: 0.3s;
+}
 
 
 /* :root {
