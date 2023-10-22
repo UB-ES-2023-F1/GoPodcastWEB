@@ -1,58 +1,77 @@
 <template>
     <div class="home container-fluid m-0 p-0">
-    <div class="row w-100 m-0">
+      <div class="row w-100 m-0">
         <!-- Sidebar -->
         <Sidebar />
         <!-- Main content-->
-        <div class="home-content col-lg-10 col-md-9 col-sm-12 p-0 ">
-                <div class="row w-100 mt-5 ps-5">
-                    <div class="search col-6">
-                        <input type="text" placeholder="Search">
-                        <button>Search</button>
-                    </div>
-                    <div class="col-6 d-flex justify-content-end">
-                    <div class="signin  d-flex justify-content-end me-3">
-                        <button @click="$router.push('/login');">Sign in</button>
-                    </div>
-                    <div class="signup d-flex me-2">
-                        <button @click="$router.push('/register');">Sign up</button>
-                    </div></div>
-                </div>
-            
-                <div class="featured">
-                    <h2 class="ps-5">Featured Podcasts</h2>
-                    <PodcastList />
-                </div>
-                <div class="more-content ps-5 pt-4">
-                <CategoryList />
-                <div class="mt-5 pt-2">
-                    <h2>Most Listened Podcasts</h2>
-                    <PopularList />
-                </div>
+        <div class="home-content col-lg-10 col-md-9 col-sm-12 p-0">
+          <div class="row w-100 mt-5 ps-5">
+            <div class="search col-6">
+              <input type="text" placeholder="Search">
+              <button>Search</button>
             </div>
-            
+            <div class="col-6 d-flex justify-content-end">
+              <div class="signin d-flex justify-content-end me-3">
+                <button @click="$router.push('/login');">Sign in</button>
+              </div>
+              <div class="signup d-flex me-2">
+                <button @click="$router.push('/register');">Sign up</button>
+              </div>
+              <div class="publish-button">
+                <button @click="abrirVentanaEmergente">Publicar Episodio</button>
+              </div>
+            </div>
+          </div>
+          <div class="featured">
+            <h2 class="ps-5">Featured Podcasts</h2>
+            <PodcastList />
+          </div>
+          <div class="more-content ps-5 pt-4">
+            <CategoryList />
+            <div class="mt-5 pt-2">
+              <h2>Most Listened Podcasts</h2>
+              <PopularList />
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-</template>
-
-<script>
-import CategoryList from '../components/CategoryList.vue';
-import PodcastList from '../components/PodcastList.vue';
-import PopularList from '../components/PopularList.vue';
-import Sidebar from '../components/Sidebar.vue';
-
-export default {
+    <!-- Ventana emergente de publicación de episodios -->
+    <PublishEpisodePopup v-if="mostrarPopup" @cerrarVentana="cerrarVentanaEmergente" />
+  </template>
+  
+  <script>
+  import CategoryList from '../components/CategoryList.vue';
+  import PodcastList from '../components/PodcastList.vue';
+  import PopularList from '../components/PopularList.vue';
+  import Sidebar from '../components/Sidebar.vue';
+  import PublishEpisodePopup from '../components/PublishEpisodePopup.vue'; // Asegúrate de importar el componente
+  
+  export default {
     name: 'Home',
     components: {
-    PodcastList,
-    CategoryList,
-    PopularList,
-    Sidebar
-},
-};
-</script>
-
+      PodcastList,
+      CategoryList,
+      PopularList,
+      Sidebar,
+      PublishEpisodePopup, // Registra el componente
+    },
+    data() {
+      return {
+        mostrarPopup: false, // Variable para controlar la visibilidad de la ventana emergente
+      };
+    },
+    methods: {
+      abrirVentanaEmergente() {
+        this.mostrarPopup = true;
+      },
+      cerrarVentanaEmergente() {
+        this.mostrarPopup = false;
+      },
+    },
+  };
+  </script>
+  
 <style>
 .home {
     height: 100%;

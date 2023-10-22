@@ -18,9 +18,14 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/publish',
+    path: '/publish/podcast',
     name: 'PublishPodcast',
     component: () => import('../views/PublishPodcast.vue')
+  },
+  {
+    path: '/publish/episode',
+    name: 'PublishEpisode',
+    component: () => import('../views/PublishEpisode.vue')
   }
 ]
 
