@@ -46,4 +46,4 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm run lint -- --fix
+      - run: npx eslint . --fix
