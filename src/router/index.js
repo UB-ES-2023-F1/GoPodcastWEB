@@ -21,6 +21,11 @@ const routes = [
     path: '/publish',
     name: 'PublishPodcast',
     component: () => import('../views/PublishPodcast.vue')
+  },
+  {
+    path: '/visualize',
+    name: 'VisualizePodcast',
+    component: () => import('../views/VisualizePodcast.vue')
   }
 ]
 

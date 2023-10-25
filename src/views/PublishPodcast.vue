@@ -17,30 +17,36 @@
                             <div class="mb-3"></div>
                         
                             <div class="form-group">
-                                <label for="titulo" class="label">Título</label>
+                                <label for="titulo" class="label">Title</label>
                                 <input type="text" class="form-control" id="titulo" v-model="titulo" required style="max-width: 100%;"/>
                             </div>
                             <div class="mb-3"></div>
                         
                             <div class="form-group">
-                                <label for="resumen" class="label">Breve Resumen</label>
+                                <label for="resumen" class="label">Short summary</label>
                                 <input type="text" class="form-control" id="resumen" v-model="resumen" required style="width: 100%;"/>
                             </div>
                             <div class="mb-3"></div>
                         
                             <div class="form-group">
-                                <label for="descripcion" class="label">Descripción del Podcast</label>
+                                <label for="descripcion" class="label">Podcast description</label>
                                 <textarea class="form-control" id="descripcion" v-model="descripcion" required style="width: 100%;"></textarea>
                             </div>
                             <div class="mb-3"></div>
                         
                             <div class="form-group">
-                                <label for="etiquetas" class="label">Etiquetas</label>
-                                <input type="tag" class="form-control" id="tags" v-model="tags" required style="width: 100%;"/>
+                                <label for="etiquetas" class="label">Tags</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="etiquetas"
+                                    v-model="tagInput"
+                                />
+                            
                             </div>
                             <div class="mb-3"></div>
                         
-                            <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;"  @click="onSubmit">Publicar Podcast</button>
+                            <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;"  @click="onSubmit">Publish Podcast</button>
                         </form>
                     </div>
                 </div>
@@ -64,7 +70,8 @@ export default {
             titulo: null,
             resumen: null,
             descripcion: null,
-            tags: []
+            tags: [], 
+            tagInput: null
         };
     },
     methods: {
@@ -72,6 +79,8 @@ export default {
             this.imagenPortada = blob;
         },
         onSubmit() {
+            const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
+            console.log('Etiquetas:', tags);
             const parameters = {
                 imagenPortada: this.imagenPortada,
                 titulo: this.titulo,
@@ -90,6 +99,10 @@ export default {
                 alert('Error posting podcast')
                 console.error(error)
             })  
+        },
+        handleTagInput() {
+            const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
+            this.tags = tags;
         },
 
 /*            FUTURA IMPLEMENTACIÓN:
