@@ -3,7 +3,7 @@
       <div class="popup-content">
         <div class="popup-header">
           <h2>Publicar Episodio</h2>
-          <button @click="cerrarVentana" class="close-button">X</button>
+          <!-- <button @click="close" class="close-button">X</button> -->
         </div>
         <div class="popup-body">
           <form @submit.prevent="publicarEpisodio" class="publish-form">
@@ -56,21 +56,21 @@
       };
     },
     methods: {
-      cerrarVentana() {
-        // Agrega aquí la lógica para cerrar la ventana de publicación.
-      },
-      publicarEpisodio() {
-        // Agrega aquí la lógica para publicar el episodio.
-      },
+      
     },
   };
   </script>
   
 
   <style scoped>
+
+  .publish-popup{
+    max-width: 70%;
+  }
   .popup-content {
     width: 50%;
     max-height: 70%;
+    /* max-width: 70%; */
     overflow-y: auto;
     padding: 20px;
     background-color: rgba(0, 0, 0, 0.924);

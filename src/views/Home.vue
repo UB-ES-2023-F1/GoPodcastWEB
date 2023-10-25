@@ -18,7 +18,7 @@
                 <button @click="$router.push('/register');">Sign up</button>
               </div>
               <div class="publish-button">
-                <button @click="abrirVentanaEmergente">Publicar Episodio</button>
+                <button @click="popupEpisodeOpen">Publicar Episodio</button>
               </div>
             </div>
           </div>
@@ -62,10 +62,10 @@
       };
     },
     methods: {
-      abrirVentanaEmergente() {
+      popupEpisodeOpen() {
         this.mostrarPopup = true;
       },
-      cerrarVentanaEmergente() {
+      popupEpisodeClose() {
         this.mostrarPopup = false;
       },
     },
@@ -168,5 +168,29 @@ h2 {
     margin-top: 30px;
     margin-bottom: 35px;
     width: inherit;
+}
+
+
+.publish-button {
+  position: fixed;
+  bottom: 50px;
+  z-index: 9999;
+}
+
+
+.publish-button button{
+  width: 7em;
+  height: 7em;
+  border-radius: 50%;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  box-shadow: #d2d5ff 0px 2px 5px 2px;
+}
+
+.publish-button button:hover {
+  background-color: #ffffff;
+  color: #000000;
+  transition: all 0.35s ease-in-out;
 }
 </style>

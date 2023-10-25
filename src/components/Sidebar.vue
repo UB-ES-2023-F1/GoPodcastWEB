@@ -33,6 +33,9 @@
                 <a href="#" class="nav-link opacity-50">
                     About us
                 </a>
+                <a href="#" class="nav-link opacity-50" @click="$router.push('/publish/episode');">
+                    New Episode
+                    </a>
             </li>
         </ul>
     </div>
