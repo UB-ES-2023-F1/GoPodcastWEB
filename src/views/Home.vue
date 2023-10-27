@@ -17,9 +17,6 @@
               <div class="signup d-flex me-2">
                 <button @click="$router.push('/register');">Sign up</button>
               </div>
-              <div class="publish-button">
-                <button @click="popupEpisodeOpen">Publicar Episodio</button>
-              </div>
             </div>
           </div>
           <div class="featured">
@@ -35,9 +32,10 @@
           </div>
         </div>
       </div>
+
+      <!-- Progress bar -->
+      <!-- <ProgressBar /> -->
     </div>
-    <!-- Ventana emergente de publicación de episodios -->
-    <PublishEpisodePopup v-if="mostrarPopup" @cerrarVentana="cerrarVentanaEmergente" />
   </template>
   
   <script>
@@ -45,7 +43,7 @@
   import PodcastList from '../components/PodcastList.vue';
   import PopularList from '../components/PopularList.vue';
   import Sidebar from '../components/Sidebar.vue';
-  import PublishEpisodePopup from '../components/PublishEpisodePopup.vue'; // Asegúrate de importar el componente
+  // import ProgressBar from '../components/ProgressBar.vue';
   
   export default {
     name: 'Home',
@@ -54,20 +52,11 @@
       CategoryList,
       PopularList,
       Sidebar,
-      PublishEpisodePopup, // Registra el componente
+      // ProgressBar,
     },
     data() {
-      return {
-        mostrarPopup: false, // Variable para controlar la visibilidad de la ventana emergente
-      };
     },
     methods: {
-      popupEpisodeOpen() {
-        this.mostrarPopup = true;
-      },
-      popupEpisodeClose() {
-        this.mostrarPopup = false;
-      },
     },
   };
   </script>
