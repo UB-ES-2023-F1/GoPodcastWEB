@@ -29,10 +29,9 @@
                                 <div class="col-12 col-sm-4 col-md-7 col-lg-7 ">
                                     <h1>{{ podcast.title }}</h1>
                                     <div>
-                                        <button class="follow-button mt-2 mb-4" @click="toggleFollow">
+                                        <button @click="toggleFollow" class="follow-button mt-2 mb-4" :class="{ following: podcast.isFollowing }">
                                             {{ podcast.isFollowing ? 'Unfollow' : 'Follow' }}
                                         </button>
-                                        <!--<button class="follow-button mt-2 mb-4" role="follow-button">Follow</button>-->
                                     </div>
                                     <h6>{{ podcast.summary }}</h6>
                                     <p>{{ podcast.description }}</p>
@@ -241,22 +240,40 @@ h2 {
 ul {
     list-style-type: none;
 } 
+
 .follow-button {
     width: 7vw;
     height: 30px;
-    background-color: transparent; /* Fondo transparente o el color de fondo que desees */
-    border: 1px solid #fff;
     border-radius: 50px;
-    color: #ffffff;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.35s ease-in-out;
 }
 
-.follow-button:hover {
-    background-color: #ffffff;
-    color: #000000;
-    transition: all 0.35s ease-in-out;
+.follow-button.following {
+    background-color: #fff;
+    border: 1px solid #000;
+    color: #000;
+}
+
+.follow-button:not(.following) {
+    background-color: transparent; 
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+.follow-button:hover.following {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    
+}
+
+.follow-button:hover:not(.following) {
+    background-color: #fff;
+    color: #000;
 }
 </style>
 
