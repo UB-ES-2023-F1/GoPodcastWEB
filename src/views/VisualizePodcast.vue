@@ -4,7 +4,7 @@
             <!-- Sidebar -->
             <Sidebar />
             <!-- Main content-->
-            <div class="visualize-content col-lg-10 col-md-9 col-sm-12 p-0 ">
+            <div class="visualize-content col-lg-10 col-md-9 col-sm-12 p-0  ">
                 <div class="row w-100 mt-5 ps-5">
                     <div class="search col-6">
                         <input type="text" placeholder="Search">
@@ -20,13 +20,13 @@
                     </div>
                 </div>
                 <div class="row p-5">
-                    <div class="col-12 col-sm-4 col-md-8 col-lg-12">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="contenedor-reducido mb-5"> 
                             <div class="row mt-5 ps-5 mr-5">
                                 <div class="col-10 col-sm-4 col-md-4 col-lg-4">
-                                    <img :src="podcast.image_url" alt="Imagen" class="borde-redondeado"/>
+                                    <img :src="podcast.image_url" alt="Imagen" class="reduced-image"/>
                                 </div>
-                                <div class="col-12 col-sm-4 col-md-7 col-lg-7 ">
+                                <div class="col-10 col-sm-7 col-md-7 col-lg-7 ">
                                     <h1>{{ podcast.title }}</h1>
                                     <div>
                                         <button @click="toggleFollow" class="follow-button mt-2 mb-4" :class="{ following: podcast.isFollowing }">
@@ -126,11 +126,17 @@ import axios from 'axios'
 }
 
 .visualize-content {
-    /* margin-top: 0em; */
     height: inherit;
     overflow: hidden;
     align-items: start;
     justify-content: flex-start;
+}
+
+.reduced-image {
+    width: 100%; 
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
 }
 
 .visualize-content .more-content{
@@ -148,11 +154,6 @@ h6{
     text-align: center;
     align-items: center;
     justify-content: center;
-}
-
-.borde-redondeado {
-  border-radius: 5px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
 }
 
 .contenedor-reducido{
@@ -242,7 +243,7 @@ ul {
 } 
 
 .follow-button {
-    width: 7vw;
+    width: 9vw;
     height: 30px;
     border-radius: 50px;
     font-size: 14px;

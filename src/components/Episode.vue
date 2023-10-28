@@ -162,8 +162,8 @@ export default {
 
 <style>
 .reduced-image {
-    width: 100%; /* Ajusta el valor al tamaño que desees */
-    height: auto; /* Mantiene la proporción de aspecto */
+    width: 100%; 
+    height: auto; 
 }
 
 .container {
