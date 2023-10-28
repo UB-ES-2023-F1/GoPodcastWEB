@@ -22,11 +22,19 @@ const routes = [
     name: 'PublishPodcast',
     component: () => import('../views/PublishPodcast.vue')
   },
+  /*
   {
-    path: '/visualize',
+    path: '/visualize/:podcastId',
     name: 'VisualizePodcast',
     component: () => import('../views/VisualizePodcast.vue')
   }
+*/
+  {
+    path: '/visualize/:id',
+    name: 'VisualizePodcast',
+    component: () => import('../views/VisualizePodcast.vue')
+  }
+  
 ]
 
 const router = createRouter({

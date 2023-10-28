@@ -33,6 +33,21 @@
   height: 100vh;
 }
 
+.visualize {
+  background: linear-gradient(to top, #18002a, #1b003f, #003339, #000);
+  background-size: 400% 400%;
+  animation: gradient 20s ease infinite;
+  height: 100vh;
+}
+
+.visualize-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .sidebar {
   background: rgba(0, 0, 0, 68.9%);
   background-size: 400% 400%;
