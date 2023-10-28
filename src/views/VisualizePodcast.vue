@@ -23,36 +23,21 @@
                     <div class="col-12 col-sm-4 col-md-8 col-lg-12">
                         <div class="contenedor-reducido mb-5"> 
                             <div class="row mt-5 ps-5 mr-5">
-                                <div class="col-4 col-sm- 4 col-md-4 col-lg-4">
-                                    <img :src="podcast.image_url" alt="Imagen" />
+                                <div class="col-10 col-sm-4 col-md-4 col-lg-4">
+                                    <img :src="podcast.image_url" alt="Imagen" class="borde-redondeado"/>
                                 </div>
-                                <div class="col-8 col-sm-8 col-md-8 col-lg-8 pr-3">
+                                <div class="col-12 col-sm-4 col-md-7 col-lg-7 ">
                                     <h1>{{ podcast.title }}</h1>
                                     <div>
                                         <button class="follow-button mt-2 mb-4" role="follow-button">Follow</button>
                                     </div>
                                     <h6>{{ podcast.summary }}</h6>
                                     <p>{{ podcast.description }}</p>
-                                    
-
-                                </div>
-
-                        
-                            </div>
-                            <!--
-                            <div class="row w-100 mt-5 ps-5 mr-5">
-                                <div class="overflow-x-auto flex-nowrap overflow-x-hidden" ref="episodeContainer">
-                                    <ul>
-                                        <li v-for="(audio, index) in podcast.list_of_episodes" :key="index" >
-                                            <audio class="audioStyle" controls :src="audio.episode_url">{{ audio.title }}</audio>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
-                        -->
-                        <div class="row mt-3 align-items-center ps-5">
-                            <Episode />
-                        </div>
+                            <div class="row mt-3 align-items-center ps-5">
+                                <Episode />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,6 +50,7 @@
 <script>
 import Sidebar from '../components/Sidebar.vue';
 import Episode from '../components/Episode.vue';
+import axios from 'axios'
 
     export default {
         components: {
@@ -78,7 +64,7 @@ import Episode from '../components/Episode.vue';
                     image_url: '/src/assets/podcasts/Moonlight.jpg',
                     title: "Moonlight",
                     summary: "Podcast talking about Cruz Cafuné's new album",
-                    description: "Moonlight 922 se trata del segundo trabajo musical de Cruz Cafuné, dos años más tarde de la publicación de su antecesor, Maracucho Bueno Muere Chiquito, siendo este estrenado el día 10 de enero del año 2020 en todas las plataformas digitales.El álbum fue publicado tras el lanzamiento de cuatro adelantos de las trece canciones que serían publicadas; teniendo en cuenta que finalmente, “En Mi Zona” no acabaría formando parte de la Mixtape. Debe ser mencionado, que en un principio, la idea del artista era publicar música durante todas las lunas llenas; y que solo estuviera disponible durante el transcurro de estas, de ahí parte del nombre del álbum; aunque finalmente fue algo que no pudo llevarse a cabo.Como bien lleva haciendo el artista durante años, en el proyecto, decide navegar en distintos géneros musicales, tales como el soul, rap, el R&B y el trap; pero como de costumbre, mostrando una esencia propia que le caracteriza, contando incluso con colaboraciones con Flavio Rodríguez, voz pionera del R&B en castellano o artistas más cercanos a él, como puede ser Abhir Hathi.",
+                    description: "Moonlight 922 se trata del segundo trabajo musical de Cruz Cafuné, dos años más tarde de la publicación de su antecesor, Maracucho Bueno Muere Chiquito, siendo este estrenado el día 10 de enero del año 2020 en todas las plataformas digitales.El álbum fue publicado tras el lanzamiento de cuatro adelantos de las trece canciones que serían publicadas; teniendo en cuenta que finalmente, “En Mi Zona” no acabaría formando parte de la Mixtape. Debe ser mencionado, que en un principio, la idea del artista era publicar música durante todas las lunas llenas; y que solo estuviera disponible durante el transcurro de estas, de ahí parte del nombre del álbum; aunque finalmente fue algo que no pudo llevarse a cabo.",
                     list_of_episodes: [
                         { id: 1, episode_title: 'intro', episode_url: '/src/assets/audio/Moonlight_audio.mp3'},
                         { id: 2, episode_title: 'mi_isla', episode_url: '/src/assets/audio/Mi_isla_audio.mp3'},
@@ -137,6 +123,11 @@ h6{
     text-align: center;
     align-items: center;
     justify-content: center;
+}
+
+.borde-redondeado {
+  border-radius: 5px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
 }
 
 .contenedor-reducido{
