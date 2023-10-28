@@ -128,7 +128,7 @@ export default {
             if (episode.isLiked) {
                 axios.delete(path).then(response => {
                     episode.isLiked = false;
-                    console.log(response.data)
+                    console.log(response.data);
                 })
                 .catch(error => {
                     console.error('Error al eliminar el like: ', error);
@@ -136,7 +136,7 @@ export default {
             } else {
                 axios.post(path).then(response => {
                     episode.isLiked = true;
-                    console.log(response.data)
+                    console.log(response.data);
                 })
                 .catch(error => {
                     console.error('Error al dar like: ', error);

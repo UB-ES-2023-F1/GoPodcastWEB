@@ -29,7 +29,10 @@
                                 <div class="col-12 col-sm-4 col-md-7 col-lg-7 ">
                                     <h1>{{ podcast.title }}</h1>
                                     <div>
-                                        <button class="follow-button mt-2 mb-4" role="follow-button">Follow</button>
+                                        <button class="follow-button mt-2 mb-4" @click="toggleFollow">
+                                            {{ podcast.isFollowing ? 'Unfollow' : 'Follow' }}
+                                        </button>
+                                        <!--<button class="follow-button mt-2 mb-4" role="follow-button">Follow</button>-->
                                     </div>
                                     <h6>{{ podcast.summary }}</h6>
                                     <p>{{ podcast.description }}</p>
@@ -70,7 +73,8 @@ import axios from 'axios'
                         { id: 2, episode_title: 'mi_isla', episode_url: '/src/assets/audio/Mi_isla_audio.mp3'},
                     ],
                     author: "Cruz Cafuné",
-                }
+                    isFollowing: false,
+                },
             };
         },
         methods: {
@@ -85,11 +89,33 @@ import axios from 'axios'
                     console.error(error);
                 });
             },
-            
-            created () {
-                // Descomentar cuando tengamos los endpoints listos
-                // this.getPodcast() 
+            toggleFollow() {
+                const podcastId = this.podcast.id;
+                const path = `http://localhost:8000/followPodcast/${podcastId}`;
+
+                if (this.podcast.isFollowing) {
+                    axios.delete(path).then(response => {
+                        this.podcast.isFollowing = false;
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.error('Error al dejar de seguir el podcast: ', error);
+                    });
+                } else {
+                    axios.post(path).then(response => {
+                        this.podcast.isFollowing = true;
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.error('Error al seguir el podcast: ', error);
+                    });
+                }
             },
+            
+        },
+        created () {
+            // Descomentar cuando tengamos los endpoints listos
+            // this.getPodcast() 
         },
         
     };
