@@ -77,8 +77,8 @@
     mounted() {
       const podcastsContainer = this.$refs.podcastsContainer;
       podcastsContainer.addEventListener('wheel', (e) => {
-        if (e.deltaY !== 0) {
-          podcastsContainer.scrollLeft += e.deltaY;
+        if (e.deltaX !== 0) {
+          podcastsContainer.scrollLeft += e.deltaX;
           e.preventDefault();
         }
       });
