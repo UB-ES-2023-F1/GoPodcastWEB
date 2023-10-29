@@ -34,7 +34,7 @@
       </div>
 
       <!-- Progress bar -->
-      <!-- <ProgressBar /> -->
+      <ProgressBar />
     </div>
   </template>
   
@@ -43,7 +43,7 @@
   import PodcastList from '../components/PodcastList.vue';
   import PopularList from '../components/PopularList.vue';
   import Sidebar from '../components/Sidebar.vue';
-  // import ProgressBar from '../components/ProgressBar.vue';
+  import ProgressBar from '../components/ProgressBar.vue';
   
   export default {
     name: 'Home',
@@ -52,7 +52,7 @@
       CategoryList,
       PopularList,
       Sidebar,
-      // ProgressBar,
+      ProgressBar,
     },
     data() {
     },
