@@ -29,10 +29,9 @@
                     <button type="submit" class="btn-submit btn btn-dark mt-3" @click="onSubmit">Log In</button>
                 </div>
             </form>
-            
-            
-            <div class="d-flex justify-content-center mt-4">
-                <p class="text-center">You do not have an account? <router-link to="/register">Sing up</router-link></p>
+
+            <div class="justify-content-center d-flex mt-3">
+                <p class="text-center">You do not have an account? <router-link to="/register">Sign up</router-link></p>
             </div>
         </div>
     </div>

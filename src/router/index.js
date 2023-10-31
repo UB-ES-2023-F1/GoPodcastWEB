@@ -18,10 +18,11 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/publish',
+    path: '/publish/podcast',
     name: 'PublishPodcast',
     component: () => import('../views/PublishPodcast.vue')
   },
+
   /*
   {
     path: '/visualize/:podcastId',
@@ -33,6 +34,11 @@ const routes = [
     path: '/visualize/:id',
     name: 'VisualizePodcast',
     component: () => import('../views/VisualizePodcast.vue')
+  },
+  {
+    path: '/publish/episode',
+    name: 'PublishEpisode',
+    component: () => import('../views/PublishEpisode.vue')
   }
   
 ]

@@ -10,7 +10,7 @@
             <h5 id="slogan" class="text-center mt-5 f-italic" style="font-size: 1.8rem;">Play, Enjoy, Repeat!</h5>
             <p class="text-center mt-5" :style="{ fontSize: '1.2rem' }">Sign up to listen to your favorite podcasts
             </p>
-            <form @submit.prevent="submitForm" class="register-form col-xl-7 mx-auto mt-4">
+            <form @submit.prevent="onSubmit()" class="register-form col-xl-7 mx-auto mt-4">
                 <div class="form-group mb-2">
                     <label for="username">Username</label>
                     <input type="username" class="form-control" id="username" aria-describedby="usernameHelp"
@@ -35,7 +35,7 @@
                         v-model="confirmPassword" required>
                 </div>
                 <div class="justify-content-center d-flex mt-3">
-                    <button type="submit" class="btn-submit btn btn-dark mt-3" @click="onSubmit">Sign Up</button>
+                    <button type="submit" class="btn-submit btn btn-dark mt-3">Sign Up</button>
                 </div>
             </form>
             <div class="d-flex justify-content-center mt-4">
@@ -129,25 +129,26 @@ export default {
             return true
         },
         onSubmit() {
-            if (this.validatePassword() && this.validateEmail()){
+            if (this.validatePassword() && this.validateEmail()) {
                 const parameters = {
                     username: this.username,
                     email: this.email,
                     password: this.password
                 }
                 console.log(parameters)
-                  const path = 'http://localhost:5117/user' // Descomentar y modificar por el endpoint correcto
-                  axios.post(path, parameters)
+                const path = 'http://localhost:5000/user' // Descomentar y modificar por el endpoint correcto
+                axios.post(path, parameters)
                     .then((res) => {
-                      alert('Account created')
-                      this.backToLogin()
+                        console.log(res)
+                        alert('Account created')
+                        this.backToLogin()
                     })
                     .catch((error) => {
-                      alert('Error creating account')
-                      console.error(error)
+                        alert('Error creating account')
+                        console.error(error)
                     })
             }
-            
+
         },
         backToLogin() {
             this.$router.push('/login')
