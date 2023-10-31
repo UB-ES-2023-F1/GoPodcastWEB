@@ -2,11 +2,15 @@
     <div v-for="episode in podcast.list_of_episodes" :key="episode.id" class="episode">
         <div class="row mt-2 p-2 contenedor-episodio">
             <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                <img :src="podcast.image_url" alt="Imagen" class="reduced-image borde-redondeado" />
+                <a :href="'/visualizeEpisode/' + episode.id">
+                    <img :src="episode.episodeImage" alt="Imagen" class="reduced-image borde-redondeado" id="imagen-interactiva"/>
+                </a>
             </div>
             <div class="col-12 col-sm-9 col-md-9 col-lg-9">
                 <div class="row">
-                    <h6>{{ episode.episode_title }}</h6>
+                    <a :href="'/visualizeEpisode/' + episode.id">
+                        <h6>{{ episode.title }} </h6>
+                    </a>
                 </div>
                 <div class="row">
                     <p>{{ episode.description }}</p>
@@ -26,6 +30,9 @@
                         </button>
                     </div>
                 </div>
+                <div v-for="(tag, index) in episode.tags" :key="index" class="tag row" :style="{ backgroundColor: randomColor() }">
+                    {{ tag }}
+                </div>
             </div>
         </div>
     </div>
@@ -44,8 +51,8 @@ export default {
                 summary: "Podcast talking about Cruz Cafuné's new album",
                 description: "This podcast talks about the importance of the islands having been born and raised in the Canary Islands",
                 list_of_episodes: [
-                    { id: 1, episode_title: 'intro', description: "Pequeño speech de Cruzzi hablando de la luna", episode_url: '/src/assets/audio/Moonlight_audio.mp3', audioElement: null, isLiked: false },
-                    { id: 2, episode_title: 'mi_isla', description: "Canción de Cruzzi inicio album Moonlight922", episode_url: '/src/assets/audio/Mi_isla_audio.mp3', audioElement: null, isLiked: false },
+                    { id: 1, title: 'intro', episodeImage: "/src/assets/podcasts/MMCD.jpg", description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", audio_url: '/src/assets/audio/Moonlight_audio.mp3', tags: ["Intro","Cruzzi","Moonlight"], audioElement: null, isLiked: false },
+                    { id: 2, title: 'mi_isla', episodeImage: "/src/assets/podcasts/MBMC.jpg", description: "Canción de Cruzzi inicio album Moonlight922", audio_url: '/src/assets/audio/Mi_isla_audio.mp3', tags: ["LPGC","Cruzzi","Luna"], audioElement: null, isLiked: false },
                 ],
                 author: "Cruz Cafuné",
             },
@@ -65,7 +72,7 @@ export default {
             }
         },
         playEpisode(episode) {
-            const audioElement = new Audio(episode.episode_url);
+            const audioElement = new Audio(episode.audio_url);
             episode.audioElement = audioElement;
             this.currentEpisode = episode;
             audioElement.addEventListener("loadedmetadata", () => {
@@ -91,7 +98,7 @@ export default {
             }
         },
         preloadAudioDuration(episode) {
-            const audioElement = new Audio(episode.episode_url);
+            const audioElement = new Audio(episode.audio_url);
             audioElement.addEventListener("loadedmetadata", () => {
                 const duration = audioElement.duration;
                 episode.duration = this.formatDuration(duration);
@@ -143,6 +150,14 @@ export default {
                 });
             }
         },
+        randomColor() {
+            const letters = "0123456789ABCDEF";
+            let color = "#";
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        },
     },
     created () {
         // Descomentar cuando tengamos los endpoints listos
@@ -164,6 +179,14 @@ export default {
 .reduced-image {
     width: 100%; 
     height: auto; 
+}
+
+.tag {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    color: white;
 }
 
 .container {
@@ -200,12 +223,28 @@ export default {
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: #fff; /* Color de ícono */
+    color: #fff;
     transition: color 0.3s;
 }
 
 .play-like-button:hover {
-    color: #007BFF; /* Cambiar color al pasar el mouse */
+    color: #007BFF; 
 }
 
+#imagen-interactiva {
+    transition: filter 0.3s; 
+}
+
+#imagen-interactiva:hover {
+    filter: brightness(0.8); 
+}
+
+a {
+    text-decoration: none; 
+    color: inherit; 
+}
+
+a:hover {
+    filter: brightness(0.8); 
+}
 </style>
