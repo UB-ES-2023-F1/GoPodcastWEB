@@ -2,14 +2,14 @@
     <div class="centered-container">
         <label class="btn-submit btn btn-dark mt-3">
             <input type="file" @change="handleImageChange" accept="image/*" style="display:none" />
-            Seleccionar
+            Select
             <i class="fas fa-camera"></i>
         </label>
         <div></div>
         <div v-if="selectedImage && !croppedImage" class="image-container">
             <img ref="image" :src="selectedImage" alt="Imagen a recortar" />
         </div>
-        <button @click="cropImage" class="btn-submit-bold btn btn-dark mt-3" v-if="showCropButton">Recortar</button>
+        <button @click="cropImage" class="btn-submit-bold btn btn-dark mt-3" v-if="showCropButton">Crop</button>
         <img v-if="croppedImage" :src="croppedImage" alt="Imagen Recortada" class="cropped-image" />
 
     </div>
@@ -55,6 +55,7 @@
               const croppedImageUrl = URL.createObjectURL(blob);
               this.croppedImage = croppedImageUrl;
               this.cropper.destroy(); // Destruye la instancia de Cropper
+              this.$emit('image-cropped', blob);
             });
           }
           this.showCropButton = false;
