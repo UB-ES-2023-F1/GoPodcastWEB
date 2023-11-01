@@ -9,13 +9,13 @@
             <div class="player-content w-full rounded-lg shadow-lg">
                 <div id="player-row" class="row flex-wrap w-full max-w-5xl">
                     <div class="episode-cover d-inline col-4 col-md-4">
-                        <img src="../assets/podcasts/podcast1.jpg" alt="cover" class="cover d-none d-lg-inline" />
-                        <div class="d-inline">
-                            <h6 class="text-white ps-3 d-lg-inline d-md-block pt-md-4">ABOUT CHRISTMAS</h6>
-                            <h6 class="opacity-50 ps-3 pe-5 d-lg-inline d-md-block">Episode 1</h6>
+                        <img src="../assets/podcasts/podcast1.jpg" alt="cover" class="cover d-none d-lg-inline" style="width: 8vw; max-width: 8em;" />
+                        <div class="nowrap" style="display: inline-block;">
+                            <h6 class="text-white ps-3 d-block">ABOUT CHRISTMAS</h6>
+                            <h6 class="opacity-50 ps-3 pe-5">Episode 1</h6>
                         </div>
 
-                        <div id="button-div" class="flex-initial pr-3 d-inline ps-md-3">
+                        <div id="button-div" class="flex-initial pr-3 ps-md-3" style="display: inline-block;">
                             <svg @click="toggleAudio()" v-show="!isPlaying" class="play-button text-gray-400"
                                 :class="{ 'text-orange-600': audioLoaded, 'hover:text-orange-400': audioLoaded, 'cursor-pointer': audioLoaded }"
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -33,18 +33,18 @@
                         </div>
                     </div>
 
-                    <div id="progress-bar" class="col-8 d-inline text-center pt-5">
+                    <div id="progress-bar" class="col-8 d-flex align-items-center">
                         <span>{{ elapsedTime() }}</span>
-                        <div class="overlay-container h-full d-inline px-2">
-                            <input v-model="playbackTime" type="range" min="0" :max="audioDuration" class="slider h-full"
+                        <div class="overlay-container h-full d-inline px-2" style="width: 100%">
+                            <input v-model="playbackTime" type="range" min="0" :max="audioDuration" class="slider h-full w-100"
                                 id="position" name="position" />
                             <div v-show="!audioLoaded"
-                                class="absolute top-0 bottom-0 right-0 left-0 px-2 pointer-events-none"
+                                class="absolute top-0 bottom-0 right-0 left-0 pointer-events-none"
                                 style="color: #94bcec">
                                 Loading please wait...
                             </div>
                         </div>
-                        <span>{{ totalTime() }}</span>
+                        <span class="pe-5">{{ totalTime() }}</span>
                     </div>
                 </div>
             </div>
