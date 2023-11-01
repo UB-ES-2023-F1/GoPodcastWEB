@@ -68,9 +68,9 @@ export default {
                 email: this.email,
                 password: this.password
             }
-            console.log(parameters)
+            
             const path = 'http://localhost:5000/login' // Descomentar y modificar por el endpoint correcto
-            axios.put(path, parameters)
+            axios.post(path, parameters)
             .then((res) => {
                 this.logged = true
                 this.backToHome()
