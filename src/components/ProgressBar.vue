@@ -1,15 +1,15 @@
 <template>
-    <div class="player">
-        <div id="audio-player-root">
+    <div class="player m-0 p-0">
+        <div id="audio-player-root w-100 p-0 m-0">
             <div>
                 <audio style="display:none" ref="player" :id="playerid">
                     <source :src="audioUrl" type="audio/mpeg" />
                 </audio>
             </div>
-            <div class="player-content w-full rounded-lg shadow-lg">
+            <div class="player-content w-full rounded-lg shadow-lg m-0 p-0">
                 <div id="player-row" class="row flex-wrap w-full max-w-5xl">
-                    <div class="episode-cover d-inline col-4 col-md-4">
-                        <img src="../assets/podcasts/podcast1.jpg" alt="cover" class="cover d-none d-lg-inline" style="width: 8vw; max-width: 8em;" />
+                    <div class="episode-cover d-inline col-4 col-md-4 ">
+                        <img src="../assets/podcasts/xmas.jpg" alt="cover" class="cover p-0 d-none d-lg-inline" style="width: 8vw; max-width: 8em;" />
                         <div class="nowrap" style="display: inline-block;">
                             <h6 class="text-white ps-3 d-block">ABOUT CHRISTMAS</h6>
                             <h6 class="opacity-50 ps-3 pe-5">Episode 1</h6>
@@ -56,6 +56,7 @@
 .player {
     position: fixed;
     bottom: 0;
+    left: 0;
     width: 100%;
 }
 
@@ -163,10 +164,25 @@ export default {
             audioLoaded: false,
             isPlaying: false,
             episodeToken: "",
-            audioUrl: "src/assets/audio/episodes/episode1.mp3"
+            audioUrl: "../src/assets/audio/episodes/episode1.mp3"
         };
     },
     methods: {
+        consoleLogTest() {
+            console.log("Test");
+        },
+        setAudioUrl(audioUrl) {
+            console.log("Setting audio url to: " + audioUrl);
+            this.audioUrl = audioUrl;
+        },
+        setCoverUrl(coverUrl) {
+            console.log("Setting cover url to: " + coverUrl);
+            this.coverUrl = coverUrl;
+        },
+        setTitle(title) {
+            console.log("Setting title to: " + title);
+            this.title = title;
+        },
         fetchAudio() {
             axios.get('/api/episodes/' + this.episodeToken + '/audio').then((response) => {
                 this.audioUrl = response.data.url;
