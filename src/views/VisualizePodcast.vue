@@ -50,12 +50,14 @@
 <script>
 import Sidebar from '../components/Sidebar.vue';
 import Episode from '../components/Episode.vue';
+import ProgressBar from '../components/ProgressBar.vue';
 import axios from 'axios'
 
     export default {
         components: {
             Sidebar,
             Episode,
+            ProgressBar,
         },
         data() {
             return {

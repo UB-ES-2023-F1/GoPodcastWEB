@@ -3,7 +3,8 @@
         <div class="row mt-2 p-2 contenedor-episodio">
             <div class="col-12 col-sm-3 col-md-3 col-lg-3">
                 <a :href="'/visualizeEpisode/' + episode.id">
-                    <img :src="episode.episodeImage" alt="Imagen" class="reduced-image borde-redondeado" id="imagen-interactiva"/>
+                    <img :src="episode.episodeImage" alt="Imagen" class="reduced-image borde-redondeado"
+                        id="imagen-interactiva" />
                 </a>
             </div>
             <div class="col-12 col-sm-9 col-md-9 col-lg-9">
@@ -30,18 +31,27 @@
                         </button>
                     </div>
                 </div>
-                <div v-for="(tag, index) in episode.tags" :key="index" class="tag row" :style="{ backgroundColor: randomColor() }">
+                <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
+                    :style="{ backgroundColor: randomColor() }">
                     {{ tag }}
                 </div>
             </div>
         </div>
     </div>
+
+    <div v-if="currentEpisode">
+        <ProgressBar ref="progressBar" />
+    </div>
 </template>
 
 <script>
+import ProgressBar from '../components/ProgressBar.vue';
 import axios from 'axios'
 
 export default {
+    components: {
+        ProgressBar,
+    },
     data() {
         return {
             podcast: {
@@ -51,8 +61,8 @@ export default {
                 summary: "Podcast talking about Cruz Cafuné's new album",
                 description: "This podcast talks about the importance of the islands having been born and raised in the Canary Islands",
                 list_of_episodes: [
-                    { id: 1, title: 'intro', episodeImage: "/src/assets/podcasts/MMCD.jpg", description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", audio_url: '/src/assets/audio/Moonlight_audio.mp3', tags: ["Intro","Cruzzi","Moonlight"], audioElement: null, isLiked: false },
-                    { id: 2, title: 'mi_isla', episodeImage: "/src/assets/podcasts/MBMC.jpg", description: "Canción de Cruzzi inicio album Moonlight922", audio_url: '/src/assets/audio/Mi_isla_audio.mp3', tags: ["LPGC","Cruzzi","Luna"], audioElement: null, isLiked: false },
+                    { id: 1, title: 'intro', episodeImage: "/src/assets/podcasts/MMCD.jpg", description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", audio_url: '/src/assets/audio/Moonlight_audio.mp3', tags: ["Intro", "Cruzzi", "Moonlight"], audioElement: null, isLiked: false },
+                    { id: 2, title: 'mi_isla', episodeImage: "/src/assets/podcasts/MBMC.jpg", description: "Canción de Cruzzi inicio album Moonlight922", audio_url: '/src/assets/audio/Mi_isla_audio.mp3', tags: ["LPGC", "Cruzzi", "Luna"], audioElement: null, isLiked: false },
                 ],
                 author: "Cruz Cafuné",
             },
@@ -71,6 +81,24 @@ export default {
                 this.playEpisode(episode);
             }
         },
+        // TODO: Descomentar y linkear con el componente ProgressBar
+        // playEpisode(episode) {
+        //     this.$nextTick(() => {
+        //         // Use $nextTick to wait for the ProgressBar component to be mounted
+        //         const progressBar = this.$refs.progressBar;
+
+        //         if (progressBar) {
+        //             console.log('Setting audio url to: ' + episode.audio_url);
+        //             this.$refs.progressBar.setAudioUrl(episode.audio_url);
+        //             this.$refs.progressBar.setCoverUrl(episode.episodeImage);
+        //             this.$refs.progressBar.setTitle(episode.title);
+        //             this.$refs.progressBar.play();
+        //         } else {
+        //             console.error('ProgressBar component or setAudioUrl method not found.');
+        //         }
+        //         this.currentEpisode = episode;
+        //     });
+        // },
         playEpisode(episode) {
             const audioElement = new Audio(episode.audio_url);
             episode.audioElement = audioElement;
@@ -124,9 +152,9 @@ export default {
             axios.get(pathPodcast).then((resPodcast) => {
                 this.podcast = resPodcast.data;
             })
-            .catch((error) => {
-                console.error(error);
-            });
+                .catch((error) => {
+                    console.error(error);
+                });
         },
         toggleLike(episode) {
             const episodeId = episode.id;
@@ -137,17 +165,17 @@ export default {
                     episode.isLiked = false;
                     console.log(response.data);
                 })
-                .catch(error => {
-                    console.error('Error al eliminar el like: ', error);
-                });
+                    .catch(error => {
+                        console.error('Error al eliminar el like: ', error);
+                    });
             } else {
                 axios.post(path).then(response => {
                     episode.isLiked = true;
                     console.log(response.data);
                 })
-                .catch(error => {
-                    console.error('Error al dar like: ', error);
-                });
+                    .catch(error => {
+                        console.error('Error al dar like: ', error);
+                    });
             }
         },
         randomColor() {
@@ -159,11 +187,11 @@ export default {
             return color;
         },
     },
-    created () {
+    created() {
         // Descomentar cuando tengamos los endpoints listos
         // this.getPodcast() 
     },
-  
+
     mounted() {
         // Precargar la duración al cargar la página
         this.podcast.list_of_episodes.forEach((episode) => {
@@ -177,8 +205,8 @@ export default {
 
 <style>
 .reduced-image {
-    width: 100%; 
-    height: auto; 
+    width: 100%;
+    height: auto;
 }
 
 .tag {
@@ -209,7 +237,7 @@ export default {
 
 .borde-redondeado {
     border-radius: 5px;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 .centrados_elementos {
@@ -228,23 +256,23 @@ export default {
 }
 
 .play-like-button:hover {
-    color: #007BFF; 
+    color: #007BFF;
 }
 
 #imagen-interactiva {
-    transition: filter 0.3s; 
+    transition: filter 0.3s;
 }
 
 #imagen-interactiva:hover {
-    filter: brightness(0.8); 
+    filter: brightness(0.8);
 }
 
 a {
-    text-decoration: none; 
-    color: inherit; 
+    text-decoration: none;
+    color: inherit;
 }
 
 a:hover {
-    filter: brightness(0.8); 
+    filter: brightness(0.8);
 }
 </style>
