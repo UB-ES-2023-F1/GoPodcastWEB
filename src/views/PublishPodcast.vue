@@ -1,59 +1,63 @@
 <template>
     <div class="publish">
-        <div class="container pt-3 w-300">
-            <div class="logo d-flex justify-content-left mb-4">
+        <div class="container">
+            <div class="logo d-flex justify-content-left mb-4 pt-3">
                 <router-link to="/" class="d-flex align-items-center" style="text-decoration: none; align-items:normal;">
                 <img src="../assets/logo_white.png" alt="logo" :style="{width: '40px', height: '40px'}">
                 <h5 class="ms-2  text-white" style="font-size: 2rem;">GoPodcast</h5>
                 </router-link>
             </div>
-            <div class="contenedor-reducido">
-                <div class="row">
-                    <div class="col-md-6 mx-auto">
-                        
-                        <form @submit.prevent="publicarPodcast" class="publish-form">
-                        
-                            <image-cropper v-model="imagenPortada" @image-cropped="handleImageCropped" />
-                            <div class="mb-3"></div>
-                        
-                            <div class="form-group">
-                                <label for="titulo" class="label">Title</label>
-                                <input type="text" class="form-control" id="titulo" v-model="titulo" required style="max-width: 100%;"/>
+            
+            <div class="row ">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="contenedor-reducido">
+                        <div class="row mb-5 mt-3">
+                            <div class="col-md-6 mx-auto">
+                                <form @submit.prevent="publicarPodcast" class="publish-form">
+                                
+                                    <image-cropper v-model="imagenPortada" @image-cropped="handleImageCropped" />
+                                    <div class="mb-3"></div>
+                                
+                                    <div class="form-group">
+                                        <label for="titulo" class="label">Title</label>
+                                        <input type="text" class="form-control" id="titulo" v-model="titulo" required style="max-width: 100%;"/>
+                                    </div>
+                                    <div class="mb-3"></div>
+                                
+                                    <div class="form-group">
+                                        <label for="resumen" class="label">Short summary</label>
+                                        <input type="text" class="form-control" id="resumen" v-model="resumen" required style="width: 100%;"/>
+                                    </div>
+                                    <div class="mb-3"></div>
+                                
+                                    <div class="form-group">
+                                        <label for="descripcion" class="label">Podcast description</label>
+                                        <textarea class="form-control" id="descripcion" v-model="descripcion" required style="width: 100%;"></textarea>
+                                    </div>
+                                    <div class="mb-3"></div>
+                                
+                                    <div class="form-group">
+                                        <label for="etiquetas" class="label">Tags</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            id="etiquetas"
+                                            v-model="tagInput"
+                                        />
+                                    
+                                    </div>
+                                    <div class="mb-3"></div>
+                                
+                                    <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;"  @click="onSubmit">Publish Podcast</button>
+                                </form>
                             </div>
-                            <div class="mb-3"></div>
-                        
-                            <div class="form-group">
-                                <label for="resumen" class="label">Short summary</label>
-                                <input type="text" class="form-control" id="resumen" v-model="resumen" required style="width: 100%;"/>
-                            </div>
-                            <div class="mb-3"></div>
-                        
-                            <div class="form-group">
-                                <label for="descripcion" class="label">Podcast description</label>
-                                <textarea class="form-control" id="descripcion" v-model="descripcion" required style="width: 100%;"></textarea>
-                            </div>
-                            <div class="mb-3"></div>
-                        
-                            <div class="form-group">
-                                <label for="etiquetas" class="label">Tags</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="etiquetas"
-                                    v-model="tagInput"
-                                />
-                            
-                            </div>
-                            <div class="mb-3"></div>
-                        
-                            <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;"  @click="onSubmit">Publish Podcast</button>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-  </template>
+</template>
 
 
 <script>
