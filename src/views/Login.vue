@@ -63,12 +63,10 @@ export default {
             }
             
             this.loading = true;
-
             const parameters = {
                 email: this.email,
                 password: this.password
-            }
-            
+            }            
             const path = 'http://localhost:5000/login' // Descomentar y modificar por el endpoint correcto
             axios.post(path, parameters)
             .then((res) => {
