@@ -176,8 +176,11 @@
 
 .publish {
   background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
-  background-size: 400% 400%;
+  background-size: cover; 
+  background-attachment: fixed; 
   animation: gradient 20s ease infinite;
+  min-height: 100vh;
+  position: relative;
 }
 
 .publish-form label {

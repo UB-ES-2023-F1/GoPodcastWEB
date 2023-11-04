@@ -11,12 +11,17 @@
               <button>Search</button>
             </div>
             <div class="col-6 d-flex justify-content-end">
-              <div class="signin d-flex justify-content-end me-3">
+              <div class="signin d-flex justify-content-end me-3" v-if="!this.userIsLoggedIn">
                 <button @click="$router.push('/login');">Sign in</button>
               </div>
-              <div class="signup d-flex me-2">
+              <div class="signup d-flex me-2" v-if="!this.userIsLoggedIn">
                 <button @click="$router.push('/register');">Sign up</button>
               </div>
+               <!-- Se mostrará solo si el usuario está logueado -->
+              <div class="publish-podcast d-flex justify-content-end me-3" v-if="this.userIsLoggedIn">
+                <button @click="$router.push('/publish/podcast');">Publish Podcast</button>
+              </div>
+              
             </div>
           </div>
           <div class="featured">
@@ -44,9 +49,13 @@
   import PopularList from '../components/PopularList.vue';
   import Sidebar from '../components/Sidebar.vue';
   import ProgressBar from '../components/ProgressBar.vue';
+  import { mapState } from 'vuex';
   
   export default {
     name: 'Home',
+    computed: {
+      ...mapState(['userIsLoggedIn']),
+    },
     components: {
       PodcastList,
       CategoryList,
@@ -159,7 +168,7 @@ h2 {
     width: inherit;
 }
 
-
+/*
 .publish-button {
   position: fixed;
   bottom: 50px;
@@ -181,5 +190,23 @@ h2 {
   background-color: #ffffff;
   color: #000000;
   transition: all 0.35s ease-in-out;
+}
+*/
+.publish-podcast button {
+    width: 9vw;
+    height:max-content;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: all 0.35s ease-in-out;
+    background-color: transparent; 
+    border: 1px solid #fff;
+    color: #fff;
+}
+
+.publish-podcast button:hover {
+    background-color: #fff;
+    color: #000;
 }
 </style>

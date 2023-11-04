@@ -7,8 +7,8 @@
                 <h5 class="ms-2  text-white" style="font-size: 2rem;">GoPodcast</h5>
                 </router-link>
             </div>
-            <div class="contenedor-reducido">
-                <div class="row">
+            <div class="contenedor-reducido mb-5">
+                <div class="row mb-3">
                     <div class="col-md-6 mx-auto">
                         
                         <form @submit.prevent="publicarPodcast" class="publish-form">
