@@ -67,7 +67,7 @@
 
 
 <script>
-import CropImage from '../components/CropImage.vue';
+import CropImage from '/src/components/CropImage.vue';
 import axios from 'axios';
 
 export default {
