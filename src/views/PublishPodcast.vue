@@ -43,8 +43,14 @@
                                             class="form-control"
                                             id="etiquetas"
                                             v-model="tagInput"
+                                            @input="handleTagInput"
                                         />
-                                    
+                                        <div class="mb-3"></div>
+                                        <div class="tags-container">
+                                        <div class="tag" v-for="(tag, index) in tags" :key="index" >
+                                            {{ tag }}
+                                        </div>
+                                        </div>
                                     </div>
                                     <div class="mb-3"></div>
                                 
@@ -96,7 +102,6 @@ export default {
             const path = 'http://localhost:5173/podcast' // Descomentar y modificar por el endpoint correcto
             axios.post(path, parameters)
             .then((res) => {
-                alert('Podcast Posted')
                 this.backToHome()
             })
             .catch((error) => {
@@ -139,6 +144,20 @@ onSubmit() {
   font-size: 17px;
   font-weight: bold; 
   margin-bottom: 10px;
+}
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background-color: #646cff;
+  color: #fff;
+  border-radius: 16px;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
 }
 </style>
 
