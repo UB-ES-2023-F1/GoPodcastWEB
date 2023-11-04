@@ -28,9 +28,11 @@
 
 .visualize {
   background: linear-gradient(to top, #18002a, #1b003f, #003339, #000);
-  background-size: 400% 400%;
+  background-size: cover; 
+  background-attachment: fixed; 
   animation: gradient 20s ease infinite;
-  height: 100vh;
+  min-height: 100vh;
+  position: relative;
 }
 
 .visualize-content {
