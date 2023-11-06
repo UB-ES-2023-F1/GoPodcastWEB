@@ -2,7 +2,9 @@
     <div class="podcasts-container m-0 p-0">
       <div class="podcasts overflow-x-auto flex-nowrap overflow-x-hidden" ref="podcastsContainer">
         <div v-for="podcast in podcasts" :key="podcast.id" class="podcast">
-          <img :src="'src/assets/'+podcast.image_url" :alt="podcast.title">
+          <a :href="'/visualize/' + podcast.id">
+            <img :src="'src/assets/'+podcast.image_url" :alt="podcast.title">
+          </a>
           <span class="name">{{ podcast.title }}</span>
         </div>
       </div>
@@ -17,7 +19,7 @@
       return {
         // Com encara no tenim l'endpoint, dummy data:
         podcasts: [
-          { id: 1, image_url: 'podcasts/podcast1.jpg', title: 'podcast1' },
+          { id: 1, image_url: 'podcasts/podcast1.jpg', title: 'podcast1', summary: '', description: '', list_of_episodes: [/*{ id: 1, nombre: '', url: ''}*/], author: '' },
           { id: 2, image_url: 'podcasts/podcast2.jpg', title: 'podcast2' },
           { id: 3, image_url: 'podcasts/podcast3.jpg', title: 'podcast3' },
           { id: 4, image_url: 'podcasts/podcast4.jpg', title: 'podcast4' },
