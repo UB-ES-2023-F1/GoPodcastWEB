@@ -39,10 +39,10 @@
                                     </div>
                                     <div class="mb-3"></div>
 
-                                    <image-cropper v-model="episodeImage" />
+                                    <!-- <image-cropper v-model="episodeImage" /> -->
 
                                     <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;"
-                                        @click="onSubmit">Publicar Podcast</button>
+                                        @click="onSubmit">Publicar Episodio</button>
                                 </form>
                             </div>
                         </div>
@@ -70,6 +70,7 @@ export default {
             description: "",
             tags: "",
             audio: null,
+            podcastId: 1, // TODO: get podcast id from url
         };
     },
     methods: {
@@ -79,9 +80,9 @@ export default {
             formData.append('title', this.title);
             formData.append('description', this.description);
             formData.append('tags', this.tags);
-            formData.append('episodeImage', this.episodeImage);
+            // formData.append('episodeImage', this.episodeImage);
             axios
-                .post('http://localhost:5173/publish/episode', formData, {
+                .post('http://localhost:5000/podcasts/' + this.podcastId + '/episodes', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
