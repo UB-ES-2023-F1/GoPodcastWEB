@@ -204,10 +204,10 @@ h2 {
 }
 */
 .publish-podcast button {
-  width: 9vw;
-  height: max-content;
+  width: 10vw;
+  height: 50px;
   border-radius: 50px;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   border-radius: 50px;
   transition: all 0.35s ease-in-out;
