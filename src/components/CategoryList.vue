@@ -33,7 +33,7 @@ export default {
         };
     },
     getCategirues () {
-      const pathCategories = 'http://localhost:8000/categories'
+      const pathCategories = 'https://gopodcastapi.azurewebsites.net/categories'
 
       axios.get(pathCategories)
         .then((res) => {

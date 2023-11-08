@@ -84,7 +84,7 @@ export default {
       }
 
       // formData.append('episodeImage', this.episodeImage);
-      const path = 'http://localhost:5000/podcasts/' + this.podcastId + '/episodes' 
+      const path = 'https://gopodcastapi.azurewebsites.net/podcasts/' + this.podcastId + '/episodes' 
       axios.post(path, formData, axiosConfig, {
         headers: {
           'Content-Type': 'multipart/form-data',

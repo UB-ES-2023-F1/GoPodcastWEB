@@ -81,7 +81,7 @@ import axios from 'axios'
         methods: {
             getPodcast() {
                 const podcastId = this.$route.params.id;
-                const pathPodcast = `http://localhost:8000/podcasts/${podcastId}`;
+                const pathPodcast = `https://gopodcastapi.azurewebsites.net/podcasts/${podcastId}`;
 
                 axios.get(pathPodcast).then((resPodcast) => {
                     this.podcast = resPodcast.data;
@@ -92,7 +92,7 @@ import axios from 'axios'
             },
             toggleFollow() {
                 const podcastId = this.podcast.id;
-                const path = `http://localhost:8000/followPodcast/${podcastId}`;
+                const path = `https://gopodcastapi.azurewebsites.net/followPodcast/${podcastId}`;
 
                 if (this.podcast.isFollowing) {
                     axios.delete(path).then(response => {

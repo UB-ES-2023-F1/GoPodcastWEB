@@ -74,7 +74,7 @@ export default {
                 withCredentials: true
             }
 
-            const path = 'http://localhost:5000/login' // Descomentar y modificar por el endpoint correcto
+            const path = 'https://gopodcastapi.azurewebsites.net/login' // Descomentar y modificar por el endpoint correcto
             axios.post(path, parameters, axiosConfig)
             .then((res) => {
                 this.setUserIsLoggedIn(true)

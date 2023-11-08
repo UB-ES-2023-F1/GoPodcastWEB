@@ -113,7 +113,7 @@ export default {
             }
 
             console.log(parameters)
-            const path = 'http://localhost:5000/podcasts' // Descomentar y modificar por el endpoint correcto
+            const path = 'https://gopodcastapi.azurewebsites.net/podcasts' // Descomentar y modificar por el endpoint correcto
             axios.post(path, formData, axiosConfig, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

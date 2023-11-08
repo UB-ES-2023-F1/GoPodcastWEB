@@ -34,7 +34,7 @@
       };
     },
     getPodcasts () {
-      const pathPodcasts = 'http://localhost:8000/podcasts/'
+      const pathPodcasts = 'https://gopodcastapi.azurewebsites.net/podcasts/'
 
       axios.get(pathPodcasts)
         .then((res) => {
