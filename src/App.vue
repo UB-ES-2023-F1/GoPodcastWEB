@@ -26,8 +26,8 @@ export default {
 #slogan{
   color: var(--primary-color);
   font-style: italic;
-  font-family: 'Lucida Sans Unicode';
-  font-weight: 800;
+  /* font-family: 'Lucida Sans Unicode'; */
+  /* font-weight: 800; */
 }
 
 a{

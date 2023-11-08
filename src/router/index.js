@@ -1,23 +1,68 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Register from '../views/Register.vue'
-import Login from '../views/Login.vue'
+import store from '../store';
+
 
 const routes = [
   {
     path: '/',
-    name: 'Register',
-    component: Register
+    name: 'Home',
+    component: () => import('../views/Home.vue')
   },
   {
-    path: '/Login',
+    path: '/register',
+    name: 'Register',
+    component: () => import('../views/Register.vue')
+  },
+  {
+    path: '/login',
     name: 'Login',
-    component: Login
+    component: () => import('../views/Login.vue')
+  },
+  {
+    path: '/publish/podcast',
+    name: 'PublishPodcast',
+    component: () => import('../views/PublishPodcast.vue'),
+    beforeEnter: (to, from, next) => {
+      const userIsLoggedIn = store.state.userIsLoggedIn;
+      if (userIsLoggedIn) {
+        next();
+      } else {
+        next('/login'); //Para restringir el acceso a este ednpoint, redirigimos al usuario a '/login' si no está loggeado 
+      }
+    }
+  },
+  {
+    path: '/publish/episode',
+    name: 'PublishEpisode',
+    component: () => import('../views/PublishEpisode.vue'),
+    beforeEnter: (to, from, next) => {
+      const userIsLoggedIn = store.state.userIsLoggedIn;
+      if (userIsLoggedIn) {
+        next();
+      } else {
+        next('/login'); //Para restringir el acceso a este ednpoint, redirigimos al usuario a '/login' si no está loggeado 
+      }
+    }
+  },
+  /*
+  {
+    path: '/visualize/:podcastId',
+    name: 'VisualizePodcast',
+    component: () => import('../views/VisualizePodcast.vue')
   }
+*/
+  {
+    path: '/visualize/:id',
+    name: 'VisualizePodcast',
+    component: () => import('../views/VisualizePodcast.vue')
+  },
+  
+  
 ]
 
 const router = createRouter({
   history: createWebHistory(),
   routes
-})
+});
 
-export default router
+export default router;
