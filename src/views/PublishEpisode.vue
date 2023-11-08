@@ -92,7 +92,7 @@ export default {
       })
         .then((response) => {
           console.log(response);
-          this.$toast.success('Episode published successfully');
+          alert('Episode published successfully');
         })
         .catch((error) => {
           console.log(error);
