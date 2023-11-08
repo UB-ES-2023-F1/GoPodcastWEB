@@ -3,7 +3,7 @@
     <h2>Browse Categories</h2>
     <div class="categories">
         <div v-for="category in categories" :key="category.id" class="category" ref="categoriesContainer">
-            <img :src="'src/assets/'+category.image_url" :alt="category.title">
+            <img :src="'../src/assets/'+category.image_url" :alt="category.title">
             <span class="name text-center">{{ category.title }}</span>
         </div>
     </div>

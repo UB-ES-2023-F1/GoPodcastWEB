@@ -3,7 +3,7 @@
       <div class="podcasts overflow-x-auto flex-nowrap overflow-x-hidden" ref="podcastsContainer">
         <div v-for="podcast in podcasts" :key="podcast.id" class="podcast">
           <a :href="'/visualize/' + podcast.id">
-            <img :src="'../assets/'+podcast.image_url" :alt="podcast.title">
+            <img :src="'../src/assets/'+podcast.image_url" :alt="podcast.title">
           </a>
           <span class="name">{{ podcast.title }}</span>
         </div>

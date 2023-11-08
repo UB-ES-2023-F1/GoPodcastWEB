@@ -2,7 +2,7 @@
     <div class="popular podcasts-container m-0 p-0">
       <div class="podcasts overflow-x-auto flex-nowrap overflow-x-hidden" ref="podcastsContainer">
         <div v-for="podcast in podcasts" :key="podcast.id" class="podcast">
-          <img :src="'src/assets/'+podcast.image_url" :alt="podcast.title">
+          <img :src="'../src/assets/'+podcast.image_url" :alt="podcast.title">
           <span class="name">{{ podcast.title }}</span>
         </div>
       </div>
