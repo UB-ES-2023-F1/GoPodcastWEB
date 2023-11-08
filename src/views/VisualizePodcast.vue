@@ -1,7 +1,9 @@
 <template>
     <div class="visualize container-fluid m-0 p-0">
         <div class="row w-100 m-0">
+            <!-- Sidebar -->
             <Sidebar />
+            <!-- Main content-->
             <div class="visualize-content col-lg-10 col-md-9 col-sm-12 p-0  ">
                 <div class="row w-100 mt-5 ps-5">
                     <div class="search col-6">

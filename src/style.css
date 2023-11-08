@@ -10,19 +10,12 @@
 }
 
 .home {
-  /* background: linear-gradient(to top, #2767df, #112454, #000000, #000000); */
-  
   background: linear-gradient(to top, #18002a, #1b003f, #003339, #000);
-
-  /* background: linear-gradient(to top, #18002a, #100025, #002e59, #000000); */
-  
-  /* background: linear-gradient(to bottom, #063487, #0b2b7b, #000000, #000000); */
-  
-  /* background: linear-gradient(to bottom, #0059ff, #00237b, #000000, #000000); */
-
-  background-size: 400% 400%;
+  background-size: cover; 
+  background-attachment: fixed; 
   animation: gradient 20s ease infinite;
-  height: 100vh;
+  min-height: 100vh;
+  position: relative;
 }
 
 .home-content {
@@ -35,9 +28,11 @@
 
 .visualize {
   background: linear-gradient(to top, #18002a, #1b003f, #003339, #000);
-  background-size: 400% 400%;
+  background-size: cover; 
+  background-attachment: fixed; 
   animation: gradient 20s ease infinite;
-  height: 100vh;
+  min-height: 100vh;
+  position: relative;
 }
 
 .visualize-content {
@@ -129,9 +124,11 @@
 
 .login {
   background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
-  background-size: 400% 400%;
+  background-size: cover; 
+  background-attachment: fixed; 
   animation: gradient 20s ease infinite;
-  height: 100vh;
+  min-height: 100vh;
+  position: relative;
 }
 
 .login-form label {

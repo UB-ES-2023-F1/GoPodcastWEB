@@ -3,11 +3,10 @@
         <div class="container">
             <div class="logo d-flex justify-content-left mb-4 pt-3">
                 <router-link to="/" class="d-flex align-items-center" style="text-decoration: none; align-items:normal;">
-                <img src="../assets/logo_white.png" alt="logo" :style="{width: '40px', height: '40px'}">
-                <h5 class="ms-2  text-white" style="font-size: 2rem;">GoPodcast</h5>
+                    <img src="../assets/logo_white.png" alt="logo" :style="{ width: '40px', height: '40px' }">
+                    <h5 class="ms-2  text-white" style="font-size: 2rem;">GoPodcast</h5>
                 </router-link>
             </div>
-            
             <div class="row ">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="contenedor-reducido">
@@ -80,58 +79,78 @@ export default {
             titulo: null,
             resumen: null,
             descripcion: null,
-            tags: [], 
+            tags: [],
             tagInput: null
         };
     },
     methods: {
-        handleImageCropped(blob){
+        handleImageCropped(blob) {
             this.imagenPortada = blob;
         },
         onSubmit() {
             const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
             console.log('Etiquetas:', tags);
+
+            var formData = new FormData();
+
+            formData.append("cover", this.imagenPortada);
+            formData.append("name", this.titulo)
+            formData.append("summary", this.resumen)
+            formData.append("description", this.descripcion)
+            formData.append("tags", this.tags)
+
             const parameters = {
-                imagenPortada: this.imagenPortada,
-                titulo: this.titulo,
-                resumen: this.resumen,
+                cover: this.imagenPortada,
+                name: this.titulo,
+                summary: this.resumen,
                 descripcion: this.descripcion,
                 tags: this.tags
             }
+
+
+            const axiosConfig = {
+                withCredentials: true
+            }
+
             console.log(parameters)
-            const path = 'http://localhost:5173/podcast' // Descomentar y modificar por el endpoint correcto
-            axios.post(path, parameters)
-            .then((res) => {
-                this.backToHome()
+            const path = 'http://localhost:5000/podcasts' // Descomentar y modificar por el endpoint correcto
+            axios.post(path, formData, axiosConfig, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             })
-            .catch((error) => {
-                alert('Error posting podcast')
-                console.error(error)
-            })  
+                .then((res) => {
+                    alert('Podcast Posted')
+                    this.backToHome()
+                })
+                .catch((error) => {
+                    alert('Error posting podcast')
+                    console.error(error)
+                })
         },
         handleTagInput() {
             const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
             this.tags = tags;
         },
 
-/*            FUTURA IMPLEMENTACIÓN:
-onSubmit() {
-    const formData = new FormData();
-    formData.append('imagenPortada', this.imagenPortada, 'imagen.png'); // 'imagen.png' es el nombre del archivo en el servidor
-
-    // Luego, haz la solicitud HTTP para cargar la imagen
-    const path = 'http://localhost:5173/podcast'; // Modifica esto por tu endpoint correcto
-    axios.post(path, formData)
-      .then((res) => {
-        alert('Podcast Posted');
-        this.backToHome();
-      })
-      .catch((error) => {
-        alert('Error posting podcast');
-        console.error(error);
-      });
-},
-}*/
+        /*            FUTURA IMPLEMENTACIÓN:
+        onSubmit() {
+            const formData = new FormData();
+            formData.append('imagenPortada', this.imagenPortada, 'imagen.png'); // 'imagen.png' es el nombre del archivo en el servidor
+        
+            // Luego, haz la solicitud HTTP para cargar la imagen
+            const path = 'http://localhost:5173/podcast'; // Modifica esto por tu endpoint correcto
+            axios.post(path, formData)
+              .then((res) => {
+                alert('Podcast Posted');
+                this.backToHome();
+              })
+              .catch((error) => {
+                alert('Error posting podcast');
+                console.error(error);
+              });
+        },
+        }*/
         backToHome() {
             this.$router.push('/')
         }
@@ -141,9 +160,9 @@ onSubmit() {
 
 <style scoped>
 .label {
-  font-size: 17px;
-  font-weight: bold; 
-  margin-bottom: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 .tags-container {
   display: flex;
