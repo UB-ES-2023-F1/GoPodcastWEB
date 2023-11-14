@@ -113,6 +113,7 @@ export default {
   padding: 0 20px;
   font-size: 18px;
   background-color: rgba(0, 0, 0, 0.625);
+  color: white;
 }
 
 .search button {
