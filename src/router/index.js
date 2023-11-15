@@ -56,6 +56,11 @@ const routes = [
     name: 'VisualizePodcast',
     component: () => import('../views/VisualizePodcast.vue')
   },
+  {
+    path: '/auxiliar',
+    name: 'Auxi',
+    component: () => import('../views/Auxi.vue')
+  },
   
   
 ]
