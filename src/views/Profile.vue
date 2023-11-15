@@ -1,19 +1,23 @@
 <template>
-    <div class="container-fluid m-0 p-0 h-100">
+    <div class="container-fluid m-0 p-0 h-100 profile">
         <div class="row w-100 m-0">
             <Sidebar />
             <div class="publish col-lg-10 col-md-9 col-sm-12 p-0">
                 <div class="profile-content p-5">
-                    <div>
-                    <img src="../assets/redpanda.jpg" alt="profile" class="profile-img rounded-circle" style="width: 15vw; max-width: 15em;" />
-                    <div style="display: inline-block;" class="ms-4">
-                        <h1 class="profile-name mt-1">{{ user.name }}</h1>
-                        <p class="type opacity-50">USER</p>
-                        <p class="profile-bio mb-0 wrap">{{ user.bio }}</p>
-
+                    <div class="row w-80 ">
+                        <TopBar />
                     </div>
-                </div>
-                    
+                    <div>
+                        <img src="../assets/redpanda.jpg" alt="profile" class="profile-img rounded-circle"
+                            style="width: 15vw; max-width: 15em;" />
+                        <div style="display: inline-block;" class="ms-4">
+                            <h1 class="profile-name mt-1">{{ user.name }}</h1>
+                            <p class="type opacity-50">USER</p>
+                            <p class="profile-bio mb-0 wrap">{{ user.bio }}</p>
+
+                        </div>
+                    </div>
+
                     <div class="favorite-podcasts">
                         <h2 class="label mt-5 mb-3">Favorite Podcasts</h2>
                         <FavoriteList />
@@ -31,6 +35,8 @@
 <style>
 .profile {
     height: 100%;
+    background-color: rgba(0, 0, 0, 0.559);
+
 }
 
 .profile-content {
@@ -40,6 +46,7 @@
     margin: 0;
     padding: 0;
 }
+
 
 .form-content {
     height: 120vh;
@@ -71,6 +78,7 @@
     color: #000000;
     transition: all 0.35s ease-in-out;
 }
+
 </style>
     
 
@@ -78,12 +86,14 @@
 import Sidebar from '../components/Sidebar.vue'
 import StreamLaterList from '../components/StreamLaterList.vue'
 import FavoriteList from '../components/FavoriteList.vue'
+import TopBar from '../components/TopBar.vue'
 
 export default {
     components: {
         Sidebar,
         StreamLaterList,
-        FavoriteList
+        FavoriteList,
+        TopBar
     },
     data() {
         return {
