@@ -4,9 +4,16 @@
             <Sidebar />
             <div class="publish col-lg-10 col-md-9 col-sm-12 p-0">
                 <div class="profile-content p-5">
-                    <img src="../assets/redpanda.jpg" alt="profile" class="profile-img rounded-circle" />
-                    <h1 class="profile-name mt-3 mb-0">{{ user.name }}</h1>
-                    <p class="profile-bio mb-0">{{ user.bio }}</p>
+                    <div>
+                    <img src="../assets/redpanda.jpg" alt="profile" class="profile-img rounded-circle" style="width: 15vw; max-width: 15em;" />
+                    <div style="display: inline-block;" class="ms-4">
+                        <h1 class="profile-name mt-1">{{ user.name }}</h1>
+                        <p class="type opacity-50">USER</p>
+                        <p class="profile-bio mb-0 wrap">{{ user.bio }}</p>
+
+                    </div>
+                </div>
+                    
                     <div class="favorite-podcasts">
                         <h2 class="label mt-5 mb-3">Favorite Podcasts</h2>
                         <FavoriteList />
@@ -83,7 +90,7 @@ export default {
             user: {
                 name: 'John Doe',
                 avatar: 'https://via.placeholder.com/150',
-                bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.',
+                bio: 'Me gustan los podcasts y los pandas rojos, yey! Dame follow para ver mis playlist :D',
                 email: 'johndoe@example.com',
                 location: 'New York, NY',
                 website: 'https://example.com'
