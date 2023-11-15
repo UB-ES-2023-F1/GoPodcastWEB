@@ -47,5 +47,3 @@ jobs:
           DISABLE_ERORRS: true
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm install eslint-config-google --save-dev
-      - run: npx eslint . --fix
