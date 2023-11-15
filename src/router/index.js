@@ -56,6 +56,11 @@ const routes = [
     name: 'VisualizePodcast',
     component: () => import('../views/VisualizePodcast.vue')
   },
+  {
+    path: '/profile/:id',
+    name: 'Profile',
+    component: () => import('../views/Profile.vue')
+  }
   
   
 ]
