@@ -12,7 +12,7 @@
                             style="width: 15vw; max-width: 15em;" />
                         <div style="display: inline-block;" class="ms-4">
                             <h1 class="profile-name mt-1">{{ user.name }}</h1>
-                            <p class="type opacity-50">USER</p>
+                            <p class="type opacity-50">{{ user.type }}</p>
                             <p class="profile-bio mb-0 wrap">{{ user.bio }}</p>
 
                         </div>
@@ -87,6 +87,7 @@ import Sidebar from '../components/Sidebar.vue'
 import StreamLaterList from '../components/StreamLaterList.vue'
 import FavoriteList from '../components/FavoriteList.vue'
 import TopBar from '../components/TopBar.vue'
+import axios from 'axios'
 
 export default {
     components: {
@@ -98,14 +99,23 @@ export default {
     data() {
         return {
             user: {
-                name: 'John Doe',
-                avatar: 'https://via.placeholder.com/150',
+                name: 'Jaime Altozano',
                 bio: 'Me gustan los podcasts y los pandas rojos, yey! Dame follow para ver mis playlist :D',
-                email: 'johndoe@example.com',
-                location: 'New York, NY',
-                website: 'https://example.com'
+                type: 'USER'
             }
         }
+    },
+    getUserInfo() {
+        axios.get('http://localhost:3000/user/1')
+            .then(response => {
+                this.user = response.data
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    },
+    created() {
+        // this.getUserInfo()
     }
 }
 </script>
