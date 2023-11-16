@@ -66,6 +66,17 @@ export default {
       this.setUserIsLoggedIn(false);
     },
   },
+  /*
+  beforeRouteEnter(to, from, next) {
+    const store = app.$store;
+    store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
+    next();
+  },
+*/
+  beforeCreate() {
+    const store = this.$store;
+    store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
+  },
   components: {
     PodcastList,
     CategoryList,

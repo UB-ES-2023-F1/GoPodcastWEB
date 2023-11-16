@@ -6,7 +6,7 @@ const app = createApp(App)
 
 export default new Vuex.Store({
   state: {
-    userIsLoggedIn: false,
+    userIsLoggedIn: true,
   },
   mutations: {
     setUserIsLoggedIn(state, value) {

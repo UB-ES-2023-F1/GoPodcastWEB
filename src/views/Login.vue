@@ -41,7 +41,7 @@
 
 <script>
 import axios from 'axios'
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex';
 
 export default {
     name: 'Login',
@@ -52,6 +52,9 @@ export default {
             showPassword: false,
             loading: false
         }
+    },
+    computed: {
+    ...mapState(['userIsLoggedIn']),
     },
     methods: {
         ...mapMutations(['setUserIsLoggedIn']), // Importa la mutación setUserIsLoggedIn
@@ -90,8 +93,12 @@ export default {
         },
         backToHome() {
             this.$router.push('/')
-        }
-    }
+        },
+    },
+    beforeCreate() {
+        const store = this.$store;
+        store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
+    },
 }
 
 </script>

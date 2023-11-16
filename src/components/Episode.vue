@@ -2,14 +2,14 @@
     <div v-for="episode in podcast.list_of_episodes" :key="episode.id" class="episode">
         <div class="row mt-2 p-2 contenedor-episodio">
             <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                <a :href="'/visualizeEpisode/' + episode.id">
+                <a :href="'/visualize/' + podcast.id + '/visualizeEpisode/' + episode.id">
                     <img :src="episode.episodeImage" alt="Imagen" class="reduced-image borde-redondeado"
                         id="imagen-interactiva" />
                 </a>
             </div>
             <div class="col-12 col-sm-9 col-md-9 col-lg-9">
                 <div class="row">
-                    <a :href="'/visualizeEpisode/' + episode.id">
+                    <a :href="'/visualize/' + podcast.id + '/visualizeEpisode/' + episode.id">
                         <h6>{{ episode.title }} </h6>
                     </a>
                 </div>

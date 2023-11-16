@@ -44,6 +44,11 @@ const routes = [
       }
     }
   },
+  {
+    path: '/visualize/:podcastId/visualizeEpisode/:id',
+    name: 'VisualizeEpisode',
+    component: () => import('../views/VisualizeEpisode.vue')
+  },
   /*
   {
     path: '/visualize/:podcastId',

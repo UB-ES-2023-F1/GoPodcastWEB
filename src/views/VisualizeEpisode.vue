@@ -11,14 +11,7 @@
                         <button>Search</button>
                     </div>
                     <div class="col-6 d-flex justify-content-end">
-                        <!--
-                        <div class="signin  d-flex justify-content-end me-3">
-                            <button @click="$router.push('/login');">Sign in</button>
-                        </div>
-                        <div class="signup d-flex me-2">
-                            <button @click="$router.push('/register');">Sign up</button>
-                        </div>
-                    -->
+                        
                     </div>
                 </div>
                 <div class="row p-5">
@@ -26,22 +19,30 @@
                         <div class="contenedor-reducido mb-5"> 
                             <div class="row mt-5 ps-5 mr-5">
                                 <div class="col-10 col-sm-4 col-md-4 col-lg-4">
-                                    <img :src="podcast.image_url" alt="Imagen" class="reduced-image"/>
+                                    <img :src="episode.episodeImage" alt="Imagen" class="reduced-image mb-4"/>
                                 </div>
                                 <div class="col-10 col-sm-7 col-md-7 col-lg-7 ">
-                                    <h1>{{ podcast.title }}</h1>
+                                    <h1>{{ episode.title }}</h1>
                                     <div>
-                                        <button @click="toggleFollow" class="follow-button mt-2 mb-4" :class="{ following: podcast.isFollowing }">
-                                            {{ podcast.isFollowing ? 'Unfollow' : 'Follow' }}
-                                        </button>
+                                        <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
+                                            :style="{ backgroundColor: randomColor() }">
+                                            {{ tag }}
+                                        </div>
                                     </div>
-                                    <h6>{{ podcast.summary }}</h6>
-                                    <p>{{ podcast.description }}</p>
+                                    <h6>{{ episode.summary }}</h6>
+                                    <p>{{ episode.description }}</p>
                                 </div>
                             </div>
-                            <div class="row mt-3 align-items-center ps-5">
-                                <Episode />
-                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <Comment
+                                v-for="comment in episode.listOfComments"
+                                :key="comment.id"
+                                :comment="comment"
+                                @toggle-like="toggleLike"
+                            />
                         </div>
                     </div>
                 </div>
@@ -53,72 +54,100 @@
 
 <script>
 import Sidebar from '../components/Sidebar.vue';
-import Episode from '../components/Episode.vue';
+import Comment from '../components/Comment.vue';
 import ProgressBar from '../components/ProgressBar.vue';
 import axios from 'axios'
 
     export default {
         components: {
             Sidebar,
-            Episode,
+            Comment,
             ProgressBar,
         },
         data() {
             return {
-                podcast:{
-                    id: 1,
-                    image_url: '/src/assets/podcasts/Moonlight.jpg',
-                    title: "Moonlight",
-                    summary: "Podcast talking about Cruz Cafuné's new album",
-                    description: "Moonlight 922 se trata del segundo trabajo musical de Cruz Cafuné, dos años más tarde de la publicación de su antecesor, Maracucho Bueno Muere Chiquito, siendo este estrenado el día 10 de enero del año 2020 en todas las plataformas digitales.El álbum fue publicado tras el lanzamiento de cuatro adelantos de las trece canciones que serían publicadas; teniendo en cuenta que finalmente, “En Mi Zona” no acabaría formando parte de la Mixtape. Debe ser mencionado, que en un principio, la idea del artista era publicar música durante todas las lunas llenas; y que solo estuviera disponible durante el transcurro de estas, de ahí parte del nombre del álbum; aunque finalmente fue algo que no pudo llevarse a cabo.",
-                    list_of_episodes: [
-                        { id: 1, title: 'intro', episodeImage: "/src/assets/podcasts/MMCD.jpg", description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", audio_url: '/src/assets/audio/Moonlight_audio.mp3', tags: ["Intro", "Cruzzi", "Moonlight"], listOfComments: [], audioElement: null, isLiked: false },
-                        { id: 2, title: 'mi_isla', episodeImage: "/src/assets/podcasts/MBMC.jpg", description: "Canción de Cruzzi inicio album Moonlight922", audio_url: '/src/assets/audio/Mi_isla_audio.mp3', tags: ["LPGC", "Cruzzi", "Luna"], listOfComments: [], audioElement: null, isLiked: false },
-                    ],
-                    author: "Cruz Cafuné",
-                    isFollowing: false,
+                episode:{ 
+                    id: 1, 
+                    title: 'intro', 
+                    episodeImage: "/src/assets/podcasts/MMCD.jpg", 
+                    description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", 
+                    audio_url: '/src/assets/audio/Moonlight_audio.mp3', 
+                    tags: ["Intro", "Cruzzi", "Moonlight"], 
+                    listOfComments: [
+                    {
+                        id: "p5jg9d8k",
+                        author: 'User1',
+                        date: new Date(),
+                        text: "Comentario Prueba1",
+                        liked: false,
+                        replies: [
+                            {
+                            id: "p5jg9d81",
+                            author: 'User2',
+                            date: new Date(),
+                            text: "Comentario Prueba Res1",
+                            liked: false,
+                            replies: [
+                                {
+                                id: "p5jg9d71",
+                                author: 'User2',
+                                date: new Date(),
+                                text: "Comentario Prueba Res1Res1",
+                                liked: false,
+                                replies: [],
+                                },
+                            ],
+                            },
+                            {
+                            id: "p5jg9d31",
+                            author: 'User3',
+                            date: new Date(),
+                            text: "Comentario Prueba Res2",
+                            liked: false,
+                            replies: [],
+                            },
+                        ]},
+                        {
+                        id: "p5jg9d30",
+                        author: 'User3',
+                        date: new Date(),
+                        text: "Comentario Prueba 2",
+                        liked: false,
+                        replies: [],
+                        },
+                    ], 
+                    audioElement: null, 
+                    isLiked: false 
                 },
             };
         },
         methods: {
-            getPodcast() {
-                const podcastId = this.$route.params.id;
-                const pathPodcast = `http://localhost:8000/podcasts/${podcastId}`;
+            getEpisode() {
+                const podcastId = this.$route.params.podcastId;
+                const episodeId = this.$route.params.id;
+                const pathEpisode = `http://localhost:8000/podcasts/${podcastId}/episodes/${episodeId}`;
 
-                axios.get(pathPodcast).then((resPodcast) => {
-                    this.podcast = resPodcast.data;
+                axios.get(pathEpisode).then((resEpisode) => {
+                    this.episode = resEpisode.data;
                 })
                 .catch((error) => {
                     console.error(error);
                 });
             },
-            toggleFollow() {
-                const podcastId = this.podcast.id;
-                const path = `http://localhost:8000/followPodcast/${podcastId}`;
-
-                if (this.podcast.isFollowing) {
-                    axios.delete(path).then(response => {
-                        this.podcast.isFollowing = false;
-                        console.log(response.data);
-                    })
-                    .catch(error => {
-                        console.error('Error al dejar de seguir el podcast: ', error);
-                    });
-                } else {
-                    axios.post(path).then(response => {
-                        this.podcast.isFollowing = true;
-                        console.log(response.data);
-                    })
-                    .catch(error => {
-                        console.error('Error al seguir el podcast: ', error);
-                    });
+            randomColor() {
+                const letters = "0123456789ABCDEF";
+                let color = "#";
+                for (let i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
                 }
+                return color;
             },
             
         },
         created () {
             // Descomentar cuando tengamos los endpoints listos
-            // this.getPodcast() 
+            // this.getEpisode() 
+            this.episodeId = this.$route.params.id;
         },
         
     };
@@ -127,6 +156,14 @@ import axios from 'axios'
 <style>
 .visualize {
     height: 100%;
+}
+
+.tag {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    color: white;
 }
 
 .visualize-content {
