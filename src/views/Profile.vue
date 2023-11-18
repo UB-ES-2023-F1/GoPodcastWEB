@@ -26,6 +26,10 @@
                         <h2 class="label mt-5 mb-3">Watch Later</h2>
                         <StreamLaterList />
                     </div>
+                    <div class="my-podcasts">
+                        <h2 class="label mt-5 mb-3">My Podcasts</h2>
+                        <MyPodcasts />
+                    </div>
                 </div>
             </div>
         </div>
@@ -79,6 +83,10 @@
     transition: all 0.35s ease-in-out;
 }
 
+.my-podcasts {
+    color: rgb(119, 0, 255);
+}
+
 </style>
     
 
@@ -86,6 +94,7 @@
 import Sidebar from '../components/Sidebar.vue'
 import StreamLaterList from '../components/StreamLaterList.vue'
 import FavoriteList from '../components/FavoriteList.vue'
+import MyPodcasts from '../components/MyPodcasts.vue'
 import TopBar from '../components/TopBar.vue'
 import axios from 'axios'
 
@@ -94,6 +103,7 @@ export default {
         Sidebar,
         StreamLaterList,
         FavoriteList,
+        MyPodcasts,
         TopBar
     },
     data() {
