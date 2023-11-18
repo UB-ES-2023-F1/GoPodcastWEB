@@ -1,11 +1,11 @@
 <template>
     <div class="m-0 p-0">
       <div class="podcasts overflow-x-auto flex-nowrap overflow-x-hidden" ref="podcastsContainer">
-        <div v-for="podcast in podcasts" :key="podcast.id" class="podcast">
-          <a :href="'/visualize/' + podcast.id">
-            <img :src="'../src/assets/'+podcast.image_url" :alt="podcast.title">
+        <div v-for="episode in episodes_dummy" :key="episode.id" class="podcast">
+          <a :href="'/visualize/' + episode.id">
+            <img :src="'../src/assets/'+episode.podcast.image_url" :alt="episode.title">
           </a>
-          <span class="name">{{ podcast.title }}</span>
+          <span class="name">{{ episode.title }}</span>
         </div>
       </div>
     </div>
@@ -17,34 +17,52 @@
   export default {
     data() {
       return {
-        // Com encara no tenim l'endpoint, dummy data:
-        podcasts: [
-          { id: 9, image_url: 'podcasts/podcast4.jpg', title: 'podcast4' },
-          { id: 10, image_url: 'podcasts/podcast5.jpg', title: 'podcast5' },
-          { id: 11, image_url: 'podcasts/podcast6.jpg', title: 'podcast6' },
-        ],
+        episodes: [],
+         // Com encara no tenim l'endpoint, dummy data:
+        episodes_dummy: [
+          { id: 1, title: "EP1: Into the Woods", description: "", id_podcast: 4, 
+            podcast: { id: 4, title: "White Xmas", image_url: "podcasts/podcast4.jpg" }},
+          { id: 2, title: "EP2: White Xmas", description: "", id_podcast: 6,
+            podcast: { id: 6, title: "White Xmas", image_url: "podcasts/podcast6.jpg" }},
+          { id: 3, title: "EP3: Destroy Santa!!", description: "", id_podcast: 6,
+            podcast: { id: 6, title: "White Xmas", image_url: "podcasts/podcast6.jpg" }},
+          { id: 4, title: "EP7: Silly Lily", description: "", id_podcast: 5,
+            podcast: { id: 5, title: "Lily Adventures", image_url: "podcasts/podcast5.jpg" }},
+          // { id: 5, title: "White Xmas", description: "", id_podcast: 5,
+          //   podcast: { id: 5, title: "White Xmas", image_url: "podcasts/podcast6.jpg" }},
+          // { id: 6, title: "White Xmas", description: "", id_podcast: 5,
+          //   podcast: { id: 5, title: "White Xmas", image_url: "podcasts/podcast1.jpg" }},
+          // { id: 7, title: "White Xmas", description: "", id_podcast: 5,
+          //   podcast: { id: 5, title: "White Xmas", image_url: "podcasts/podcast1.jpg" }},
+          // { id: 8, title: "White Xmas", description: "", id_podcast: 5,
+          //   podcast: { id: 5, title: "White Xmas", image_url: "podcasts/podcast1.jpg" }},
+        ]
+
+       
+        // podcasts: [
+        //   { id: 9, image_url: 'podcasts/podcast4.jpg', title: 'podcast4' },
+        //   { id: 10, image_url: 'podcasts/podcast5.jpg', title: 'podcast5' },
+        //   { id: 11, image_url: 'podcasts/podcast6.jpg', title: 'podcast6' },
+        // ],
       };
     },
     getStreamLater () {
-      const pathPodcasts = 'http://localhost:8000/streamlater/user'
+      const pathStreamLater = 'http://localhost:8000/stream_later'
+      const pathEpisodes = 'http://localhost:8000/podcasts/'
 
       axios.get(pathPodcasts)
         .then((res) => {
-          var podcasts = res.data.filter((podcast) => {
-            return podcast.id != null
+          var episodes = res.data.filter((episode) => {
+            return episode.id != null
           })
-          console.log(podcasts)
+          console.log(episodes)
           var promises = []
-          for (let i = 0; i < podcasts.length; i++) {
-            const promise = axios.get(pathPodcasts + podcasts[i].title)
+          for (let i = 0; i < episodes.length; i++) {
+            const promise = axios.get(pathPodcasts + episodes[i].id)
               .then((resPodcast) => {
-                delete podcasts[i].title
-                console.log('resComp')
-                console.log(resPodcast.data)
-                podcasts[i].info = {
-                  'description': resPodcast.data.description,
-                  'category': resPodcast.data.category
-                  // 'image': resPodcast.data.image_url
+                episodes[i].podcast = {
+                  'podcast_title': resPodcast.data.title,
+                  'podcast_image_url': resPodcast.data.image_url
                 }
               })
               .catch((error) => {
@@ -55,8 +73,8 @@
             promises.push(promise)
           }
           Promise.all(promises).then((_) => {
-            console.log(podcasts)
-            this.podcasts = podcasts
+            console.log(episodes)
+            this.episodes = episodes
           })
         })
         .catch((error) => {
