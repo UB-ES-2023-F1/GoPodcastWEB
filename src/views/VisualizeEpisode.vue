@@ -23,9 +23,20 @@
                                 </div>
                                 <div class="col-12 col-sm-7 col-md-7 col-lg-7 ">
                                     <title>{{ episode.title }}</title>
-                                    <button class="play-like-button" @click="togglePlayback(this.episode)">
-                                        <i class="fas fa-play-circle"></i>
-                                    </button>
+                                    <div class="row">
+                                        <div class="col-3 col-sm-1 col-md-1 col-lg-1">
+                                            <button class="play-button" @click="togglePlayback(this.episode)">
+                                                <i class="fas fa-play-circle"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-3 col-sm-1 col-md-1 col-lg-1"></div>
+                                        <div class="col-3 col-sm-1 col-md-1 col-lg-1 mt-3">
+                                            <button class="like-button" @click="toggleLike()">
+                                                <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p></p>
                                     <div class="in-same-line">
                                         <h6>{{ episode.author }}</h6>
                                         <span class="separation">&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;</span>
@@ -183,13 +194,13 @@ import axios from 'axios'
                     return `${Math.floor(seconds)} s`;
                 }
             },
-            toggleLike(episode) {
-                const episodeId = episode.id;
+            toggleLike() {
+                const episodeId = this.episode.id;
                 const path = `http://localhost:8000/likeEpisode/${episodeId}`;
 
-                if (episode.isLiked) {
+                if (this.episode.isLiked) {
                     axios.delete(path).then(response => {
-                        episode.isLiked = false;
+                        this.episode.isLiked = false;
                         console.log(response.data);
                     })
                         .catch(error => {
@@ -197,7 +208,7 @@ import axios from 'axios'
                         });
                 } else {
                     axios.post(path).then(response => {
-                        episode.isLiked = true;
+                        this.episode.isLiked = true;
                         console.log(response.data);
                     })
                         .catch(error => {
@@ -267,14 +278,31 @@ import axios from 'axios'
   align-items: baseline;
 }
 
+.vert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.like-button {
+    background: transparent;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #fff;
+    transition: color 0.3s;
+    margin-top: 0;
+    margin-bottom: 0;
+    align-items: center;
+    
+}
 
-.in-same-line h6,
-.in-same-line duration {
-  margin-right: 5px; /* Ajusta el espacio entre el título y la duración */
+.like-button:hover {
+    color: #007BFF;
+    transform: scale(1.2);
 }
 
 
-.play-like-button {
+.play-button {
     background: transparent;
     border: none;
     font-size: 50px;
@@ -285,7 +313,7 @@ import axios from 'axios'
     margin-bottom: 0;
 }
 
-.play-like-button:hover {
+.play-button:hover {
     color: #007BFF;
     transform: scale(1.2);
 }
