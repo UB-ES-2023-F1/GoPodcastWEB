@@ -58,12 +58,16 @@ import { mapState, mapMutations } from 'vuex';
 export default {
   name: 'Home',
   computed: {
+    userIsLoggedIn() {
+      return this.$store.state.userIsLoggedIn;
+    },
     ...mapState(['userIsLoggedIn']),
   },
   methods: {
     ...mapMutations(['setUserIsLoggedIn']),
     signOut() {
       this.setUserIsLoggedIn(false);
+      this.$store.commit('setUserIsLoggedIn', false);
     },
   },
   /*
@@ -72,11 +76,12 @@ export default {
     store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
     next();
   },
-*/
+
   beforeCreate() {
     const store = this.$store;
     store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
   },
+  */
   components: {
     PodcastList,
     CategoryList,

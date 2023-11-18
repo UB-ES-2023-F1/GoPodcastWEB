@@ -14,29 +14,43 @@
                         
                     </div>
                 </div>
-                <div class="row p-5">
+                <div class="row p-5 w-100">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="contenedor-reducido mb-5"> 
-                            <div class="row mt-5 ps-5 mr-5">
-                                <div class="col-10 col-sm-4 col-md-4 col-lg-4">
+                            <div class="row mt-4 ps-4 mr-4">
+                                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                     <img :src="episode.episodeImage" alt="Imagen" class="reduced-image mb-4"/>
                                 </div>
-                                <div class="col-10 col-sm-7 col-md-7 col-lg-7 ">
-                                    <h1>{{ episode.title }}</h1>
+                                <div class="col-12 col-sm-7 col-md-7 col-lg-7 ">
+                                    <title>{{ episode.title }}</title>
+                                    <button class="play-like-button" @click="togglePlayback(this.episode)">
+                                        <i class="fas fa-play-circle"></i>
+                                    </button>
+                                    <div class="in-same-line">
+                                        <h6>{{ episode.author }}</h6>
+                                        <span class="separation">&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;</span>
+                                        <duration>{{ episode.duration }}</duration>
+                                    </div>
+                                    
+                                    
                                     <div>
                                         <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
-                                            :style="{ backgroundColor: randomColor() }">
+                                            :style="{ backgroundColor: randomColor(tag) }">
                                             {{ tag }}
                                         </div>
+                                        
                                     </div>
-                                    <h6>{{ episode.summary }}</h6>
+                                    <p></p>
+                                    <p></p>
                                     <p>{{ episode.description }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
+                        <div class="col-12 col-sm-8 col-md-8 col-lg-8">
+                            <h2>Comments:</h2>
                             <Comment
                                 v-for="comment in episode.listOfComments"
                                 :key="comment.id"
@@ -44,11 +58,14 @@
                                 @toggle-like="toggleLike"
                             />
                         </div>
+                        <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
                     </div>
                 </div>
             </div>
         </div>
-            
+        <div v-if="currentEpisode">
+            <ProgressBar ref="progressBar" />
+        </div>
     </div>   
 </template>
 
@@ -68,79 +85,162 @@ import axios from 'axios'
             return {
                 episode:{ 
                     id: 1, 
-                    title: 'intro', 
+                    title: 'Intro', 
                     episodeImage: "/src/assets/podcasts/MMCD.jpg", 
                     description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", 
                     audio_url: '/src/assets/audio/Moonlight_audio.mp3', 
                     tags: ["Intro", "Cruzzi", "Moonlight"], 
                     listOfComments: [
                     {
-                        id: "p5jg9d8k",
-                        author: 'User1',
                         date: new Date(),
-                        text: "Comentario Prueba1",
-                        liked: false,
+                        text: "¡Este episodio fue increíblemente informativo! Me encantó cómo los anfitriones profundizaron en el tema y proporcionaron datos detallados que realmente ampliaron mi comprensión. ¡Aprendí mucho en solo unos minutos!",
                         replies: [
                             {
-                            id: "p5jg9d81",
-                            author: 'User2',
                             date: new Date(),
-                            text: "Comentario Prueba Res1",
-                            liked: false,
+                            text: "La calidad del sonido en este episodio es excepcional. La producción está muy bien hecha, lo que hizo que la experiencia auditiva fuera muy agradable. ¡Se nota el esfuerzo que pusieron en la edición para garantizar una excelente calidad!",
                             replies: [
                                 {
-                                id: "p5jg9d71",
-                                author: 'User2',
                                 date: new Date(),
-                                text: "Comentario Prueba Res1Res1",
-                                liked: false,
+                                text: "Teneis razón ambos, me encantó el episodio!!",
                                 replies: [],
                                 },
                             ],
                             },
                             {
-                            id: "p5jg9d31",
-                            author: 'User3',
                             date: new Date(),
-                            text: "Comentario Prueba Res2",
-                            liked: false,
+                            text: "Tienes razón este episodio es un 10!",
                             replies: [],
                             },
                         ]},
                         {
-                        id: "p5jg9d30",
-                        author: 'User3',
                         date: new Date(),
-                        text: "Comentario Prueba 2",
-                        liked: false,
+                        text: "Los invitados en este episodio aportaron perspectivas fascinantes. Me encantó escuchar diferentes voces y opiniones sobre el tema. Fue genial ver cómo los anfitriones facilitaron la conversación de manera que todos pudieron expresar sus ideas de manera clara y concisa.",
                         replies: [],
                         },
-                    ], 
+                    ],
+                    author: "Cruz Cafuné",
                     audioElement: null, 
                     isLiked: false 
                 },
+                currentEpisode: null,
+                tagColors: {},
             };
+            
         },
         methods: {
+            togglePlayback(episode) {
+                if (this.currentEpisode === episode) {
+                    // Si el mismo episodio está en reproducción, detén la reproducción
+                    this.stopPlayback(episode);
+                    this.currentEpisode = null;
+                } else {
+                    // Si se selecciona un nuevo episodio, detén la reproducción actual y comienza el nuevo episodio
+                    this.stopCurrentPlayback();
+                    this.playEpisode(episode);
+                }
+            },
+            playEpisode(episode) {
+                const audioElement = new Audio(episode.audio_url);
+                episode.audioElement = audioElement;
+                this.currentEpisode = episode;
+                audioElement.addEventListener("loadedmetadata", () => {
+                    const duration = audioElement.duration;
+                    episode.duration = this.formatDuration(duration);
+                    audioElement.play(); 
+                });
+                if (episode !== episode) {
+                    this.stopPlayback(ep); 
+                }
+                this.preloadAudioDuration(ep);
+            },
+            stopPlayback(episode) {
+                if (episode.audioElement) {
+                    episode.audioElement.pause();
+                }
+            },
+            stopCurrentPlayback() {
+                if (this.currentEpisode) {
+                    this.stopPlayback(this.currentEpisode);
+                }
+            },
+            preloadAudioDuration(episode) {
+                const audioElement = new Audio(episode.audio_url);
+                audioElement.addEventListener("loadedmetadata", () => {
+                    const duration = audioElement.duration;
+                    episode.duration = this.formatDuration(duration);
+                });
+            },
+            formatDuration(seconds) {
+                if (seconds >= 3600) {
+                    const hours = Math.floor(seconds / 3600);
+                    const minutes = Math.floor((seconds % 3600) / 60);
+                    return `${hours} h ${minutes} min`;
+                } else if (seconds >= 60) {
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = Math.floor(seconds % 60);
+                    return `${minutes} min ${remainingSeconds} s`;
+                } else {
+                    return `${Math.floor(seconds)} s`;
+                }
+            },
+            toggleLike(episode) {
+                const episodeId = episode.id;
+                const path = `http://localhost:8000/likeEpisode/${episodeId}`;
+
+                if (episode.isLiked) {
+                    axios.delete(path).then(response => {
+                        episode.isLiked = false;
+                        console.log(response.data);
+                    })
+                        .catch(error => {
+                            console.error('Error al eliminar el like: ', error);
+                        });
+                } else {
+                    axios.post(path).then(response => {
+                        episode.isLiked = true;
+                        console.log(response.data);
+                    })
+                        .catch(error => {
+                            console.error('Error al dar like: ', error);
+                        });
+                }
+            },
+            randomColor(tag) {
+                if (!this.tagColors[tag]) {
+                    const getRandomHex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+                    
+                    let color;
+                    do {
+                    color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
+                    } while (this.isColorTooLight(color)); // Comprueba si el color es demasiado claro
+                    
+                    this.tagColors[tag] = color; // Almacena el color generado en tagColors
+                }
+
+                return this.tagColors[tag];
+            },
+
+            // Función que permita la legibilidad del texto de la etiqueta en relación del color de fondo
+            isColorTooLight(color) {
+                const r = parseInt(color.slice(1, 3), 16);
+                const g = parseInt(color.slice(3, 5), 16);
+                const b = parseInt(color.slice(5, 7), 16);
+
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+                return brightness > 128;
+            },
             getEpisode() {
                 const podcastId = this.$route.params.podcastId;
                 const episodeId = this.$route.params.id;
                 const pathEpisode = `http://localhost:8000/podcasts/${podcastId}/episodes/${episodeId}`;
 
                 axios.get(pathEpisode).then((resEpisode) => {
-                    this.episode = resEpisode.data;
+                    episode = resEpisode.data;
                 })
                 .catch((error) => {
                     console.error(error);
                 });
-            },
-            randomColor() {
-                const letters = "0123456789ABCDEF";
-                let color = "#";
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
             },
             
         },
@@ -149,11 +249,47 @@ import axios from 'axios'
             // this.getEpisode() 
             this.episodeId = this.$route.params.id;
         },
+        mounted() {
+            // Precargar la duración al cargar la página
+            this.preloadAudioDuration(this.episode);
+        },
         
     };
 </script>
 
 <style>
+.contenedor-reducido h1 {
+    word-wrap: break-word;
+}
+
+.in-same-line {
+  display: flex;
+  align-items: baseline;
+}
+
+
+.in-same-line h6,
+.in-same-line duration {
+  margin-right: 5px; /* Ajusta el espacio entre el título y la duración */
+}
+
+
+.play-like-button {
+    background: transparent;
+    border: none;
+    font-size: 50px;
+    cursor: pointer;
+    color: #fff;
+    transition: color 0.3s;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.play-like-button:hover {
+    color: #007BFF;
+    transform: scale(1.2);
+}
+
 .visualize {
     height: 100%;
 }
@@ -164,6 +300,7 @@ import axios from 'axios'
     margin: 5px;
     border-radius: 20px;
     color: white;
+    font-size: 14px
 }
 
 .visualize-content {
@@ -171,6 +308,18 @@ import axios from 'axios'
     overflow: hidden;
     align-items: start;
     justify-content: flex-start;
+}
+title {
+    display: block;
+    font-size: 3.5em;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 1;
+
+}
+duration {
+    font-size: 17px;
 }
 
 .reduced-image {

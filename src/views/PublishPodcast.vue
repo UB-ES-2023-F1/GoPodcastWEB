@@ -132,25 +132,6 @@ export default {
             const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
             this.tags = tags;
         },
-
-        /*            FUTURA IMPLEMENTACIÓN:
-        onSubmit() {
-            const formData = new FormData();
-            formData.append('imagenPortada', this.imagenPortada, 'imagen.png'); // 'imagen.png' es el nombre del archivo en el servidor
-        
-            // Luego, haz la solicitud HTTP para cargar la imagen
-            const path = 'http://localhost:5173/podcast'; // Modifica esto por tu endpoint correcto
-            axios.post(path, formData)
-              .then((res) => {
-                alert('Podcast Posted');
-                this.backToHome();
-              })
-              .catch((error) => {
-                alert('Error posting podcast');
-                console.error(error);
-              });
-        },
-        }*/
         backToHome() {
             this.$router.push('/')
         }

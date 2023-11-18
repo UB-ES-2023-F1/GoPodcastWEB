@@ -1,11 +1,20 @@
 <template>
     <div class="comment" :style="{ marginLeft: isReply ? '20px' : '0' }">
       <div class="comment-header">
-        <span class="comment-author">{{ comment.author }}</span>
+        <!--<span class="comment-author">{{ comment.author }}</span>-->
         <span class="comment-date">{{ formatDate(comment.date) }}</span>
       </div>
       <div class="comment-content">
         <p>{{ comment.text }}</p>
+      </div>
+
+      <div class="row">
+        <form @submit.prevent="publicarPodcast" class="publish-form">
+          <div class="form-group">
+            <textarea class="form-control" id="new_reply" v-model="newReplyText" placeholder="Add a reply" style="width: 100%;"></textarea>
+          </div>
+          <button type="submit" class="btn-submit btn btn-dark mt-3" @click="onSubmit">Add Reply</button>
+        </form>
       </div>
 
       <!--
@@ -20,20 +29,11 @@
         <template v-if="comment.replies && comment.replies.length > 0">
           <Comment
             v-for="reply in comment.replies"
-            :key="reply.id"
             :comment="reply"
             @toggle-like-reply="toggleLikeReply"
             :is-reply="true"
           />
         </template>
-
-    <!--
-        <div class="add-reply">
-          <textarea v-model="newReplyText" placeholder="Add a reply"></textarea>
-          <button @click="addReply">Add Reply</button>
-        </div>
-    -->
-
       </div>
     </div>
   </template>
@@ -43,7 +43,7 @@
     name: 'Comment',
     data() {
       return {
-        // newReplyText: '',
+        newReplyText: '',
       };
     },
     props: {
@@ -56,28 +56,24 @@
         default: false,
       },
     },
+
     methods: {
       formatDate(date) {
         return date.toDateString();
       },
-    /*
-      toggleLike() {
-        this.$emit('toggle-like', this.comment.id);
-      },
-    */
-    /*
-      addReply() {
+      onSubmit() {
         const newReply = {
-          id: generateUniqueId(),
-          author: 'User', // Puedes reemplazar 'User' con los datos reales del usuario
           date: new Date(),
           text: this.newReplyText,
-          liked: false,
           replies: [], // No hay respuestas para la respuesta inicialmente
         };
   
         this.comment.replies.push(newReply);
         this.newReplyText = ''; // Limpiar el campo de entrada después de agregar una respuesta
+      },
+    /*
+      toggleLike() {
+        this.$emit('toggle-like', this.comment.id);
       },
     */
     },
@@ -86,9 +82,20 @@
   
   <style scoped>
   .comment {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin: 10px 0;
+    background-color: #333;
+    border: 1px solid #a1a1a1;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    padding: 15px;
+    margin: 15px 0;
+    transition: background-color 0.3s ease;
+    text-align: justify;
+  }
+
+  .btn-submit{
+    font-size: 14px;
+    padding: 0.1rem 1rem;  
   }
   
   .comment-header {
@@ -96,12 +103,16 @@
     justify-content: space-between;
     margin-bottom: 5px;
   }
-  
+  /*
   .comment-author {
     font-weight: bold;
+    color: #bbb;
   }
+  */
   
   .comment-date {
+    font-size: 0.8em;
+
     color: #888;
   }
   
@@ -116,6 +127,9 @@
   
   .add-reply {
     margin-top: 10px;
+  }
+  .comment-content p {
+    word-wrap: break-word;
   }
   </style>
   

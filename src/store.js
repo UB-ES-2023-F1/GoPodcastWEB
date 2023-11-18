@@ -6,11 +6,12 @@ const app = createApp(App)
 
 export default new Vuex.Store({
   state: {
-    userIsLoggedIn: true,
+    userIsLoggedIn: localStorage.getItem('userIsLoggedIn') === 'true' || false, // Recuperar desde localStorage
   },
   mutations: {
     setUserIsLoggedIn(state, value) {
       state.userIsLoggedIn = value
+      localStorage.setItem('userIsLoggedIn', value.toString());
     },
   },
 })
