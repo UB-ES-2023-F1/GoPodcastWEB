@@ -34,7 +34,7 @@
       };
     },
     getFavorites () {
-      const pathPodcasts = 'http://localhost:8000/favorites/user'
+      const pathPodcasts = 'http://localhost:8000/favorites'
 
       axios.get(pathPodcasts)
         .then((res) => {
@@ -42,30 +42,6 @@
             return podcast.id != null
           })
           console.log(podcasts)
-          var promises = []
-          for (let i = 0; i < podcasts.length; i++) {
-            const promise = axios.get(pathPodcasts + podcasts[i].title)
-              .then((resPodcast) => {
-                delete podcasts[i].title
-                console.log('resComp')
-                console.log(resPodcast.data)
-                podcasts[i].info = {
-                  'description': resPodcast.data.description,
-                  'category': resPodcast.data.category
-                  // 'image': resPodcast.data.image_url
-                }
-              })
-              .catch((error) => {
-                console.error(error)
-              })
-            console.log('Pushed promise: ')
-            console.log(promise)
-            promises.push(promise)
-          }
-          Promise.all(promises).then((_) => {
-            console.log(podcasts)
-            this.podcasts = podcasts
-          })
         })
         .catch((error) => {
           console.error(error)
@@ -73,7 +49,7 @@
     },
     created () {
       // Descomentar cuando tengamos los endpoints listos
-      // this.getPodcasts() 
+      // this.getFavorites() 
     },
     mounted() {
       const podcastsContainer = this.$refs.podcastsContainer;
