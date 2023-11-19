@@ -14,24 +14,24 @@
                             <div class="col-md-6 mx-auto">
                                 <form @submit.prevent="publicarPodcast" class="publish-form">
                                 
-                                    <image-cropper v-model="imagenPortada" @image-cropped="handleImageCropped" />
+                                    <image-cropper v-model="image_url" @image-cropped="handleImageCropped" />
                                     <div class="mb-3"></div>
                                 
                                     <div class="form-group">
                                         <label for="titulo" class="label">Title</label>
-                                        <input type="text" class="form-control" id="titulo" v-model="titulo" required style="max-width: 100%;"/>
+                                        <input type="text" class="form-control" id="titulo" v-model="title" required style="max-width: 100%;"/>
                                     </div>
                                     <div class="mb-3"></div>
                                 
                                     <div class="form-group">
                                         <label for="resumen" class="label">Short summary</label>
-                                        <input type="text" class="form-control" id="resumen" v-model="resumen" required style="width: 100%;"/>
+                                        <input type="text" class="form-control" id="resumen" v-model="summary" required style="width: 100%;"/>
                                     </div>
                                     <div class="mb-3"></div>
                                 
                                     <div class="form-group">
                                         <label for="descripcion" class="label">Podcast description</label>
-                                        <textarea class="form-control" id="descripcion" v-model="descripcion" required style="width: 100%;"></textarea>
+                                        <textarea class="form-control" id="descripcion" v-model="description" required style="width: 100%;"></textarea>
                                     </div>
                                     <div class="mb-3"></div>
                                 
@@ -40,7 +40,7 @@
                                         <input
                                             type="text"
                                             class="form-control"
-                                            id="etiquetas"
+                                            id="tags"
                                             v-model="tagInput"
                                             @input="handleTagInput"
                                         />
@@ -75,17 +75,17 @@ export default {
     },
     data() {
         return {
-            imagenPortada: null,
-            titulo: null,
-            resumen: null,
-            descripcion: null,
+            image_url: null,
+            title: null,
+            summary: null,
+            description: null,
             tags: [],
             tagInput: null
         };
     },
     methods: {
         handleImageCropped(blob) {
-            this.imagenPortada = blob;
+            this.image_url = blob;
         },
         onSubmit() {
             const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
@@ -93,17 +93,17 @@ export default {
 
             var formData = new FormData();
 
-            formData.append("cover", this.imagenPortada);
-            formData.append("name", this.titulo)
-            formData.append("summary", this.resumen)
-            formData.append("description", this.descripcion)
+            formData.append("cover", this.image_url);
+            formData.append("name", this.title)
+            formData.append("summary", this.summary)
+            formData.append("description", this.description)
             formData.append("tags", this.tags)
 
             const parameters = {
-                cover: this.imagenPortada,
-                name: this.titulo,
-                summary: this.resumen,
-                descripcion: this.descripcion,
+                cover: this.image_url,
+                name: this.title,
+                summary: this.summary,
+                descripcion: this.description,
                 tags: this.tags
             }
 
@@ -132,25 +132,6 @@ export default {
             const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
             this.tags = tags;
         },
-
-        /*            FUTURA IMPLEMENTACIÓN:
-        onSubmit() {
-            const formData = new FormData();
-            formData.append('imagenPortada', this.imagenPortada, 'imagen.png'); // 'imagen.png' es el nombre del archivo en el servidor
-        
-            // Luego, haz la solicitud HTTP para cargar la imagen
-            const path = 'http://localhost:5173/podcast'; // Modifica esto por tu endpoint correcto
-            axios.post(path, formData)
-              .then((res) => {
-                alert('Podcast Posted');
-                this.backToHome();
-              })
-              .catch((error) => {
-                alert('Error posting podcast');
-                console.error(error);
-              });
-        },
-        }*/
         backToHome() {
             this.$router.push('/')
         }

@@ -40,14 +40,30 @@ import { mapState, mapMutations } from 'vuex';
 export default {
   name: 'Home',
   computed: {
+    userIsLoggedIn() {
+      return this.$store.state.userIsLoggedIn;
+    },
     ...mapState(['userIsLoggedIn']),
   },
   methods: {
     ...mapMutations(['setUserIsLoggedIn']),
     signOut() {
       this.setUserIsLoggedIn(false);
+      this.$store.commit('setUserIsLoggedIn', false);
     },
   },
+  /*
+  beforeRouteEnter(to, from, next) {
+    const store = app.$store;
+    store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
+    next();
+  },
+
+  beforeCreate() {
+    const store = this.$store;
+    store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
+  },
+  */
   components: {
     PodcastList,
     CategoryList,
@@ -122,3 +138,20 @@ h2 {
 */
 
 </style>
+
+<!--import { createApp } from 'vue'
+import App from './App.vue'
+import Vuex from 'vuex'
+
+const app = createApp(App)
+
+export default new Vuex.Store({
+  state: {
+    userIsLoggedIn: false,
+  },
+  mutations: {
+    setUserIsLoggedIn(state, value) {
+      state.userIsLoggedIn = value
+    },
+  },
+})-->

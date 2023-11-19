@@ -41,7 +41,7 @@
 
 <script>
 import axios from 'axios'
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex';
 
 export default {
     name: 'Login',
@@ -52,6 +52,12 @@ export default {
             showPassword: false,
             loading: false
         }
+    },
+    computed: {
+        userIsLoggedIn() {
+            return this.$store.state.userIsLoggedIn;
+        },
+    //...mapState(['userIsLoggedIn']),
     },
     methods: {
         ...mapMutations(['setUserIsLoggedIn']), // Importa la mutación setUserIsLoggedIn
@@ -77,6 +83,7 @@ export default {
             const path = 'http://localhost:5000/login' // Descomentar y modificar por el endpoint correcto
             axios.post(path, parameters, axiosConfig)
             .then((res) => {
+                this.$store.commit('setUserIsLoggedIn', false);
                 this.setUserIsLoggedIn(true)
                 this.backToHome()
             })
@@ -90,8 +97,14 @@ export default {
         },
         backToHome() {
             this.$router.push('/')
-        }
-    }
+        },
+    },
+    /*
+    beforeCreate() {
+        const store = this.$store;
+        store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
+    },
+    */
 }
 
 </script>
