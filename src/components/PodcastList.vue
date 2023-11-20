@@ -20,17 +20,6 @@
       return {
         // Com encara no tenim l'endpoint, dummy data:
         podcasts: [
-          { id: 1, image_url: 'podcasts/podcast1.jpg', title: 'podcast1', summary: '', description: '', list_of_episodes: [/*{ id: 1, nombre: '', url: ''}*/], author: '' },
-          { id: 2, image_url: 'podcasts/podcast2.jpg', title: 'podcast2' },
-          { id: 3, image_url: 'podcasts/podcast3.jpg', title: 'podcast3' },
-          { id: 4, image_url: 'podcasts/podcast4.jpg', title: 'podcast4' },
-          { id: 5, image_url: 'podcasts/podcast5.jpg', title: 'podcast5' },
-          { id: 6, image_url: 'podcasts/podcast6.jpg', title: 'podcast6' },
-          { id: 7, image_url: 'podcasts/podcast2.jpg', title: 'podcast2' },
-          { id: 8, image_url: 'podcasts/podcast3.jpg', title: 'podcast3' },
-          { id: 9, image_url: 'podcasts/podcast4.jpg', title: 'podcast4' },
-          { id: 10, image_url: 'podcasts/podcast5.jpg', title: 'podcast5' },
-          { id: 11, image_url: 'podcasts/podcast6.jpg', title: 'podcast6' },
         ],
       };
     },
