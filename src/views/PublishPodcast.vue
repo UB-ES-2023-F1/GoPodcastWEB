@@ -113,7 +113,7 @@ export default {
             }
 
             console.log(parameters)
-            const path = 'https://lively-rock-0b6486203.4.azurestaticapps.net/podcasts' // Descomentar y modificar por el endpoint correcto
+            const path = 'http://localhost:5000/podcasts' // Descomentar y modificar por el endpoint correcto
             axios.post(path, formData, axiosConfig, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

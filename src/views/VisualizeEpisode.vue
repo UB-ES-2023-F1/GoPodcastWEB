@@ -244,7 +244,7 @@ import axios from 'axios'
             getEpisode() {
                 const podcastId = this.$route.params.podcastId;
                 const episodeId = this.$route.params.id;
-                const pathEpisode = `https://lively-rock-0b6486203.4.azurestaticapps.net/podcasts/${podcastId}/episodes/${episodeId}`;
+                const pathEpisode = `http://localhost:8000/podcasts/${podcastId}/episodes/${episodeId}`;
 
                 axios.get(pathEpisode).then((resEpisode) => {
                     episode = resEpisode.data;

@@ -83,7 +83,7 @@ import axios from 'axios'
         methods: {
             getPodcast() {
                 const podcastId = this.$route.params.id;
-                const pathPodcast = `https://lively-rock-0b6486203.4.azurestaticapps.net/podcasts/${podcastId}`;
+                const pathPodcast = `http://localhost:8000/podcasts/${podcastId}`;
 
                 axios.get(pathPodcast).then((resPodcast) => {
                     this.podcast = resPodcast.data;
@@ -94,7 +94,7 @@ import axios from 'axios'
             },
             toggleFollow() {
                 const podcastId = this.podcast.id;
-                const path = `https://lively-rock-0b6486203.4.azurestaticapps.net/followPodcast/${podcastId}`;
+                const path = `http://localhost:8000/followPodcast/${podcastId}`;
 
                 if (this.podcast.isFollowing) {
                     axios.delete(path).then(response => {
