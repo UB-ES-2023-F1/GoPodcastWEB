@@ -11,7 +11,7 @@ import { beforeAll, afterEach, afterAll, beforeEach } from 'vitest'
 
 // Global variables
 const flushPromises = require('flush-promises');
-const backendURL = 'http://gopodcastapidev.azurewebsites.net'
+const backendURL = import.meta.env.VITE_API_URL + '/categories'
 
 
 // Setting up the handlers
