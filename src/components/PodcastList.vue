@@ -24,7 +24,7 @@
       };
     },
     getPodcasts () {
-      const pathPodcasts = 'http://localhost:8000/podcasts/'
+      const pathPodcasts = import.meta.env.VITE_API_URL + '/podcasts/'
 
       axios.get(pathPodcasts)
         .then((res) => {

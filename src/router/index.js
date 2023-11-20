@@ -44,6 +44,11 @@ const routes = [
       }
     }
   },
+  {
+    path: '/visualize/:podcastId/visualizeEpisode/:id',
+    name: 'VisualizeEpisode',
+    component: () => import('../views/VisualizeEpisode.vue')
+  },
   /*
   {
     path: '/visualize/:podcastId',
@@ -56,6 +61,11 @@ const routes = [
     name: 'VisualizePodcast',
     component: () => import('../views/VisualizePodcast.vue')
   },
+  {
+    path: '/profile/:id',
+    name: 'Profile',
+    component: () => import('../views/Profile.vue')
+  }
   
   
 ]

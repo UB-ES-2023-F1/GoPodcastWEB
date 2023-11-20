@@ -2,20 +2,22 @@
     <div v-for="episode in podcast.list_of_episodes" :key="episode.id" class="episode">
         <div class="row mt-2 p-2 contenedor-episodio">
             <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                <a :href="'/visualizeEpisode/' + episode.id">
+                <a :href="'/visualize/' + podcast.id + '/visualizeEpisode/' + episode.id">
                     <img :src="episode.episodeImage" alt="Imagen" class="reduced-image borde-redondeado"
                         id="imagen-interactiva" />
                 </a>
             </div>
             <div class="col-12 col-sm-9 col-md-9 col-lg-9">
                 <div class="row">
-                    <a :href="'/visualizeEpisode/' + episode.id">
-                        <h6>{{ episode.title }} </h6>
+                    <a :href="'/visualize/' + podcast.id + '/visualizeEpisode/' + episode.id">
+                        <h4>{{ episode.title }} </h4>
                     </a>
                 </div>
+                <!--
                 <div class="row">
                     <p>{{ episode.description }}</p>
                 </div>
+            -->
                 <div class="row centrados_elementos">
                     <div class="col-7 col-md-2 col-lg-2">
                         <button class="play-like-button" @click="togglePlayback(episode)">
@@ -32,7 +34,7 @@
                     </div>
                 </div>
                 <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
-                    :style="{ backgroundColor: randomColor() }">
+                    :style="{ backgroundColor: randomColor(tag) }">
                     {{ tag }}
                 </div>
             </div>
@@ -61,12 +63,13 @@ export default {
                 summary: "Podcast talking about Cruz Cafuné's new album",
                 description: "This podcast talks about the importance of the islands having been born and raised in the Canary Islands",
                 list_of_episodes: [
-                    { id: 1, title: 'intro', episodeImage: "/src/assets/podcasts/MMCD.jpg", description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", audio_url: '/src/assets/audio/Moonlight_audio.mp3', tags: ["Intro", "Cruzzi", "Moonlight"], audioElement: null, isLiked: false },
-                    { id: 2, title: 'mi_isla', episodeImage: "/src/assets/podcasts/MBMC.jpg", description: "Canción de Cruzzi inicio album Moonlight922", audio_url: '/src/assets/audio/Mi_isla_audio.mp3', tags: ["LPGC", "Cruzzi", "Luna"], audioElement: null, isLiked: false },
+                    { id: 1, title: 'intro', episodeImage: "/src/assets/podcasts/MMCD.jpg", description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", audio_url: '/src/assets/audio/Moonlight_audio.mp3', tags: ["Intro", "Cruzzi", "Moonlight"], listOfComments: [], author: "Cruz Cafuné", audioElement: null, isLiked: false },
+                    { id: 2, title: 'mi_isla', episodeImage: "/src/assets/podcasts/MBMC.jpg", description: "Canción de Cruzzi inicio album Moonlight922", audio_url: '/src/assets/audio/Mi_isla_audio.mp3', tags: ["LPGC", "Cruzzi", "Luna"], listOfComments: [], author: "Cruz Cafuné", audioElement: null, isLiked: false },
                 ],
                 author: "Cruz Cafuné",
             },
             currentEpisode: null,
+            tagColors: {},
         };
     },
     methods: {
@@ -178,13 +181,30 @@ export default {
                     });
             }
         },
-        randomColor() {
-            const letters = "0123456789ABCDEF";
-            let color = "#";
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
+        randomColor(tag) {
+            if (!this.tagColors[tag]) {
+                const getRandomHex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+                
+                let color;
+                do {
+                color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
+                } while (this.isColorTooLight(color)); // Comprueba si el color es demasiado claro
+                
+                this.tagColors[tag] = color; // Almacena el color generado en tagColors
             }
-            return color;
+
+            return this.tagColors[tag];
+        },
+
+        // Función que permita la legibilidad del texto de la etiqueta en relación del color de fondo
+        isColorTooLight(color) {
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+            return brightness > 128;
         },
     },
     created() {

@@ -11,44 +11,46 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
     data() {
         return {
             // Com encara no tenim l'endpoint, dummy data:
             categories : [
-                { id: 1, image_url: 'categories/categorySport.jpg', title: 'Pop' },
-                { id: 2, image_url: 'categories/categoryRanking.jpg', title: 'Suspense' },
-                { id: 3, image_url: 'categories/categoryEntertainment.jpg', title: 'Historia' },
-                { id: 4, image_url: 'categories/categorySport.jpg', title: 'Sport' },
-                { id: 5, image_url: 'categories/categoryMusic.jpg', title: 'Music' },
-                { id: 6, image_url: 'categories/categoryEntertainment.jpg', title: 'Entertainment' },
-                { id: 7, image_url: 'categories/categoryRanking.jpg', title: 'Ranking' },
-                { id: 8, image_url: 'categories/categorySport.jpg', title: 'Sport' },
-                { id: 9, image_url: 'categories/categoryMusic.jpg', title: 'Music' },
-                { id: 10, image_url: 'categories/categoryEntertainment.jpg', title: 'Entertainment' },
-                { id: 11, image_url: 'categories/categoryRanking.jpg', title: 'Ranking' },
+                // { id: 1, image_url: 'categories/categorySport.jpg', title: 'Pop' },
+                // { id: 2, image_url: 'categories/categoryRanking.jpg', title: 'Suspense' },
+                // { id: 3, image_url: 'categories/categoryEntertainment.jpg', title: 'Historia' },
+                // { id: 4, image_url: 'categories/categorySport.jpg', title: 'Sport' },
+                // { id: 5, image_url: 'categories/categoryMusic.jpg', title: 'Music' },
+                // { id: 6, image_url: 'categories/categoryEntertainment.jpg', title: 'Entertainment' },
+                // { id: 7, image_url: 'categories/categoryRanking.jpg', title: 'Ranking' },
+                // { id: 8, image_url: 'categories/categorySport.jpg', title: 'Sport' },
+                // { id: 9, image_url: 'categories/categoryMusic.jpg', title: 'Music' },
+                // { id: 10, image_url: 'categories/categoryEntertainment.jpg', title: 'Entertainment' },
+                // { id: 11, image_url: 'categories/categoryRanking.jpg', title: 'Ranking' },
             ],
         };
     },
-    getCategirues () {
-      const pathCategories = 'http://localhost:8000/categories'
-
-      axios.get(pathCategories)
-        .then((res) => {
-          var categories = res.data.filter((category) => {
-            return category.id != null
+    methods: {
+      getCategories () {
+        const pathCategories = import.meta.env.VITE_API_URL + '/categories'
+  
+        axios.get(pathCategories)
+          .then((res) => {
+            var categories = res.data.filter((category) => {
+              return category.id != null
+            })
+            this.categories = categories
           })
-          console.log(categories)
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+          .catch((error) => {
+            console.error(error)
+          })
+      },
     },
     created () {
       // Descomentar cuando tengamos los endpoints listos
-      // this.getCategories() 
+      this.getCategories() 
     }
   };
 </script>
