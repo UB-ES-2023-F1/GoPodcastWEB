@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  FRONTEND_URL_PROD: https://lively-rock-0b6486203.4.azurestaticapps.net
+  FRONTEND_URL_PROD: https://orange-sand-0e5435703.3.azurestaticapps.net
     
 jobs:
 
