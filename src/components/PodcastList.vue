@@ -15,6 +15,7 @@
   // import axios from 'axios'
 
   export default {
+    props: [podcastList],
     data() {
       return {
         // Com encara no tenim l'endpoint, dummy data:
