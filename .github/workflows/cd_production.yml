@@ -7,6 +7,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+
+env:
+  FRONTEND_URL_PROD: https://lively-rock-0b6486203.4.azurestaticapps.net
     
 jobs:
 
@@ -15,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: 'production'
-      url: ${{ secrets.FRONTEND_URL_PROD }}
+      url: $FRONTEND_URL_PROD
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v3
