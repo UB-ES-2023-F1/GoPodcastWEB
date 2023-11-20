@@ -196,7 +196,7 @@ import axios from 'axios'
             },
             toggleLike() {
                 const episodeId = this.episode.id;
-                const path = `https://lively-rock-0b6486203.4.azurestaticapps.net/likeEpisode/${episodeId}`;
+                const path = `http://localhost:8000/likeEpisode/${episodeId}`;
 
                 if (this.episode.isLiked) {
                     axios.delete(path).then(response => {
