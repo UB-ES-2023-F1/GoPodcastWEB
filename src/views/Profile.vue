@@ -117,7 +117,9 @@
     },
     methods: {
       getUserInfo() {
-        axios.get('http://localhost:3000/user/1')
+        const userPath = import.meta.env.VITE_API_URL + '/user/1'
+
+        axios.get(userPath)
           .then(response => {
             this.user = response.data
           })

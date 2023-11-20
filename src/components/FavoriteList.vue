@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     async getFavorites() {
-      const pathPodcasts = 'http://localhost:8000/favorites';
+      const pathPodcasts = import.meta.env.VITE_API_URL + '/favorites'
 
       try {
         const res = await axios.get(pathPodcasts);

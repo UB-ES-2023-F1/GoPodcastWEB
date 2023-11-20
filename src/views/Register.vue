@@ -136,7 +136,9 @@ export default {
                     password: this.password
                 }
                 console.log(parameters)
-                const path = 'https://gopodcastapidev.azurewebsites.net/user' // Descomentar y modificar por el endpoint correcto
+
+                const path = import.meta.env.VITE_API_URL + '/user'
+                
                 axios.post(path, parameters)
                     .then((res) => {
                         console.log(res)

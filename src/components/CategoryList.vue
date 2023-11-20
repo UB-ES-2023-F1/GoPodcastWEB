@@ -34,7 +34,7 @@ export default {
     },
     methods: {
       getCategories () {
-        const pathCategories = 'http://gopodcastapidev.azurewebsites.net/categories'
+        const pathCategories = import.meta.env.VITE_API_URL + '/categories'
   
         axios.get(pathCategories)
           .then((res) => {
