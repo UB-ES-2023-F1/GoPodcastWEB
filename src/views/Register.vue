@@ -136,7 +136,7 @@ export default {
                     password: this.password
                 }
                 console.log(parameters)
-                const path = 'gopodcastapidev.azurewebsites.net/user' // Descomentar y modificar por el endpoint correcto
+                const path = 'https://gopodcastapidev.azurewebsites.net/user' // Descomentar y modificar por el endpoint correcto
                 axios.post(path, parameters)
                     .then((res) => {
                         console.log(res)

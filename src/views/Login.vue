@@ -80,7 +80,7 @@ export default {
                 withCredentials: true
             }
 
-            const path = 'gopodcastapidev.azurewebsites.net/login' // Descomentar y modificar por el endpoint correcto
+            const path = 'https://gopodcastapidev.azurewebsites.net/login' // Descomentar y modificar por el endpoint correcto
             axios.post(path, parameters, axiosConfig)
             .then((res) => {
                 this.$store.commit('setUserIsLoggedIn', false);
