@@ -20,6 +20,7 @@ jobs:
       with:
         envkey_VITE_API_URL: ${{ secrets.VITE_API_URL }}
         file_name: .env
+    - run: env
         
     - name: Use Node.js
       uses: actions/setup-node@v3
@@ -27,7 +28,6 @@ jobs:
         node-version: 18.x
         cache: 'npm'
     - run: | 
-        npm i
         npm ci
         npm run test
 
