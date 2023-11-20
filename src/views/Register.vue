@@ -136,7 +136,7 @@ export default {
                     password: this.password
                 }
                 console.log(parameters)
-                const path = 'http://localhost:5000/user' // Descomentar y modificar por el endpoint correcto
+                const path = 'https://lively-rock-0b6486203.4.azurestaticapps.net/user' // Descomentar y modificar por el endpoint correcto
                 axios.post(path, parameters)
                     .then((res) => {
                         console.log(res)
