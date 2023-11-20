@@ -20,7 +20,7 @@ jobs:
       with:
         envkey_VITE_API_URL: http://gopodcastapidev.azurewebsites.net
         file_name: .env
-    - run: .env
+    - run: cat .env
         
     - name: Use Node.js
       uses: actions/setup-node@v3
