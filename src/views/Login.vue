@@ -80,7 +80,7 @@ export default {
                 withCredentials: true
             }
 
-            const path = 'https://lively-rock-0b6486203.4.azurestaticapps.net/login' // Descomentar y modificar por el endpoint correcto
+            const path = 'gopodcastapidev.azurewebsites.net/login' // Descomentar y modificar por el endpoint correcto
             axios.post(path, parameters, axiosConfig)
             .then((res) => {
                 this.$store.commit('setUserIsLoggedIn', false);
