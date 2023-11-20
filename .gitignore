@@ -25,13 +25,4 @@ dist-ssr
 
 .eslintrc.cjs
 .env
-coverage/sorter.js
-coverage/sort-arrow-sprite.png
-coverage/prettify.js
-coverage/prettify.css
-coverage/index.html
-coverage/favicon.png
-coverage/coverage-final.json
-coverage/CategoryList.vue.html
-coverage/block-navigation.js
-coverage/base.css
+coverage/*
