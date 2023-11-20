@@ -117,7 +117,7 @@
     },
     methods: {
       getUserInfo() {
-        axios.get('http://localhost:3000/user/1')
+        axios.get('https://lively-rock-0b6486203.4.azurestaticapps.net/user/1')
           .then(response => {
             this.user = response.data
           })

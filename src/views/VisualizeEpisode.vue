@@ -196,7 +196,7 @@ import axios from 'axios'
             },
             toggleLike() {
                 const episodeId = this.episode.id;
-                const path = `http://localhost:8000/likeEpisode/${episodeId}`;
+                const path = `https://lively-rock-0b6486203.4.azurestaticapps.net/likeEpisode/${episodeId}`;
 
                 if (this.episode.isLiked) {
                     axios.delete(path).then(response => {
@@ -244,7 +244,7 @@ import axios from 'axios'
             getEpisode() {
                 const podcastId = this.$route.params.podcastId;
                 const episodeId = this.$route.params.id;
-                const pathEpisode = `http://localhost:8000/podcasts/${podcastId}/episodes/${episodeId}`;
+                const pathEpisode = `https://lively-rock-0b6486203.4.azurestaticapps.net/podcasts/${podcastId}/episodes/${episodeId}`;
 
                 axios.get(pathEpisode).then((resEpisode) => {
                     episode = resEpisode.data;
