@@ -9,11 +9,11 @@
       </div>
 
       <div class="row">
-        <form @submit.prevent="publicarPodcast" class="publish-form">
+        <form @submit.prevent="onSubmit" class="publish-form">
           <div class="form-group">
             <textarea class="form-control" id="new_reply" v-model="newReplyText" placeholder="Add a reply" style="width: 100%;"></textarea>
           </div>
-          <button type="submit" class="btn-submit btn btn-dark mt-3" @click="onSubmit">Add Reply</button>
+          <button type="submit" class="btn-submit btn btn-dark mt-3">Add Reply</button>
         </form>
       </div>
 
@@ -62,6 +62,10 @@
         return date.toDateString();
       },
       onSubmit() {
+        if (this.newReplyText.trim() === '') {
+          // Evitar agregar respuestas vacías
+          return;
+        }
         const newReply = {
           date: new Date(),
           text: this.newReplyText,
