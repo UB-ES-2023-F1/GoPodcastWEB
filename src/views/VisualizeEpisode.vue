@@ -5,14 +5,8 @@
             <Sidebar />
             <!-- Main content-->
             <div class="visualize-content col-lg-10 col-md-9 col-sm-12 p-0  ">
-                <div class="row w-100 mt-5 ps-5">
-                    <div class="search col-6">
-                        <input type="text" placeholder="Search">
-                        <button>Search</button>
-                    </div>
-                    <div class="col-6 d-flex justify-content-end">
-                        
-                    </div>
+                <div class="row w-100 p-5">
+                    <TopBar />
                 </div>
                 <div class="row p-5 w-100">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -83,6 +77,7 @@
 <script>
 import Sidebar from '../components/Sidebar.vue';
 import Comment from '../components/Comment.vue';
+import TopBar from '../components/TopBar.vue';
 import ProgressBar from '../components/ProgressBar.vue';
 import axios from 'axios'
 
@@ -91,6 +86,7 @@ import axios from 'axios'
             Sidebar,
             Comment,
             ProgressBar,
+            TopBar,
         },
         data() {
             return {
@@ -196,7 +192,7 @@ import axios from 'axios'
             },
             toggleLike() {
                 const episodeId = this.episode.id;
-                const path = `http://localhost:8000/likeEpisode/${episodeId}`;
+                const path = import.meta.env.VITE_API_URL + `/likeEpisode/${episodeId}`;
 
                 if (this.episode.isLiked) {
                     axios.delete(path).then(response => {
@@ -244,7 +240,7 @@ import axios from 'axios'
             getEpisode() {
                 const podcastId = this.$route.params.podcastId;
                 const episodeId = this.$route.params.id;
-                const pathEpisode = `http://localhost:8000/podcasts/${podcastId}/episodes/${episodeId}`;
+                const pathEpisode = import.meta.env.VITE_API_URL + `/podcasts/${podcastId}/episodes/${episodeId}`;
 
                 axios.get(pathEpisode).then((resEpisode) => {
                     episode = resEpisode.data;
@@ -362,6 +358,7 @@ duration {
     height: 100%;
     padding-left: 0px;
     background-color: #04001d;
+    margin-bottom: 0;
 }
 
 h6{
@@ -384,65 +381,6 @@ h6{
     color: #525dff;
 }
 
-.search {
-    display: flex;
-    margin-bottom: 50px;
-}
-
-.search input {
-    width: 300px;
-    height: 40px;
-    border: none;
-    border-radius: 50px 0 0 50px;
-    padding: 0 20px;
-    font-size: 16px;
-    background-color: rgba(0, 0, 0, 0.625);
-}
-
-.search button {
-    width: 5em;
-    height: 40px;
-    border: none;
-    border-radius: 0 50px 50px 0;
-    background-color: #2933ff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-
-.signup button {
-    width: 10vw;
-    height: 40px;
-    border: none;
-    border-radius: 50px;
-    background-color: #2933ff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.signup button:hover {
-    transform: scale(1.1);
-    transition: all 0.35s ease-in-out;
-}
-
-.signin button {
-    width: 10vw;
-    height: 40px;
-    border: none;
-    border-radius: 50px;
-    background-color: #000000;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.signin button:hover {
-    background-color: #ffffff;
-    color: #000000;
-    transition: all 0.35s ease-in-out;
-}
 
 
 h2 {
