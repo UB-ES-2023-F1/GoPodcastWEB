@@ -5,23 +5,10 @@
             <Sidebar />
             <!-- Main content-->
             <div class="visualize-content col-lg-10 col-md-9 col-sm-12 p-0  ">
-                <div class="row w-100 mt-5 ps-5">
-                    <div class="search col-6">
-                        <input type="text" placeholder="Search">
-                        <button>Search</button>
-                    </div>
-                    <div class="col-6 d-flex justify-content-end">
-                        <!--
-                        <div class="signin  d-flex justify-content-end me-3">
-                            <button @click="$router.push('/login');">Sign in</button>
-                        </div>
-                        <div class="signup d-flex me-2">
-                            <button @click="$router.push('/register');">Sign up</button>
-                        </div>
-                    -->
-                    </div>
+                <div class="row w-100 p-5">
+                    <TopBar />
                 </div>
-                <div class="row p-5">
+                <div class="row p-5 w-100">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="contenedor-reducido mb-5"> 
                             <div class="row mt-5 ps-5 mr-5">
@@ -55,6 +42,7 @@
 import Sidebar from '../components/Sidebar.vue';
 import Episode from '../components/Episode.vue';
 import ProgressBar from '../components/ProgressBar.vue';
+import TopBar from '../components/TopBar.vue';
 import axios from 'axios'
 
     export default {
@@ -62,6 +50,7 @@ import axios from 'axios'
             Sidebar,
             Episode,
             ProgressBar,
+            TopBar,
         },
         data() {
             return {
@@ -83,7 +72,7 @@ import axios from 'axios'
         methods: {
             getPodcast() {
                 const podcastId = this.$route.params.id;
-                const pathPodcast = `http://localhost:8000/podcasts/${podcastId}`;
+                const pathPodcast = import.meta.env.VITE_API_URL + `/podcasts/${podcastId}`;
 
                 axios.get(pathPodcast).then((resPodcast) => {
                     this.podcast = resPodcast.data;
@@ -94,7 +83,7 @@ import axios from 'axios'
             },
             toggleFollow() {
                 const podcastId = this.podcast.id;
-                const path = `http://localhost:8000/followPodcast/${podcastId}`;
+                const path = import.meta.env.VITE_API_URL + `/followPodcast/${podcastId}`;
 
                 if (this.podcast.isFollowing) {
                     axios.delete(path).then(response => {
@@ -168,66 +157,6 @@ h6{
 
 .visualize-content .more-content h2{
     color: #525dff;
-}
-
-.search {
-    display: flex;
-    margin-bottom: 50px;
-}
-
-.search input {
-    width: 300px;
-    height: 40px;
-    border: none;
-    border-radius: 50px 0 0 50px;
-    padding: 0 20px;
-    font-size: 16px;
-    background-color: rgba(0, 0, 0, 0.625);
-}
-
-.search button {
-    width: 5em;
-    height: 40px;
-    border: none;
-    border-radius: 0 50px 50px 0;
-    background-color: #2933ff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-
-.signup button {
-    width: 10vw;
-    height: 40px;
-    border: none;
-    border-radius: 50px;
-    background-color: #2933ff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.signup button:hover {
-    transform: scale(1.1);
-    transition: all 0.35s ease-in-out;
-}
-
-.signin button {
-    width: 10vw;
-    height: 40px;
-    border: none;
-    border-radius: 50px;
-    background-color: #000000;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.signin button:hover {
-    background-color: #ffffff;
-    color: #000000;
-    transition: all 0.35s ease-in-out;
 }
 
 
