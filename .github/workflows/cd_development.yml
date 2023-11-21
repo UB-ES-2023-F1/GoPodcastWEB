@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  FRONTEND_URL_DEV: http://gopodcastapidev.azurewebsites.net
+  FRONTEND_URL_DEV: https://gopodcastapidev.azurewebsites.net
     
 jobs:
 
