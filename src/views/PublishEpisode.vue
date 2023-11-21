@@ -33,8 +33,20 @@
                   <div class="mb-3"></div>
 
                   <div class="form-group">
-                    <label for="tags" class="label">Tags</label>
-                    <input type="text" class="form-control" id="tags" v-model="tags" required style="width: 100%;" />
+                    <label for="etiquetas" class="label">Tags</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="tags"
+                        v-model="tagInput"
+                        @input="handleTagInput"
+                    />
+                    <div class="mb-3"></div>
+                    <div class="tags-container">
+                    <div class="tag" v-for="(tag, index) in tags" :key="index" >
+                        {{ tag }}
+                    </div>
+                    </div>
                   </div>
                   <div class="mb-3"></div>
 
@@ -66,14 +78,19 @@ export default {
       episodeImage: null,
       title: "",
       description: "",
-      tags: "",
+      tags: [],
       audio: null,
       podcastId: '4375bc80-362e-4869-acd8-800f313e8b38', // TODO: get podcast id from url
+      tagInput: null
     };
   },
   methods: {
     onSubmit() {
+      const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
+      console.log('Etiquetas:', tags);
+
       var formData = new FormData();
+      
       formData.append('audio', this.audio);
       formData.append('title', this.title);
       formData.append('description', this.description);
@@ -84,7 +101,8 @@ export default {
       }
 
       // formData.append('episodeImage', this.episodeImage);
-      const path = 'https://gopodcastapi.azurewebsites.net/podcasts/' + this.podcastId + '/episodes' 
+      const path = import.meta.env.VITE_API_URL + '/podcasts/' + this.podcastId + '/episodes' 
+      
       axios.post(path, formData, axiosConfig, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -100,7 +118,11 @@ export default {
     },
     onFileChange() {
       this.audio = this.$refs.audio.files[0]
-    }
+    },
+    handleTagInput() {
+      const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
+      this.tags = tags;
+    },
   },
 };
 </script>
@@ -147,5 +169,21 @@ export default {
   background-color: #ffffff;
   color: #000000;
   transition: all 0.35s ease-in-out;
-}</style>
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background-color: #646cff;
+  color: #fff;
+  border-radius: 16px;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+</style>
   

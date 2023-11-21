@@ -33,7 +33,7 @@
                 <a href="#" class="nav-link opacity-50">
                     About us
                 </a>
-                <a href="#" class="nav-link opacity-50" @click="$router.push('/publish/episode');">
+                <a href="#" class="nav-link opacity-50" v-if="this.userIsLoggedIn" @click="$router.push('/publish/episode');">
                     New Episode
                     </a>
             </li>
@@ -42,11 +42,24 @@
 </template>
   
 <script>
+import { mapState, mapMutations } from 'vuex';
+
+
 export default {
     data() {
         return {
         };
-    }
+    },
+        computed: {
+        ...mapState(['userIsLoggedIn']),
+    },
+    methods: {
+        ...mapMutations(['setUserIsLoggedIn']),
+    },
+    beforeCreate() {
+        const store = this.$store;
+        store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
+    },
 };
 </script>
 
@@ -56,6 +69,7 @@ export default {
     overflow: hidden;
     font-size: 1.25rem;
     letter-spacing: 0.05rem;
+    min-height: 100vh;
 }
 
 .sidebar .logo {
