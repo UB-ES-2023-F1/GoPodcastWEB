@@ -136,7 +136,11 @@ export default {
                     password: this.password
                 }
                 console.log(parameters)
-                const path = 'http://localhost:5000/user' // Descomentar y modificar por el endpoint correcto
+
+                const path = import.meta.env.VITE_API_URL + '/user'
+
+                console.log(path);
+                
                 axios.post(path, parameters)
                     .then((res) => {
                         console.log(res)

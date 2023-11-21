@@ -6,36 +6,32 @@
       <!-- Main content-->
       <div class="home-content col-lg-10 col-md-9 col-sm-12 p-0">
         <div class="row w-100 mt-5 ps-5">
-          <div class="search col-6">
-            <input type="text" placeholder="Search">
-            <button>Search</button>
+          <TopBar @search="search"/>
+        </div>
+        <!-- If user is searching -->
+        <div v-if="searching">
+          <h1 class="ps-5">Search results. <a @click="searching=false" style="color: rgb(206, 206, 206); cursor: pointer;">Go back.</a></h1>
+          <div class="featured">
+            <h2 class="ps-5">Podcasts</h2>
+            <PodcastList :podcastList="podcastSearchList" />
           </div>
-          <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
-            <div class="signin d-flex justify-content-end me-3" v-if="!this.userIsLoggedIn">
-              <button @click="$router.push('/login');">Sign in</button>
-            </div>
-            <div class="signup d-flex me-2" v-if="!this.userIsLoggedIn">
-              <button @click="$router.push('/register');">Sign up</button>
-            </div>
-            <!-- Se mostrará solo si el usuario está logueado -->
-            <div class="publish-podcast d-flex justify-content-end me-2" v-if="this.userIsLoggedIn">
-              <button @click="$router.push('/publish/podcast');">Publish Podcast</button>
-            </div>
-            <div class="signin d-flex me-2" v-if="this.userIsLoggedIn">
-              <button @click="this.signOut()">Sign out</button>
-            </div>
+          <div class="featured">
+            <h2 class="ps-5">Authors</h2>
+            <UserList :userList="userSearchList" />
+          </div>
+        </div>
 
+        <div v-else>
+          <div class="featured">
+            <h2 class="ps-5">Featured Podcasts</h2>
+            <PodcastList :podcastList="podcastsList"/>
           </div>
-        </div>
-        <div class="featured">
-          <h2 class="ps-5">Featured Podcasts</h2>
-          <PodcastList />
-        </div>
-        <div class="more-content ps-5 pt-4">
-          <CategoryList />
-          <div class="mt-5 pt-2">
-            <h2>Most Listened Podcasts</h2>
-            <PopularList />
+          <div class="more-content ps-5 pt-4">
+            <CategoryList />
+            <div class="mt-5 pt-2">
+              <h2>Most Listened Podcasts</h2>
+              <PodcastList :podcastList="popularList" />
+            </div>
           </div>
         </div>
       </div>
@@ -49,29 +45,133 @@
 <script>
 import CategoryList from '../components/CategoryList.vue';
 import PodcastList from '../components/PodcastList.vue';
-import PopularList from '../components/PopularList.vue';
+import UserList from '../components/UserList.vue';
 import Sidebar from '../components/Sidebar.vue';
 import ProgressBar from '../components/ProgressBar.vue';
+import TopBar from '../components/TopBar.vue';
 
 import { mapState, mapMutations } from 'vuex';
+import axios from 'axios';
+
+console.log(import.meta.env.VITE_API_URL);
 
 export default {
   name: 'Home',
+  data() {
+    return {
+      podcastsList: [],
+      popularList: [],
+      podcastSearchList: [],
+      userSearchList: [],
+      searching: false
+    }
+  },
   computed: {
+    userIsLoggedIn() {
+      return this.$store.state.userIsLoggedIn;
+    },
     ...mapState(['userIsLoggedIn']),
   },
   methods: {
     ...mapMutations(['setUserIsLoggedIn']),
     signOut() {
       this.setUserIsLoggedIn(false);
+      this.$store.commit('setUserIsLoggedIn', false);
     },
+    search(nameQuery, authorQuery) {
+      console.log(nameQuery, authorQuery)
+      if (nameQuery) {
+        this.getName(nameQuery)
+      } else {
+        this.podcastSearchList = []
+      }
+      if (authorQuery) {
+        this.getAuthor(authorQuery)
+      } else {
+        this.userSearchList = []
+      }
+        
+      this.searching = true;
+    },
+    getName(nameQuery) {
+      const pathSearch = import.meta.env.VITE_API_URL + "/search/podcast/" + nameQuery
+
+      axios.get(pathSearch)
+        .then((res) => {
+          this.podcastSearchList = res.data
+        })
+        .catch((error) => {
+          this.podcastSearchList = []
+          console.error(error)
+        })
+    },
+    getAuthor(authorQuery) {
+      const pathSearch = import.meta.env.VITE_API_URL + "/search/user/" + authorQuery
+
+      axios.get(pathSearch)
+        .then((res) => {
+          this.userSearchList = res.data
+        })
+        .catch((error) => {
+          this.userSearchList = []
+          console.error(error)
+        })
+    },
+    getPodcasts() {
+      console.log("Getting podcasts")
+      const pathPodcasts = import.meta.env.VITE_API_URL + "/podcasts"
+
+      console.log("Podcasts path: " + pathPodcasts);
+      
+      axios.get(pathPodcasts)
+        .then((res) => {
+          this.podcastsList = res.data
+        })
+        .catch((error) => {
+          this.podcastsList = []
+          console.error(error)
+        })
+    },
+    getPopular() {
+      console.log("Getting populars")
+      const pathPopular = import.meta.env.VITE_API_URL + "/populars"
+
+      console.log("Populars path: " + pathPopular);
+      
+      axios.get(pathPopular)
+        .then((res) => {
+          this.popularList = res.data
+        })
+        .catch((error) => {
+          this.popularList = []
+          console.error(error)
+        })
+    }
   },
+  /*
+  beforeRouteEnter(to, from, next) {
+    const store = app.$store;
+    store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
+    next();
+  },
+
+  beforeCreate() {
+    const store = this.$store;
+    store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
+  },
+  */
+  created() {
+    this.getPopular()
+    this.getPodcasts()
+  },
+
   components: {
     PodcastList,
     CategoryList,
-    PopularList,
+    UserList,
     Sidebar,
     ProgressBar,
+    TopBar,
   },
 };
 </script>
@@ -113,6 +213,7 @@ export default {
   padding: 0 20px;
   font-size: 18px;
   background-color: rgba(0, 0, 0, 0.625);
+  color: white;
 }
 
 .search button {
@@ -161,6 +262,7 @@ export default {
 }
 
 @media (max-width: 768px) {
+
   .signup button,
   .signin button {
     width: 20vw;
@@ -203,21 +305,5 @@ h2 {
   transition: all 0.35s ease-in-out;
 }
 */
-.publish-podcast button {
-  width: 10vw;
-  height: 50px;
-  border-radius: 50px;
-  font-size: 18px;
-  cursor: pointer;
-  border-radius: 50px;
-  transition: all 0.35s ease-in-out;
-  background-color: transparent;
-  border: 1px solid #fff;
-  color: #fff;
-}
 
-.publish-podcast button:hover {
-  background-color: #fff;
-  color: #000;
-}
 </style>
