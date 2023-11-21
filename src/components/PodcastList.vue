@@ -1,126 +1,124 @@
 <template>
-    <div class="podcasts-container m-0 p-0">
-      <div class="podcasts overflow-x-auto flex-nowrap overflow-x-hidden" ref="podcastsContainer">
-        <div v-for="podcast in podcasts" :key="podcast.id" class="podcast">
-          <a :href="'/visualize/' + podcast.id">
-            <img :src="'src/assets/'+podcast.image_url" :alt="podcast.title">
-          </a>
-          <span class="name">{{ podcast.title }}</span>
-        </div>
+  <div class="podcasts-container m-0 p-0">
+    <div class="podcasts overflow-x-auto flex-nowrap overflow-x-hidden" ref="podcastsContainer">
+      <div v-for="podcast in podcastList" :key="podcast.id" class="podcast">
+        <a :href="'/visualize/' + podcast.id">
+          <img :src="podcast.img" :alt="podcast.name" v-if="podcast.img">
+          <img :src="'src/assets/icons/ic_podcast.png'" v-else>
+        </a>
+        <span class="name">{{ podcast.name }}</span>
       </div>
     </div>
-  </template>
+  </div>
+</template>
   
-  <script>
-  // import axios from 'axios'
+<script>
+import axios from 'axios';
 
-  export default {
-    props: [podcastList],
-    data() {
-      return {
-        // Com encara no tenim l'endpoint, dummy data:
-        podcasts: [
-        ],
-      };
-    },
-    getPodcasts () {
-      const pathPodcasts = import.meta.env.VITE_API_URL + '/podcasts/'
+// import axios from 'axios'
 
-      axios.get(pathPodcasts)
-        .then((res) => {
-          var podcasts = res.data.filter((podcast) => {
-            return podcast.id != null
+export default {
+  props: {
+    podcastList: {
+      type: Array,
+      default: []
+    }
+  },
+  watch: {
+    podcastList() {
+      this.getCovers()
+    }
+  },
+  data() {
+    return {
+      imagePath: '../assets/cache/podcast_covers/',
+      imgTest: null
+    }
+  },
+  methods: {
+    getCovers() {
+      this.podcastList.forEach(podcast => {
+        const pathCovers = import.meta.env.VITE_API_URL + '/podcasts/' + podcast.id + '/cover'
+
+        axios.get(pathCovers, { responseType: "blob" })
+          .then(async (res) => {
+            const base64data = await this.blobToData(res.data)
+            podcast.img = base64data
           })
-          console.log(podcasts)
-          var promises = []
-          for (let i = 0; i < podcasts.length; i++) {
-            const promise = axios.get(pathPodcasts + podcasts[i].title)
-              .then((resPodcast) => {
-                delete podcasts[i].title
-                console.log('resComp')
-                console.log(resPodcast.data)
-                podcasts[i].info = {
-                  'description': resPodcast.data.description,
-                  'category': resPodcast.data.category
-                  // 'image': resPodcast.data.image_url
-                }
-              })
-              .catch((error) => {
-                console.error(error)
-              })
-            console.log('Pushed promise: ')
-            console.log(promise)
-            promises.push(promise)
-          }
-          Promise.all(promises).then((_) => {
-            console.log(podcasts)
-            this.podcasts = podcasts
+          .catch((error) => {
+            console.error(error)
           })
-        })
-        .catch((error) => {
-          console.error(error)
-        })
-    },
-    created () {
-      // Descomentar cuando tengamos los endpoints listos
-      // this.getPodcasts() 
-    },
-    mounted() {
-      const podcastsContainer = this.$refs.podcastsContainer;
-      podcastsContainer.addEventListener('wheel', (e) => {
-        if (e.deltaX !== 0) {
-          podcastsContainer.scrollLeft += e.deltaX;
-          e.preventDefault();
-        }
       });
+
     },
-  };
-  </script>
+    blobToData(blob) {
+      return new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(blob)
+      })
+    },
+  },
+  created() {
+    // Descomentar cuando tengamos los endpoints listos
+    this.getCovers()
+  },
+  mounted() {
+    const podcastsContainer = this.$refs.podcastsContainer;
+    podcastsContainer.addEventListener('wheel', (e) => {
+      if (e.deltaX !== 0) {
+        podcastsContainer.scrollLeft += e.deltaX;
+        e.preventDefault();
+      }
+    });
+  },
+};
+</script>
   
-  <style>
-  .podcasts {
-    display: flex;
-    align-items: center;
-    padding-top: 25px;
-    padding-bottom: 20px;
-    /* width: 80vw; */
+<style>
+.podcasts {
+  display: flex;
+  align-items: center;
+  padding-top: 25px;
+  padding-bottom: 20px;
+  /* width: 80vw; */
 }
 
-  .podcasts-container {
-    margin-top: 50px;
-    width: 100vw;
-    height: 300px;
-  }
+.podcasts-container {
+  margin-top: 50px;
+  width: 100vw;
+  height: 300px;
+}
 
-  .podcast {
-    display: flex;
-    flex-direction: column;
-    /* align-items: center;
+.podcast {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center;
     justify-content: center; */
-    margin-left: 45px;
-  }
-  
-  .podcast img {
-    width: 210px;
-    height: 210px;
-    border-radius: 5%;
-    margin-bottom: 10px;
-  }
-  
-  .podcast .title {
-    font-size: 18px;
-    font-weight: 600;
-    text-align: center;
-  }
-  
-  .podcast:hover {
-    cursor: pointer;
-    transform: scale(1.1);
-    transition: all 0.3s ease-in-out;
-  }
+  margin-left: 45px;
+}
 
-  .podcast:hover img {
-    box-shadow: 0 0 15px rgba(0, 72, 255, 0.784);
-  }
-  </style>
+.podcast img {
+  width: 210px;
+  height: 210px;
+  border-radius: 5%;
+  margin-bottom: 10px;
+}
+
+.podcast .title {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.podcast:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.podcast:hover img {
+  box-shadow: 0 0 15px rgba(0, 72, 255, 0.784);
+}
+</style>
   

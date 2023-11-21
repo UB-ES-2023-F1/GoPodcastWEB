@@ -1,7 +1,8 @@
 <template>
     <div class="search col-6">
-        <input type="text" placeholder="Search">
-        <button>Search</button>
+      <input type="text" v-model="nameQuery" placeholder="Search by name">
+      <input type="text" v-model="authorQuery" placeholder="Search by author" style="border-bottom-left-radius: 0%; border-top-left-radius: 0%; border-left: 2px solid rgba(136, 136, 136, 0.555);">
+      <button @click="$emit('search', nameQuery, authorQuery)">Search</button>
     </div>
     <div class="col-12 col-md-6 d-flex justify-content-center justify-content-md-end">
         <div class="signin d-flex justify-content-end me-3" v-if="!this.userIsLoggedIn">
@@ -27,6 +28,13 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
   name: 'Home',
+  emits: ["search"],
+  data() {
+    return {
+      authorQuery: '',
+      nameQuery: ''
+    }
+  },
   computed: {
     ...mapState(['userIsLoggedIn']),
   },
