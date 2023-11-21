@@ -24,6 +24,7 @@ jobs:
       with:
         envkey_VITE_API_URL: $VITE_API_URL
         file_name: .env
+    - run: echo $VITE_API_URL
         
     - name: Use Node.js
       uses: actions/setup-node@v3
