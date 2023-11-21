@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  FRONTEND_URL: https://orange-sand-0e5435703-47.westeurope.3.azurestaticapps.net
+  FRONTEND_URL: https://gopodcastapi.azurewebsites.net
     
 jobs:
 
