@@ -11,7 +11,7 @@ import { beforeAll, afterEach, afterAll, beforeEach } from 'vitest'
 
 // Global variables
 const flushPromises = require('flush-promises');
-const backendURL = import.meta.env.VITE_API_URL + '/categories'
+const backendURL = import.meta.env.VITE_API_URL
 
 
 // Setting up the handlers
@@ -42,7 +42,7 @@ const errServer = setupServer(...restErrHandlers)
 // Start before all tests
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
 
-beaforeAll(() => console.log(backendURL));
+beforeAll(() => console.log(backendURL));
 
 // Close server after all tests
 afterAll(() => server.close())
