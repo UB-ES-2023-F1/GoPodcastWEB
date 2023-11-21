@@ -42,6 +42,8 @@ const errServer = setupServer(...restErrHandlers)
 // Start before all tests
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
 
+beaforeAll(() => console.log(backendURL));
+
 // Close server after all tests
 afterAll(() => server.close())
 
