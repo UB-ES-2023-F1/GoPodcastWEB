@@ -119,6 +119,8 @@ export default {
       console.log("Getting podcasts")
       const pathPodcasts = import.meta.env.VITE_API_URL + "/podcasts"
 
+      console.log("Podcasts path: " + pathPodcasts);
+      
       axios.get(pathPodcasts)
         .then((res) => {
           this.podcastsList = res.data
@@ -132,6 +134,8 @@ export default {
       console.log("Getting populars")
       const pathPopular = import.meta.env.VITE_API_URL + "/populars"
 
+      console.log("Populars path: " + pathPopular);
+      
       axios.get(pathPopular)
         .then((res) => {
           this.popularList = res.data
