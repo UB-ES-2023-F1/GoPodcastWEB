@@ -53,6 +53,8 @@ import TopBar from '../components/TopBar.vue';
 import { mapState, mapMutations } from 'vuex';
 import axios from 'axios';
 
+console.log(import.meta.env.VITE_API_URL);
+
 export default {
   name: 'Home',
   data() {

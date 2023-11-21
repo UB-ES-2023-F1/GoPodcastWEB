@@ -9,11 +9,13 @@
                     <TopBar />
                 </div>
                 <div class="row p-5 w-100">
+
+                    <!-- Info section -->
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="contenedor-reducido mb-5"> 
+                        <div class="contenedor-reducido mb-5">
                             <div class="row mt-4 ps-4 mr-4">
                                 <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                                    <img :src="episode.episodeImage" alt="Imagen" class="reduced-image mb-4"/>
+                                    <img :src="episode.img" alt="Imagen" class="reduced-image mb-4" />
                                 </div>
                                 <div class="col-12 col-sm-7 col-md-7 col-lg-7 ">
                                     <title>{{ episode.title }}</title>
@@ -24,6 +26,7 @@
                                             </button>
                                         </div>
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1"></div>
+                                        <!-- Like button. Only when logged in -->
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1 mt-3">
                                             <button class="like-button" @click="toggleLike()">
                                                 <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
@@ -32,46 +35,47 @@
                                     </div>
                                     <p></p>
                                     <div class="in-same-line">
-                                        <h6>{{ episode.author }}</h6>
+                                        <h6><a :href="'/visualize/' + episode.id_podcast">{{ episode.podcast_name }}</a></h6>
                                         <span class="separation">&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;</span>
-                                        <duration>{{ episode.duration }}</duration>
+                                        <h6><a :href="'/profile/' + episode.id_author">{{ episode.author_name }}</a></h6>
                                     </div>
-                                    
-                                    
+
+
+                                    <!-- Tag section. Not implemented for the moment -->
+                                    <!--
                                     <div>
                                         <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
                                             :style="{ backgroundColor: randomColor(tag) }">
                                             {{ tag }}
                                         </div>
-                                        
+
                                     </div>
-                                    <p></p>
-                                    <p></p>
+                                    -->
                                     <p>{{ episode.description }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Comment section -->
+                    <!--
                     <div class="row">
                         <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
                         <div class="col-12 col-sm-8 col-md-8 col-lg-8">
                             <h2>Comments:</h2>
-                            <Comment
-                                v-for="comment in episode.listOfComments"
-                                :key="comment.id"
-                                :comment="comment"
-                                @toggle-like="toggleLike"
-                            />
+                            <Comment v-for="comment in episode.listOfComments" :key="comment.id" :comment="comment"
+                                @toggle-like="toggleLike" />
                         </div>
                         <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
-        <div v-if="currentEpisode">
+        <!-- <div v-if="currentEpisode">
             <ProgressBar ref="progressBar" />
-        </div>
-    </div>   
+        </div> -->
+    </div>
 </template>
 
 <script>
@@ -81,187 +85,214 @@ import TopBar from '../components/TopBar.vue';
 import ProgressBar from '../components/ProgressBar.vue';
 import axios from 'axios'
 
-    export default {
-        components: {
-            Sidebar,
-            Comment,
-            ProgressBar,
-            TopBar,
+export default {
+    components: {
+        Sidebar,
+        Comment,
+        ProgressBar,
+        TopBar,
+    },
+    data() {
+        return {
+            // episode:{ 
+            //     id: 1, 
+            //     title: 'Intro', 
+            //     episodeImage: "/src/assets/podcasts/MMCD.jpg", 
+            //     description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", 
+            //     audio_url: '/src/assets/audio/Moonlight_audio.mp3', 
+            //     tags: ["Intro", "Cruzzi", "Moonlight"], 
+            //     listOfComments: [
+            //     {
+            //         date: new Date(),
+            //         text: "¡Este episodio fue increíblemente informativo! Me encantó cómo los anfitriones profundizaron en el tema y proporcionaron datos detallados que realmente ampliaron mi comprensión. ¡Aprendí mucho en solo unos minutos!",
+            //         replies: [
+            //             {
+            //             date: new Date(),
+            //             text: "La calidad del sonido en este episodio es excepcional. La producción está muy bien hecha, lo que hizo que la experiencia auditiva fuera muy agradable. ¡Se nota el esfuerzo que pusieron en la edición para garantizar una excelente calidad!",
+            //             replies: [
+            //                 {
+            //                 date: new Date(),
+            //                 text: "Teneis razón ambos, me encantó el episodio!!",
+            //                 replies: [],
+            //                 },
+            //             ],
+            //             },
+            //             {
+            //             date: new Date(),
+            //             text: "Tienes razón este episodio es un 10!",
+            //             replies: [],
+            //             },
+            //         ]},
+            //         {
+            //         date: new Date(),
+            //         text: "Los invitados en este episodio aportaron perspectivas fascinantes. Me encantó escuchar diferentes voces y opiniones sobre el tema. Fue genial ver cómo los anfitriones facilitaron la conversación de manera que todos pudieron expresar sus ideas de manera clara y concisa.",
+            //         replies: [],
+            //         },
+            //     ],
+            //     author: "Cruz Cafuné",
+            //     audioElement: null, 
+            //     isLiked: false 
+            // },
+            // currentEpisode: null,
+            // tagColors: {},
+            episode: {},
+            streamLater: []
+        };
+
+    },
+    methods: {
+        togglePlayback(episode) {
+            if (this.currentEpisode === episode) {
+                // Si el mismo episodio está en reproducción, detén la reproducción
+                this.stopPlayback(episode);
+                this.currentEpisode = null;
+            } else {
+                // Si se selecciona un nuevo episodio, detén la reproducción actual y comienza el nuevo episodio
+                this.stopCurrentPlayback();
+                this.playEpisode(episode);
+            }
         },
-        data() {
-            return {
-                episode:{ 
-                    id: 1, 
-                    title: 'Intro', 
-                    episodeImage: "/src/assets/podcasts/MMCD.jpg", 
-                    description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", 
-                    audio_url: '/src/assets/audio/Moonlight_audio.mp3', 
-                    tags: ["Intro", "Cruzzi", "Moonlight"], 
-                    listOfComments: [
-                    {
-                        date: new Date(),
-                        text: "¡Este episodio fue increíblemente informativo! Me encantó cómo los anfitriones profundizaron en el tema y proporcionaron datos detallados que realmente ampliaron mi comprensión. ¡Aprendí mucho en solo unos minutos!",
-                        replies: [
-                            {
-                            date: new Date(),
-                            text: "La calidad del sonido en este episodio es excepcional. La producción está muy bien hecha, lo que hizo que la experiencia auditiva fuera muy agradable. ¡Se nota el esfuerzo que pusieron en la edición para garantizar una excelente calidad!",
-                            replies: [
-                                {
-                                date: new Date(),
-                                text: "Teneis razón ambos, me encantó el episodio!!",
-                                replies: [],
-                                },
-                            ],
-                            },
-                            {
-                            date: new Date(),
-                            text: "Tienes razón este episodio es un 10!",
-                            replies: [],
-                            },
-                        ]},
-                        {
-                        date: new Date(),
-                        text: "Los invitados en este episodio aportaron perspectivas fascinantes. Me encantó escuchar diferentes voces y opiniones sobre el tema. Fue genial ver cómo los anfitriones facilitaron la conversación de manera que todos pudieron expresar sus ideas de manera clara y concisa.",
-                        replies: [],
-                        },
-                    ],
-                    author: "Cruz Cafuné",
-                    audioElement: null, 
-                    isLiked: false 
-                },
-                currentEpisode: null,
-                tagColors: {},
-            };
-            
+        playEpisode(episode) {
+            const audioElement = new Audio(episode.audio_url);
+            episode.audioElement = audioElement;
+            this.currentEpisode = episode;
+            audioElement.addEventListener("loadedmetadata", () => {
+                const duration = audioElement.duration;
+                episode.duration = this.formatDuration(duration);
+                audioElement.play();
+            });
+            if (episode !== episode) {
+                this.stopPlayback(ep);
+            }
+            this.preloadAudioDuration(ep);
         },
-        methods: {
-            togglePlayback(episode) {
-                if (this.currentEpisode === episode) {
-                    // Si el mismo episodio está en reproducción, detén la reproducción
-                    this.stopPlayback(episode);
-                    this.currentEpisode = null;
-                } else {
-                    // Si se selecciona un nuevo episodio, detén la reproducción actual y comienza el nuevo episodio
-                    this.stopCurrentPlayback();
-                    this.playEpisode(episode);
-                }
-            },
-            playEpisode(episode) {
-                const audioElement = new Audio(episode.audio_url);
-                episode.audioElement = audioElement;
-                this.currentEpisode = episode;
-                audioElement.addEventListener("loadedmetadata", () => {
-                    const duration = audioElement.duration;
-                    episode.duration = this.formatDuration(duration);
-                    audioElement.play(); 
-                });
-                if (episode !== episode) {
-                    this.stopPlayback(ep); 
-                }
-                this.preloadAudioDuration(ep);
-            },
-            stopPlayback(episode) {
-                if (episode.audioElement) {
-                    episode.audioElement.pause();
-                }
-            },
-            stopCurrentPlayback() {
-                if (this.currentEpisode) {
-                    this.stopPlayback(this.currentEpisode);
-                }
-            },
-            preloadAudioDuration(episode) {
-                const audioElement = new Audio(episode.audio_url);
-                audioElement.addEventListener("loadedmetadata", () => {
-                    const duration = audioElement.duration;
-                    episode.duration = this.formatDuration(duration);
-                });
-            },
-            formatDuration(seconds) {
-                if (seconds >= 3600) {
-                    const hours = Math.floor(seconds / 3600);
-                    const minutes = Math.floor((seconds % 3600) / 60);
-                    return `${hours} h ${minutes} min`;
-                } else if (seconds >= 60) {
-                    const minutes = Math.floor(seconds / 60);
-                    const remainingSeconds = Math.floor(seconds % 60);
-                    return `${minutes} min ${remainingSeconds} s`;
-                } else {
-                    return `${Math.floor(seconds)} s`;
-                }
-            },
-            toggleLike() {
-                const episodeId = this.episode.id;
-                const path = import.meta.env.VITE_API_URL + `/likeEpisode/${episodeId}`;
+        stopPlayback(episode) {
+            if (episode.audioElement) {
+                episode.audioElement.pause();
+            }
+        },
+        stopCurrentPlayback() {
+            if (this.currentEpisode) {
+                this.stopPlayback(this.currentEpisode);
+            }
+        },
+        preloadAudioDuration(episode) {
+            const audioElement = new Audio(episode.audio_url);
+            audioElement.addEventListener("loadedmetadata", () => {
+                const duration = audioElement.duration;
+                episode.duration = this.formatDuration(duration);
+            });
+        },
+        formatDuration(seconds) {
+            if (seconds >= 3600) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                return `${hours} h ${minutes} min`;
+            } else if (seconds >= 60) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.floor(seconds % 60);
+                return `${minutes} min ${remainingSeconds} s`;
+            } else {
+                return `${Math.floor(seconds)} s`;
+            }
+        },
+        toggleLike() {
+            if (!this.$store.state.userIsLoggedIn) {
+                console.log("Going to login");
+                this.$router.push({ name: 'Login' })
+                return
+            }
 
-                if (this.episode.isLiked) {
-                    axios.delete(path).then(response => {
-                        this.episode.isLiked = false;
-                        console.log(response.data);
-                    })
-                        .catch(error => {
-                            console.error('Error al eliminar el like: ', error);
-                        });
-                } else {
-                    axios.post(path).then(response => {
-                        this.episode.isLiked = true;
-                        console.log(response.data);
-                    })
-                        .catch(error => {
-                            console.error('Error al dar like: ', error);
-                        });
-                }
-            },
-            randomColor(tag) {
-                if (!this.tagColors[tag]) {
-                    const getRandomHex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
-                    
-                    let color;
-                    do {
-                    color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
-                    } while (this.isColorTooLight(color)); // Comprueba si el color es demasiado claro
-                    
-                    this.tagColors[tag] = color; // Almacena el color generado en tagColors
-                }
+            const episodeId = this.episode.id;
+            const path = import.meta.env.VITE_API_URL + `/stream_later/${episodeId}`;
 
-                return this.tagColors[tag];
-            },
-
-            // Función que permita la legibilidad del texto de la etiqueta en relación del color de fondo
-            isColorTooLight(color) {
-                const r = parseInt(color.slice(1, 3), 16);
-                const g = parseInt(color.slice(3, 5), 16);
-                const b = parseInt(color.slice(5, 7), 16);
-
-                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-                return brightness > 128;
-            },
-            getEpisode() {
-                const podcastId = this.$route.params.podcastId;
-                const episodeId = this.$route.params.id;
-                const pathEpisode = import.meta.env.VITE_API_URL + `/podcasts/${podcastId}/episodes/${episodeId}`;
-
-                axios.get(pathEpisode).then((resEpisode) => {
-                    episode = resEpisode.data;
+            if (this.episode.isLiked) {
+                axios.delete(path).then(response => {
+                    this.episode.isLiked = false;
+                    console.log(response.data);
                 })
+                    .catch(error => {
+                        console.error('Error al eliminar el like: ', error);
+                    });
+            } else {
+                axios.post(path).then(response => {
+                    this.episode.isLiked = true;
+                    console.log(response.data);
+                })
+                    .catch(error => {
+                        console.error('Error al dar like: ', error);
+                    });
+            }
+        },
+        randomColor(tag) {
+            if (!this.tagColors[tag]) {
+                const getRandomHex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+
+                let color;
+                do {
+                    color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
+                } while (this.isColorTooLight(color)); // Comprueba si el color es demasiado claro
+
+                this.tagColors[tag] = color; // Almacena el color generado en tagColors
+            }
+
+            return this.tagColors[tag];
+        },
+
+        // Función que permita la legibilidad del texto de la etiqueta en relación del color de fondo
+        isColorTooLight(color) {
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+            return brightness > 128;
+        },
+        getEpisode() {
+            const episodeId = this.$route.params.id;
+            const pathEpisode = import.meta.env.VITE_API_URL + `/episodes/${episodeId}`;
+
+            axios.get(pathEpisode).then((resEpisode) => {
+                this.episode = resEpisode.data;
+                console.log(this.episode)
+                this.getCover()
+            })
                 .catch((error) => {
                     console.error(error);
                 });
-            },
-            
         },
-        created () {
-            // Descomentar cuando tengamos los endpoints listos
-            // this.getEpisode() 
-            this.episodeId = this.$route.params.id;
+        getCover() {
+            const pathCovers = import.meta.env.VITE_API_URL + '/podcasts/' + this.episode.id_podcast + '/cover'
+
+            axios.get(pathCovers, { responseType: "blob" })
+                .then(async (res) => {
+                    const base64data = await this.blobToData(res.data)
+                    this.episode.img = base64data
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+
         },
-        mounted() {
-            // Precargar la duración al cargar la página
-            this.preloadAudioDuration(this.episode);
+        blobToData(blob) {
+            return new Promise((resolve) => {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result)
+                reader.readAsDataURL(blob)
+            })
         },
-        
-    };
+    },
+    created() {
+        // Descomentar cuando tengamos los endpoints listos
+        this.getEpisode()
+    },
+    mounted() {
+        // Precargar la duración al cargar la página
+        this.preloadAudioDuration(this.episode);
+    },
+
+};
 </script>
 
 <style>
@@ -270,8 +301,8 @@ import axios from 'axios'
 }
 
 .in-same-line {
-  display: flex;
-  align-items: baseline;
+    display: flex;
+    align-items: baseline;
 }
 
 .vert {
@@ -279,6 +310,7 @@ import axios from 'axios'
     align-items: center;
     justify-content: center;
 }
+
 .like-button {
     background: transparent;
     border: none;
@@ -289,7 +321,7 @@ import axios from 'axios'
     margin-top: 0;
     margin-bottom: 0;
     align-items: center;
-    
+
 }
 
 .like-button:hover {
@@ -333,6 +365,7 @@ import axios from 'axios'
     align-items: start;
     justify-content: flex-start;
 }
+
 title {
     display: block;
     font-size: 3.5em;
@@ -342,18 +375,19 @@ title {
     line-height: 1;
 
 }
+
 duration {
     font-size: 17px;
 }
 
 .reduced-image {
-    width: 100%; 
+    width: 100%;
     height: auto;
     border-radius: 5px;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-.visualize-content .more-content{
+.visualize-content .more-content {
     width: 100%;
     height: 100%;
     padding-left: 0px;
@@ -361,7 +395,7 @@ duration {
     margin-bottom: 0;
 }
 
-h6{
+h6 {
     font-size: 18px;
 }
 
@@ -371,13 +405,13 @@ h6{
     justify-content: center;
 }
 
-.contenedor-reducido{
+.contenedor-reducido {
     text-align: justify;
     align-items: justify;
     justify-content: justify;
 }
 
-.visualize-content .more-content h2{
+.visualize-content .more-content h2 {
     color: #525dff;
 }
 
@@ -394,9 +428,10 @@ h2 {
     margin-bottom: 35px;
     width: inherit;
 }
+
 ul {
     list-style-type: none;
-} 
+}
 
 .follow-button {
     width: 9vw;
@@ -416,7 +451,7 @@ ul {
 }
 
 .follow-button:not(.following) {
-    background-color: transparent; 
+    background-color: transparent;
     border: 1px solid #fff;
     color: #fff;
 }
@@ -425,7 +460,7 @@ ul {
     background-color: transparent;
     color: #fff;
     border: 1px solid #fff;
-    
+
 }
 
 .follow-button:hover:not(.following) {

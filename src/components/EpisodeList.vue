@@ -1,48 +1,38 @@
 <template>
-  <div class="podcasts-container m-0 p-0">
+  <div class="m-0 p-0">
     <div class="podcasts overflow-x-auto flex-nowrap overflow-x-hidden" ref="podcastsContainer">
-      <div v-for="podcast in podcastList" :key="podcast.id" class="podcast">
-        <a :href="'/visualize/' + podcast.id">
-          <img :src="podcast.img" :alt="podcast.name" v-if="podcast.img">
+      <div v-for="episode in episodesList" :key="episode.id" class="podcast" @click="goToPodcast(episode.id)">
+        <a :href="'/visualize/' + episode.id">
+          <img :src="episode.img" :alt="episode.title" class="podcast-img" v-if="episode.img">
         </a>
-        <span class="name">{{ podcast.name }}</span>
+        <span class="title">{{ episode.title }}</span>
       </div>
     </div>
   </div>
 </template>
-  
+
 <script>
-import axios from 'axios';
-
-// import axios from 'axios'
-
 export default {
   props: {
-    podcastList: {
+    episodesList: {
       type: Array,
       default: []
     }
   },
   watch: {
-    podcastList() {
+    episodesList(newValue, oldValue) {
       this.getCovers()
-    }
-  },
-  data() {
-    return {
-      imagePath: '../assets/cache/podcast_covers/',
-      imgTest: null
     }
   },
   methods: {
     getCovers() {
-      this.podcastList.forEach(podcast => {
-        const pathCovers = import.meta.env.VITE_API_URL + '/podcasts/' + podcast.id + '/cover'
+      this.episodesList.forEach(episode => {
+        const pathCovers = import.meta.env.VITE_API_URL + '/podcasts/' + episode.id_podcast + '/cover'
 
         axios.get(pathCovers, { responseType: "blob" })
           .then(async (res) => {
             const base64data = await this.blobToData(res.data)
-            podcast.img = base64data
+            episode.img = base64data
           })
           .catch((error) => {
             console.error(error)
@@ -59,8 +49,8 @@ export default {
     },
   },
   created() {
-    // Descomentar cuando tengamos los endpoints listos
-    this.getCovers()
+    // Uncomment when endpoints are ready
+    // this.getStreamLater();
   },
   mounted() {
     const podcastsContainer = this.$refs.podcastsContainer;
@@ -71,40 +61,38 @@ export default {
       }
     });
   },
-};
+}
 </script>
-  
-<style>
+
+<style scoped>
 .podcasts {
   display: flex;
   align-items: center;
   padding-top: 25px;
   padding-bottom: 20px;
-  /* width: 80vw; */
 }
 
 .podcasts-container {
   margin-top: 50px;
   width: 100vw;
   height: 300px;
+  overflow: hidden;
 }
 
 .podcast {
   display: flex;
   flex-direction: column;
-  /* align-items: center;
-    justify-content: center; */
-  margin-left: 45px;
+  margin-left: 20px;
 }
 
-.podcast img {
-  width: 210px;
-  height: 210px;
-  border-radius: 5%;
+.podcast-img {
+  width: 160px;
+  height: 160px;
+  border-radius: 2%;
   margin-bottom: 10px;
 }
 
-.podcast .title {
+.title {
   font-size: 18px;
   font-weight: 600;
   text-align: center;
@@ -116,8 +104,7 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.podcast:hover img {
+.podcast:hover .podcast-img {
   box-shadow: 0 0 15px rgba(0, 72, 255, 0.784);
 }
 </style>
-  

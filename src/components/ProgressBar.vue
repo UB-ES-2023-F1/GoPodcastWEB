@@ -75,19 +75,15 @@ export default {
             console.log("Test");
         },
         setAudioUrl(audioUrl) {
-            console.log("Setting audio url to: " + audioUrl);
             this.audioUrl = audioUrl;
         },
         setCoverUrl(coverUrl) {
-            console.log("Setting cover img to: " + coverUrl);
             this.coverImg = coverUrl;
         },
         setTitlePodcast(title) {
-            console.log("Setting title podcast to: " + title);
             this.titlePodcast = title;
         },
         setTitleEpisode(title) {
-            console.log("Setting title episode to: " + title);
             this.titleEpisode = title;
         },
         fetchAudio() {
@@ -160,6 +156,11 @@ export default {
                 this.isPlaying = false;
             }
         },
+        play() {
+            var audio = this.$refs.player;
+            audio.play();
+            this.isPlaying = true;
+        }
     },
     mounted: function () {
         //this.fetchAudio(); // TODO: Descomentar cuando esté la parte de backend preparada
