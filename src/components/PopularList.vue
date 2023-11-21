@@ -32,8 +32,8 @@
       };
     },
     getPopulars () {
-      const pathPodcasts = 'http://localhost:8000/podcasts/'
-      const pathPopulars = 'http://localhost:8000/populars/'
+      const pathPodcasts = import.meta.env.VITE_API_URL + '/podcasts/'
+      const pathPopulars = import.meta.env.VITE_API_URL + '/populars'
 
       axios.get(pathPopulars)
         .then((res) => {

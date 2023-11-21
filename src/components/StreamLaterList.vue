@@ -30,8 +30,8 @@ export default {
   },
   methods: {
     getStreamLater() {
-      const pathStreamLater = 'http://localhost:8000/stream_later';
-      const pathEpisodes = 'http://localhost:8000/podcasts/';
+      const pathStreamLater = import.meta.env.VITE_API_URL + '/stream_later';
+      const pathEpisodes = import.meta.env.VITE_API_URL + '/podcasts/';
 
       axios.get(pathEpisodes)
         .then((res) => {

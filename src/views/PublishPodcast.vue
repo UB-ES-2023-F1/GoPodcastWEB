@@ -113,7 +113,7 @@ export default {
             }
 
             console.log(parameters)
-            const path = 'http://localhost:5000/podcasts' // Descomentar y modificar por el endpoint correcto
+            const path = import.meta.env.VITE_API_URL + '/podcasts'
             axios.post(path, formData, axiosConfig, {
                 headers: {
                     'Content-Type': 'multipart/form-data'

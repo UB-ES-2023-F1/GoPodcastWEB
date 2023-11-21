@@ -112,21 +112,37 @@
           name: 'Jaime Altozano',
           bio: 'Me gustan los podcasts y los pandas rojos, yey! Dame follow para ver mis playlist :D',
           type: 'USER'
-        }
+        },
+        userId: null
       }
     },
     methods: {
       getUserInfo() {
-        axios.get('http://localhost:3000/user/1')
-          .then(response => {
+        const path = import.meta.env.VITE_API_URL + '/profile/' + this.userId
+        axios.get(path).then(response => {
             this.user = response.data
           })
           .catch(error => {
             console.log(error)
           })
-      }
+      },
+      getIdProfile() {
+        const userPath = import.meta.env.VITE_API_URL + '/protected'
+
+        const axiosConfig = {
+            withCredentials: true
+        }
+
+        axios.get(userPath, axiosConfig).then((res) => {
+            this.userId = res.data.logged_in_as;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+      },
     },
     created() {
+      this.getIdProfile();
       // Uncomment when endpoints are ready
       // this.getUserInfo()
     }

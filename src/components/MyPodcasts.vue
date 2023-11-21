@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     async getMyPodcasts() {
-      const pathPodcasts = 'http://localhost:8000/my_podcasts';
+      const pathPodcasts = import.meta.env.VITE_API_URL + '/my_podcasts';
 
       try {
         const res = await axios.get(pathPodcasts);

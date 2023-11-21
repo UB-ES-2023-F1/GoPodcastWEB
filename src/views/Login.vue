@@ -80,7 +80,7 @@ export default {
                 withCredentials: true
             }
 
-            const path = 'http://localhost:5000/login' // Descomentar y modificar por el endpoint correcto
+            const path = import.meta.env.VITE_API_URL + '/login'
             axios.post(path, parameters, axiosConfig)
             .then((res) => {
                 this.$store.commit('setUserIsLoggedIn', false);
