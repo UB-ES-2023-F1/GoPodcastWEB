@@ -2,7 +2,7 @@
     <div class="users-container m-0 p-0">
         <div class="users overflow-x-auto flex-nowrap overflow-x-hidden" ref="usersContainer">
             <div v-for="user in userList" :key="user.id" class="user">
-                <a :href="'/user/' + user.id">
+                <a :href="'/profile/' + user.id">
                     <img :src="'https://api.iconify.design/iconamoon/profile-fill.svg'">
                 </a>
                 <span class="name">{{ user.username }}</span>

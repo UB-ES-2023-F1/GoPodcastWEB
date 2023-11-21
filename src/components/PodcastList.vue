@@ -4,7 +4,6 @@
       <div v-for="podcast in podcastList" :key="podcast.id" class="podcast">
         <a :href="'/visualize/' + podcast.id">
           <img :src="podcast.img" :alt="podcast.name" v-if="podcast.img">
-          <img :src="'src/assets/icons/ic_podcast.png'" v-else>
         </a>
         <span class="name">{{ podcast.name }}</span>
       </div>
