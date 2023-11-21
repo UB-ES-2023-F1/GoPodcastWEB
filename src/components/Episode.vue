@@ -80,31 +80,26 @@ export default {
             if (this.currentEpisode === episode) {
                 // Si el mismo episodio está en reproducción, detén la reproducción
                 this.stopPlayback(episode);
-                console.log("!")
                 this.currentEpisode = null;
             } else {
                 // Si se selecciona un nuevo episodio, detén la reproducción actual y comienza el nuevo episodio
                 this.stopCurrentPlayback();
-                console.log("?")
                 this.playEpisode(episode);
             }
         },
         // TODO: Descomentar y linkear con el componente ProgressBar
         playEpisode(episode) {
             this.currentEpisode = episode
-            console.log("playinh episode " + episode)
             this.$nextTick(() => {
-                console.log("Nexttick")
                 // Use $nextTick to wait for the ProgressBar component to be mounted
                 const progressBar = this.$refs.progressBar;
 
-                console.log("ProgressBar: ", progressBar)
                 if (progressBar) {
                     this.$refs.progressBar.setAudioUrl(episode.audio_url);
                     this.$refs.progressBar.setCoverUrl(this.podcastImage);
                     this.$refs.progressBar.setTitlePodcast(this.podcastName);
                     this.$refs.progressBar.setTitleEpisode(episode.title)
-                    this.$refs.progressBar.toggleAudio();
+                    this.$refs.progressBar.play();
                     this.$refs.progressBar.initSlider();
                 } else {
                     console.error('ProgressBar component or setAudioUrl method not found.');
