@@ -10,15 +10,16 @@
                 </div>
                 <div class="row p-5 w-100">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="contenedor-reducido mb-5"> 
+                        <div class="contenedor-reducido mb-5">
                             <div class="row mt-5 ps-5 mr-5">
                                 <div class="col-10 col-sm-4 col-md-4 col-lg-4">
-                                    <img :src="podcast.image_url" alt="Imagen" class="reduced-image"/>
+                                    <img :src="podcast.img" alt="Imagen" class="reduced-image" v-if="podcast.img" />
                                 </div>
                                 <div class="col-10 col-sm-7 col-md-7 col-lg-7 ">
-                                    <h1>{{ podcast.title }}</h1>
+                                    <h1>{{ podcast.name }}</h1>
                                     <div>
-                                        <button @click="toggleFollow" class="follow-button mt-2 mb-4" :class="{ following: podcast.isFollowing }">
+                                        <button @click="toggleFollow" class="follow-button mt-2 mb-4"
+                                            :class="{ following: podcast.isFollowing }">
                                             {{ podcast.isFollowing ? 'Unfollow' : 'Follow' }}
                                         </button>
                                     </div>
@@ -27,15 +28,15 @@
                                 </div>
                             </div>
                             <div class="row mt-3 align-items-center ps-5">
-                                <Episode />
+                                <Episode :episodes="podcast.episodes" :podcastImage="podcast.img" :podcastName="podcast.name" v-if="podcast.img"/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-            
-    </div>   
+
+    </div>
 </template>
 
 <script>
@@ -45,72 +46,108 @@ import ProgressBar from '../components/ProgressBar.vue';
 import TopBar from '../components/TopBar.vue';
 import axios from 'axios'
 
-    export default {
-        components: {
-            Sidebar,
-            Episode,
-            ProgressBar,
-            TopBar,
-        },
-        data() {
-            return {
-                podcast:{
-                    id: 1,
-                    image_url: '/src/assets/podcasts/Moonlight.jpg',
-                    title: "Moonlight",
-                    summary: "Podcast talking about Cruz Cafuné's new album",
-                    description: "Moonlight 922 se trata del segundo trabajo musical de Cruz Cafuné, dos años más tarde de la publicación de su antecesor, Maracucho Bueno Muere Chiquito, siendo este estrenado el día 10 de enero del año 2020 en todas las plataformas digitales.El álbum fue publicado tras el lanzamiento de cuatro adelantos de las trece canciones que serían publicadas; teniendo en cuenta que finalmente, “En Mi Zona” no acabaría formando parte de la Mixtape. Debe ser mencionado, que en un principio, la idea del artista era publicar música durante todas las lunas llenas; y que solo estuviera disponible durante el transcurro de estas, de ahí parte del nombre del álbum; aunque finalmente fue algo que no pudo llevarse a cabo.",
-                    list_of_episodes: [
-                        { id: 1, title: 'intro', episodeImage: "/src/assets/podcasts/MMCD.jpg", description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", audio_url: '/src/assets/audio/Moonlight_audio.mp3', tags: ["Intro", "Cruzzi", "Moonlight"], listOfComments: [], author: "Cruz Cafuné", audioElement: null, isLiked: false },
-                        { id: 2, title: 'mi_isla', episodeImage: "/src/assets/podcasts/MBMC.jpg", description: "Canción de Cruzzi inicio album Moonlight922", audio_url: '/src/assets/audio/Mi_isla_audio.mp3', tags: ["LPGC", "Cruzzi", "Luna"], listOfComments: [], author: "Cruz Cafuné", audioElement: null, isLiked: false },
-                    ],
-                    author: "Cruz Cafuné",
-                    isFollowing: false,
-                },
-            };
-        },
-        methods: {
-            getPodcast() {
-                const podcastId = this.$route.params.id;
-                const pathPodcast = import.meta.env.VITE_API_URL + `/podcasts/${podcastId}`;
+export default {
+    components: {
+        Sidebar,
+        Episode,
+        ProgressBar,
+        TopBar,
+    },
+    data() {
+        return {
+            podcast: {
+                // id: 1,
+                // image_url: '/src/assets/podcasts/Moonlight.jpg',
+                // title: "Moonlight",
+                // summary: "Podcast talking about Cruz Cafuné's new album",
+                // description: "Moonlight 922 se trata del segundo trabajo musical de Cruz Cafuné, dos años más tarde de la publicación de su antecesor, Maracucho Bueno Muere Chiquito, siendo este estrenado el día 10 de enero del año 2020 en todas las plataformas digitales.El álbum fue publicado tras el lanzamiento de cuatro adelantos de las trece canciones que serían publicadas; teniendo en cuenta que finalmente, “En Mi Zona” no acabaría formando parte de la Mixtape. Debe ser mencionado, que en un principio, la idea del artista era publicar música durante todas las lunas llenas; y que solo estuviera disponible durante el transcurro de estas, de ahí parte del nombre del álbum; aunque finalmente fue algo que no pudo llevarse a cabo.",
+                // list_of_episodes: [
+                //     { id: 1, title: 'intro', episodeImage: "/src/assets/podcasts/MMCD.jpg", description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", audio_url: '/src/assets/audio/Moonlight_audio.mp3', tags: ["Intro", "Cruzzi", "Moonlight"], listOfComments: [], author: "Cruz Cafuné", audioElement: null, isLiked: false },
+                //     { id: 2, title: 'mi_isla', episodeImage: "/src/assets/podcasts/MBMC.jpg", description: "Canción de Cruzzi inicio album Moonlight922", audio_url: '/src/assets/audio/Mi_isla_audio.mp3', tags: ["LPGC", "Cruzzi", "Luna"], listOfComments: [], author: "Cruz Cafuné", audioElement: null, isLiked: false },
+                // ],
+                // author: "Cruz Cafuné",
+                // isFollowing: false,
+            },
+        };
+    },
+    methods: {
+        getPodcast() {
+            const podcastId = this.$route.params.id;
+            const pathPodcast = import.meta.env.VITE_API_URL + `/podcasts/${podcastId}`;
 
-                axios.get(pathPodcast).then((resPodcast) => {
+            axios.get(pathPodcast)
+                .then((resPodcast) => {
                     this.podcast = resPodcast.data;
+                    this.getCover()
+                    this.getEpisodes()
                 })
                 .catch((error) => {
                     console.error(error);
                 });
-            },
-            toggleFollow() {
-                const podcastId = this.podcast.id;
-                const path = import.meta.env.VITE_API_URL + `/followPodcast/${podcastId}`;
+        },
+        getCover() {
+            const pathCover = import.meta.env.VITE_API_URL + '/podcasts/' + this.$route.params.id + '/cover'
 
-                if (this.podcast.isFollowing) {
-                    axios.delete(path).then(response => {
-                        this.podcast.isFollowing = false;
-                        console.log(response.data);
-                    })
-                    .catch(error => {
-                        console.error('Error al dejar de seguir el podcast: ', error);
-                    });
-                } else {
-                    axios.post(path).then(response => {
-                        this.podcast.isFollowing = true;
-                        console.log(response.data);
-                    })
-                    .catch(error => {
-                        console.error('Error al seguir el podcast: ', error);
-                    });
-                }
-            },
-            
+            axios.get(pathCover, { responseType: "blob" })
+                .then(async (res) => {
+                    const base64data = await this.blobToData(res.data)
+                    this.podcast.img = base64data
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+
         },
-        created () {
-            // Descomentar cuando tengamos los endpoints listos
-            // this.getPodcast() 
+        blobToData(blob) {
+            return new Promise((resolve) => {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result)
+                reader.readAsDataURL(blob)
+            })
         },
-        
-    };
+        getEpisodes() {
+            const pathEpisodes = import.meta.env.VITE_API_URL + '/podcasts/' + this.$route.params.id + '/episodes'
+
+            axios.get(pathEpisodes)
+            .then((res) => {
+                this.podcast.episodes = res.data
+                console.log(this.podcast)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        },
+        toggleFollow() {
+            console.log("TODO Sprint 3");
+            // const podcastId = this.podcast.id;
+            // const path = import.meta.env.VITE_API_URL + `/followPodcast/${podcastId}`;
+
+            // if (this.podcast.isFollowing) {
+            //     axios.delete(path).then(response => {
+            //         this.podcast.isFollowing = false;
+            //         console.log(response.data);
+            //     })
+            //     .catch(error => {
+            //         console.error('Error al dejar de seguir el podcast: ', error);
+            //     });
+            // } else {
+            //     axios.post(path).then(response => {
+            //         this.podcast.isFollowing = true;
+            //         console.log(response.data);
+            //     })
+            //     .catch(error => {
+            //         console.error('Error al seguir el podcast: ', error);
+            //     });
+            // }
+        },
+
+    },
+    created() {
+        // Descomentar cuando tengamos los endpoints listos
+        this.getPodcast()
+    },
+
+};
 </script>
 
 <style>
@@ -126,20 +163,20 @@ import axios from 'axios'
 }
 
 .reduced-image {
-    width: 100%; 
+    width: 100%;
     height: auto;
     border-radius: 5px;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2); 
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-.visualize-content .more-content{
+.visualize-content .more-content {
     width: 100%;
     height: 100%;
     padding-left: 0px;
     background-color: #04001d;
 }
 
-h6{
+h6 {
     font-size: 18px;
 }
 
@@ -149,13 +186,13 @@ h6{
     justify-content: center;
 }
 
-.contenedor-reducido{
+.contenedor-reducido {
     text-align: justify;
     align-items: justify;
     justify-content: justify;
 }
 
-.visualize-content .more-content h2{
+.visualize-content .more-content h2 {
     color: #525dff;
 }
 
@@ -171,9 +208,10 @@ h2 {
     margin-bottom: 35px;
     width: inherit;
 }
+
 ul {
     list-style-type: none;
-} 
+}
 
 .follow-button {
     width: 9vw;
@@ -193,7 +231,7 @@ ul {
 }
 
 .follow-button:not(.following) {
-    background-color: transparent; 
+    background-color: transparent;
     border: 1px solid #fff;
     color: #fff;
 }
@@ -202,7 +240,7 @@ ul {
     background-color: transparent;
     color: #fff;
     border: 1px solid #fff;
-    
+
 }
 
 .follow-button:hover:not(.following) {

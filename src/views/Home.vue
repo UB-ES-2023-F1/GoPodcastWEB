@@ -24,13 +24,13 @@
         <div v-else>
           <div class="featured">
             <h2 class="ps-5">Featured Podcasts</h2>
-            <PodcastList :podcastList="popularList"/>
+            <PodcastList :podcastList="podcastsList"/>
           </div>
           <div class="more-content ps-5 pt-4">
             <CategoryList />
             <div class="mt-5 pt-2">
               <h2>Most Listened Podcasts</h2>
-              <PopularList />
+              <PodcastList :podcastList="popularList" />
             </div>
           </div>
         </div>
@@ -45,7 +45,6 @@
 <script>
 import CategoryList from '../components/CategoryList.vue';
 import PodcastList from '../components/PodcastList.vue';
-import PopularList from '../components/PopularList.vue';
 import UserList from '../components/UserList.vue';
 import Sidebar from '../components/Sidebar.vue';
 import ProgressBar from '../components/ProgressBar.vue';
@@ -58,6 +57,7 @@ export default {
   name: 'Home',
   data() {
     return {
+      podcastsList: [],
       popularList: [],
       podcastSearchList: [],
       userSearchList: [],
@@ -115,6 +115,19 @@ export default {
           console.error(error)
         })
     },
+    getPodcasts() {
+      console.log("Getting podcasts")
+      const pathPodcasts = import.meta.env.VITE_API_URL + "/podcasts"
+
+      axios.get(pathPodcasts)
+        .then((res) => {
+          this.podcastsList = res.data
+        })
+        .catch((error) => {
+          this.podcastsList = []
+          console.error(error)
+        })
+    },
     getPopular() {
       console.log("Getting populars")
       const pathPopular = import.meta.env.VITE_API_URL + "/populars"
@@ -124,7 +137,7 @@ export default {
           this.popularList = res.data
         })
         .catch((error) => {
-          this.userSearchList = []
+          this.popularList = []
           console.error(error)
         })
     }
@@ -143,12 +156,12 @@ export default {
   */
   created() {
     this.getPopular()
+    this.getPodcasts()
   },
 
   components: {
     PodcastList,
     CategoryList,
-    PopularList,
     UserList,
     Sidebar,
     ProgressBar,

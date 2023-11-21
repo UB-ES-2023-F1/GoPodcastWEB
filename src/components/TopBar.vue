@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12 d-flex justify-content-between align-items-center">
+  <div class="col-12 d-flex justify-content-between align-items-start">
     <div class="search col-6">
       <input type="text" v-model="nameQuery" placeholder="Search by name">
       <input type="text" v-model="authorQuery" placeholder="Search by author" style="border-bottom-left-radius: 0%; border-top-left-radius: 0%; border-left: 2px solid rgba(136, 136, 136, 0.555);">
@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       authorQuery: '',
-      nameQuery: ''
+      nameQuery: '',
       userId: null
     }
   },

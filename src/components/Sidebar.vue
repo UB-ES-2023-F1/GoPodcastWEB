@@ -69,6 +69,7 @@ export default {
     overflow: hidden;
     font-size: 1.25rem;
     letter-spacing: 0.05rem;
+    min-height: 100vh;
 }
 
 .sidebar .logo {

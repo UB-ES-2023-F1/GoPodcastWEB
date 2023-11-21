@@ -1,15 +1,9 @@
 <template>
-    <div v-for="episode in podcast.list_of_episodes" :key="episode.id" class="episode">
+    <div v-for="episode in episodes" :key="episode.id" class="episode">
         <div class="row mt-2 p-2 contenedor-episodio">
-            <div class="col-12 col-sm-3 col-md-3 col-lg-3">
-                <a :href="'/visualize/' + podcast.id + '/visualizeEpisode/' + episode.id">
-                    <img :src="episode.episodeImage" alt="Imagen" class="reduced-image borde-redondeado"
-                        id="imagen-interactiva" />
-                </a>
-            </div>
             <div class="col-12 col-sm-9 col-md-9 col-lg-9">
                 <div class="row">
-                    <a :href="'/visualize/' + podcast.id + '/visualizeEpisode/' + episode.id">
+                    <a :href="'/visualizeEpisode/' + episode.id">
                         <h4>{{ episode.title }} </h4>
                     </a>
                 </div>
@@ -51,73 +45,88 @@ import ProgressBar from '../components/ProgressBar.vue';
 import axios from 'axios'
 
 export default {
+    props: {
+        episodes: {
+            type: Array,
+            default: []
+        },
+        podcastImage: {
+            type: String,
+            default: null
+        },
+        podcastName: {
+            type: String,
+            default: ""
+        }
+    },
     components: {
         ProgressBar,
     },
     data() {
         return {
-            podcast: {
-                id: 1,
-                image_url: '/src/assets/podcasts/Moonlight.jpg',
-                title: "Moonlight",
-                summary: "Podcast talking about Cruz Cafuné's new album",
-                description: "This podcast talks about the importance of the islands having been born and raised in the Canary Islands",
-                list_of_episodes: [
-                    { id: 1, title: 'intro', episodeImage: "/src/assets/podcasts/MMCD.jpg", description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", audio_url: '/src/assets/audio/Moonlight_audio.mp3', tags: ["Intro", "Cruzzi", "Moonlight"], listOfComments: [], author: "Cruz Cafuné", audioElement: null, isLiked: false },
-                    { id: 2, title: 'mi_isla', episodeImage: "/src/assets/podcasts/MBMC.jpg", description: "Canción de Cruzzi inicio album Moonlight922", audio_url: '/src/assets/audio/Mi_isla_audio.mp3', tags: ["LPGC", "Cruzzi", "Luna"], listOfComments: [], author: "Cruz Cafuné", audioElement: null, isLiked: false },
-                ],
-                author: "Cruz Cafuné",
-            },
             currentEpisode: null,
             tagColors: {},
         };
+    },
+    watch: {
+        episodes(newValue, oldValue) {
+            this.episodes.forEach((episode) => {
+                this.getAudioData(episode);
+            });
+        }
     },
     methods: {
         togglePlayback(episode) {
             if (this.currentEpisode === episode) {
                 // Si el mismo episodio está en reproducción, detén la reproducción
                 this.stopPlayback(episode);
+                console.log("!")
                 this.currentEpisode = null;
             } else {
                 // Si se selecciona un nuevo episodio, detén la reproducción actual y comienza el nuevo episodio
                 this.stopCurrentPlayback();
+                console.log("?")
                 this.playEpisode(episode);
             }
         },
         // TODO: Descomentar y linkear con el componente ProgressBar
-        // playEpisode(episode) {
-        //     this.$nextTick(() => {
-        //         // Use $nextTick to wait for the ProgressBar component to be mounted
-        //         const progressBar = this.$refs.progressBar;
-
-        //         if (progressBar) {
-        //             console.log('Setting audio url to: ' + episode.audio_url);
-        //             this.$refs.progressBar.setAudioUrl(episode.audio_url);
-        //             this.$refs.progressBar.setCoverUrl(episode.episodeImage);
-        //             this.$refs.progressBar.setTitle(episode.title);
-        //             this.$refs.progressBar.play();
-        //         } else {
-        //             console.error('ProgressBar component or setAudioUrl method not found.');
-        //         }
-        //         this.currentEpisode = episode;
-        //     });
-        // },
         playEpisode(episode) {
-            const audioElement = new Audio(episode.audio_url);
-            episode.audioElement = audioElement;
-            this.currentEpisode = episode;
-            audioElement.addEventListener("loadedmetadata", () => {
-                const duration = audioElement.duration;
-                episode.duration = this.formatDuration(duration);
-                audioElement.play(); 
-            });
-            this.podcast.list_of_episodes.forEach((ep) => {
-                if (ep !== episode) {
-                this.stopPlayback(ep); 
+            this.currentEpisode = episode
+            console.log("playinh episode " + episode)
+            this.$nextTick(() => {
+                console.log("Nexttick")
+                // Use $nextTick to wait for the ProgressBar component to be mounted
+                const progressBar = this.$refs.progressBar;
+
+                console.log("ProgressBar: ", progressBar)
+                if (progressBar) {
+                    this.$refs.progressBar.setAudioUrl(episode.audio_url);
+                    this.$refs.progressBar.setCoverUrl(this.podcastImage);
+                    this.$refs.progressBar.setTitlePodcast(this.podcastName);
+                    this.$refs.progressBar.setTitleEpisode(episode.title)
+                    this.$refs.progressBar.toggleAudio();
+                    this.$refs.progressBar.initSlider();
+                } else {
+                    console.error('ProgressBar component or setAudioUrl method not found.');
                 }
-                this.preloadAudioDuration(ep);
             });
         },
+        // playEpisode(episode) {
+        //     const audioElement = new Audio(episode.audio_url);
+        //     episode.audioElement = audioElement;
+        //     this.currentEpisode = episode;
+        //     audioElement.addEventListener("loadedmetadata", () => {
+        //         const duration = audioElement.duration;
+        //         episode.duration = this.formatDuration(duration);
+        //         audioElement.play();
+        //     });
+        //     this.episodes.forEach((ep) => {
+        //         if (ep !== episode) {
+        //             this.stopPlayback(ep);
+        //         }
+        //         this.preloadAudioDuration(ep);
+        //     });
+        // },
         stopPlayback(episode) {
             if (episode.audioElement) {
                 episode.audioElement.pause();
@@ -127,6 +136,15 @@ export default {
             if (this.currentEpisode) {
                 this.stopPlayback(this.currentEpisode);
             }
+        },
+        getAudioData(episode) {
+            const pathAudio = import.meta.env.VITE_API_URL + '/episodes/' + episode.id + '/audio'
+            
+            axios.get(pathAudio, { responseType: 'blob' })
+                .then((res) => {
+                    episode.audio_url = URL.createObjectURL(res.data)
+                    this.preloadAudioDuration(episode)
+                })
         },
         preloadAudioDuration(episode) {
             const audioElement = new Audio(episode.audio_url);
@@ -147,17 +165,6 @@ export default {
             } else {
                 return `${Math.floor(seconds)} s`;
             }
-        },
-        getPodcast() {
-            const podcastId = this.$route.params.id;
-            const pathPodcast = import.meta.env.VITE_API_URL + `/podcasts/${podcastId}`;
-
-            axios.get(pathPodcast).then((resPodcast) => {
-                this.podcast = resPodcast.data;
-            })
-                .catch((error) => {
-                    console.error(error);
-                });
         },
         toggleLike(episode) {
             const episodeId = episode.id;
@@ -184,12 +191,12 @@ export default {
         randomColor(tag) {
             if (!this.tagColors[tag]) {
                 const getRandomHex = () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
-                
+
                 let color;
                 do {
-                color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
+                    color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
                 } while (this.isColorTooLight(color)); // Comprueba si el color es demasiado claro
-                
+
                 this.tagColors[tag] = color; // Almacena el color generado en tagColors
             }
 
@@ -206,17 +213,6 @@ export default {
 
             return brightness > 128;
         },
-    },
-    created() {
-        // Descomentar cuando tengamos los endpoints listos
-        // this.getPodcast() 
-    },
-
-    mounted() {
-        // Precargar la duración al cargar la página
-        this.podcast.list_of_episodes.forEach((episode) => {
-            this.preloadAudioDuration(episode);
-        });
     },
 };
 </script>

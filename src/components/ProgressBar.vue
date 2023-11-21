@@ -9,10 +9,10 @@
             <div class="player-content w-full rounded-lg shadow-lg m-0 p-0">
                 <div id="player-row" class="row flex-wrap w-full max-w-5xl">
                     <div class="episode-cover d-inline col-4 col-md-4 ">
-                        <img src="../assets/podcasts/xmas.jpg" alt="cover" class="cover p-0 d-none d-lg-inline" style="width: 8vw; max-width: 8em;" />
+                        <img :src="coverImg" alt="cover" class="cover p-0 d-none d-lg-inline" style="width: 8vw; max-width: 8em;" v-if="coverImg"/>
                         <div class="nowrap" style="display: inline-block;">
-                            <h6 class="text-white ps-3 d-block">ABOUT CHRISTMAS</h6>
-                            <h6 class="opacity-50 ps-3 pe-5">Episode 1</h6>
+                            <h6 class="text-white ps-3 d-block">{{ titlePodcast}} </h6>
+                            <h6 class="opacity-50 ps-3 pe-5">{{ titleEpisode }}</h6>
                         </div>
 
                         <div id="button-div" class="flex-initial pr-3 ps-md-3" style="display: inline-block;">
@@ -51,6 +51,147 @@
         </div>
     </div>
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+    props: ["url", "playerid"],
+    data() {
+        return {
+            playbackTime: 0,
+            audioDuration: 100,
+            audioLoaded: false,
+            isPlaying: false,
+            episodeToken: "",
+            audioUrl: "../src/assets/audio/episodes/episode1.mp3",
+            titlePodcast: "",
+            titleEpisode: "",
+            coverImg: null
+        };
+    },
+    methods: {
+        consoleLogTest() {
+            console.log("Test");
+        },
+        setAudioUrl(audioUrl) {
+            console.log("Setting audio url to: " + audioUrl);
+            this.audioUrl = audioUrl;
+        },
+        setCoverUrl(coverUrl) {
+            console.log("Setting cover img to: " + coverUrl);
+            this.coverImg = coverUrl;
+        },
+        setTitlePodcast(title) {
+            console.log("Setting title podcast to: " + title);
+            this.titlePodcast = title;
+        },
+        setTitleEpisode(title) {
+            console.log("Setting title episode to: " + title);
+            this.titleEpisode = title;
+        },
+        fetchAudio() {
+            axios.get('/api/episodes/' + this.episodeToken + '/audio').then((response) => {
+                this.audioUrl = response.data.url;
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        },
+        initSlider() {
+            var audio = this.$refs.player;
+            if (audio) {
+                this.audioDuration = Math.round(audio.duration);
+            }
+        },
+        convertTime(seconds) {
+            const format = val => `0${Math.floor(val)}`.slice(-2);
+            var hours = seconds / 3600;
+            var minutes = (seconds % 3600) / 60;
+            return [minutes, seconds % 60].map(format).join(":");
+        },
+        totalTime() {
+            var audio = this.$refs.player;
+            if (audio) {
+                var seconds = audio.duration;
+                return this.convertTime(seconds);
+            } else {
+                return '00:00';
+            }
+        },
+        elapsedTime() {
+            var audio = this.$refs.player;
+            if (audio) {
+                var seconds = audio.currentTime;
+                return this.convertTime(seconds);
+            } else {
+                return '00:00';
+            }
+        },
+        playbackListener(e) {
+            var audio = this.$refs.player;
+            this.playbackTime = audio.currentTime;
+            audio.addEventListener("ended", this.endListener);
+            audio.addEventListener("pause", this.pauseListener);
+        },
+        pauseListener() {
+            this.isPlaying = false;
+            this.listenerActive = false;
+            this.cleanupListeners();
+        },
+        endListener() {
+            this.isPlaying = false;
+            this.listenerActive = false;
+            this.cleanupListeners();
+        },
+        cleanupListeners() {
+            var audio = this.$refs.player;
+            audio.removeEventListener("timeupdate", this.playbackListener);
+            audio.removeEventListener("ended", this.endListener);
+            audio.removeEventListener("pause", this.pauseListener);
+        },
+        toggleAudio() {
+            var audio = this.$refs.player;
+            if (audio.paused) {
+                audio.play();
+                this.isPlaying = true;
+            } else {
+                audio.pause();
+                this.isPlaying = false;
+            }
+        },
+    },
+    mounted: function () {
+        //this.fetchAudio(); // TODO: Descomentar cuando esté la parte de backend preparada
+        this.$nextTick(function () {
+            var audio = this.$refs.player;
+            audio.addEventListener("loadedmetadata", function (e) {
+                this.initSlider();
+            }.bind(this));
+            audio.addEventListener("canplay", function (e) {
+                this.audioLoaded = true;
+            }.bind(this));
+            this.$watch("isPlaying", function () {
+                if (this.isPlaying) {
+                    var audio = this.$refs.player;
+                    this.initSlider();
+                    if (!this.listenerActive) {
+                        this.listenerActive = true;
+                        audio.addEventListener("timeupdate", this.playbackListener);
+                    }
+                }
+            });
+            this.$watch("playbackTime", function () {
+                var audio = this.$refs.player;
+                var diff = Math.abs(this.playbackTime - this.$refs.player.currentTime);
+                if (diff > 0.01) {
+                    this.$refs.player.currentTime = this.playbackTime;
+                }
+            });
+        });
+    }
+};
+</script>
 
 <style>
 .player {
@@ -151,139 +292,4 @@ input[type="range"]:focus {
     display: none;
 }
 </style>
-
-<script>
-import axios from 'axios';
-
-export default {
-    props: ["url", "playerid"],
-    data() {
-        return {
-            playbackTime: 0,
-            audioDuration: 100,
-            audioLoaded: false,
-            isPlaying: false,
-            episodeToken: "",
-            audioUrl: "../src/assets/audio/episodes/episode1.mp3"
-        };
-    },
-    methods: {
-        consoleLogTest() {
-            console.log("Test");
-        },
-        setAudioUrl(audioUrl) {
-            console.log("Setting audio url to: " + audioUrl);
-            this.audioUrl = audioUrl;
-        },
-        setCoverUrl(coverUrl) {
-            console.log("Setting cover url to: " + coverUrl);
-            this.coverUrl = coverUrl;
-        },
-        setTitle(title) {
-            console.log("Setting title to: " + title);
-            this.title = title;
-        },
-        fetchAudio() {
-            axios.get('/api/episodes/' + this.episodeToken + '/audio').then((response) => {
-                this.audioUrl = response.data.url;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        },
-        initSlider() {
-            var audio = this.$refs.player;
-            if (audio) {
-                this.audioDuration = Math.round(audio.duration);
-            }
-        },
-        convertTime(seconds) {
-            const format = val => `0${Math.floor(val)}`.slice(-2);
-            var hours = seconds / 3600;
-            var minutes = (seconds % 3600) / 60;
-            return [minutes, seconds % 60].map(format).join(":");
-        },
-        totalTime() {
-            var audio = this.$refs.player;
-            if (audio) {
-                var seconds = audio.duration;
-                return this.convertTime(seconds);
-            } else {
-                return '00:00';
-            }
-        },
-        elapsedTime() {
-            var audio = this.$refs.player;
-            if (audio) {
-                var seconds = audio.currentTime;
-                return this.convertTime(seconds);
-            } else {
-                return '00:00';
-            }
-        },
-        playbackListener(e) {
-            var audio = this.$refs.player;
-            this.playbackTime = audio.currentTime;
-            audio.addEventListener("ended", this.endListener);
-            audio.addEventListener("pause", this.pauseListener);
-        },
-        pauseListener() {
-            this.isPlaying = false;
-            this.listenerActive = false;
-            this.cleanupListeners();
-        },
-        endListener() {
-            this.isPlaying = false;
-            this.listenerActive = false;
-            this.cleanupListeners();
-        },
-        cleanupListeners() {
-            var audio = this.$refs.player;
-            audio.removeEventListener("timeupdate", this.playbackListener);
-            audio.removeEventListener("ended", this.endListener);
-            audio.removeEventListener("pause", this.pauseListener);
-        },
-        toggleAudio() {
-            var audio = this.$refs.player;
-            if (audio.paused) {
-                audio.play();
-                this.isPlaying = true;
-            } else {
-                audio.pause();
-                this.isPlaying = false;
-            }
-        },
-    },
-    mounted: function () {
-        // this.fetchAudio(); // TODO: Descomentar cuando esté la parte de backend preparada
-        this.$nextTick(function () {
-            var audio = this.$refs.player;
-            audio.addEventListener("loadedmetadata", function (e) {
-                this.initSlider();
-            }.bind(this));
-            audio.addEventListener("canplay", function (e) {
-                this.audioLoaded = true;
-            }.bind(this));
-            this.$watch("isPlaying", function () {
-                if (this.isPlaying) {
-                    var audio = this.$refs.player;
-                    this.initSlider();
-                    if (!this.listenerActive) {
-                        this.listenerActive = true;
-                        audio.addEventListener("timeupdate", this.playbackListener);
-                    }
-                }
-            });
-            this.$watch("playbackTime", function () {
-                var audio = this.$refs.player;
-                var diff = Math.abs(this.playbackTime - this.$refs.player.currentTime);
-                if (diff > 0.01) {
-                    this.$refs.player.currentTime = this.playbackTime;
-                }
-            });
-        });
-    }
-};
-</script>
-
 <!-- Adaptado de: https://muhammadatt.medium.com/building-an-mp3-audio-player-in-vue-js-c5884207251c -->
