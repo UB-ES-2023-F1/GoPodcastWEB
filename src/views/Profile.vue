@@ -22,28 +22,31 @@
               </div>
             </div>
           </div>
-          <div class="favorite-podcasts">
-            <h2 class="label mt-5 mb-3">Favorite Podcasts</h2>
-            <FavoriteList />
+          <div class="favorite-podcasts" v-if="isMyProfile">
+            <h2 class="mt-5 mb-3">Favorite Podcasts</h2>
+            <PodcastList :podcastList="favoriteList" v-if="favoriteList.length > 0" />
+            <h4 class="label" v-else>It looks like you don't have any favorite podcast. <a :href="'/'">Go add some!</a>
+            </h4>
           </div>
-          <div class="streamlater-podcasts">
-            <h2 class="label mt-5 mb-3">Watch Later</h2>
-            <StreamLaterList />
+          <div class="streamlater-podcasts" v-if="isMyProfile">
+            <h2 class="mt-5 mb-3">Watch Later</h2>
+            <EpisodeList :podcastList="watchLaterList" v-if="watchLaterList.length > 0" />
+            <h3 class="label" v-else>It looks like you don't have any episode in stream later. <a :href="'/'">Go add
+                some!</a></h3>
           </div>
           <div class="my-podcasts">
-            <h2 class="label mt-5 mb-3">My Podcasts</h2>
-            <PodcastList :podcastList="myPodcasts"/>
+            <h2 class="mt-5 mb-3">User's Podcasts</h2>
+            <PodcastList :podcastList="myPodcasts" />
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-  
+
 <script>
 import Sidebar from '../components/Sidebar.vue'
-import StreamLaterList from '../components/StreamLaterList.vue'
-import FavoriteList from '../components/FavoriteList.vue'
+import EpisodeList from '../components/EpisodeList.vue'
 import PodcastList from '../components/PodcastList.vue'
 import TopBar from '../components/TopBar.vue'
 import axios from 'axios'
@@ -51,8 +54,7 @@ import axios from 'axios'
 export default {
   components: {
     Sidebar,
-    StreamLaterList,
-    FavoriteList,
+    EpisodeList,
     PodcastList,
     TopBar
   },
@@ -62,7 +64,9 @@ export default {
       userId: null,
       myId: null,
       isMyProfile: false,
-      myPodcasts: []
+      myPodcasts: [],
+      favoriteList: [],
+      watchLaterList: []
     }
   },
   methods: {
@@ -94,8 +98,10 @@ export default {
 
       axios.get(userPath, axiosConfig).then((res) => {
         this.myId = res.data.logged_in_as;
-        if (this.myId === this.userId){
+        if (this.myId === this.userId) {
           this.isMyProfile = true;
+          this.getFavorites()
+          this.getWatchLater()
         }
       })
         .catch((error) => {
@@ -106,19 +112,51 @@ export default {
       const path = import.meta.env.VITE_API_URL + '/user/created_podcasts/' + this.userId
 
       axios.get(path)
-      .then((res) => {
-        this.myPodcasts = res.data
-        console.log(this.myPodcasts)
-      })
-      .catch((error) => {
-        console.error(error)
-      })
+        .then((res) => {
+          this.myPodcasts = res.data
+          console.log(this.myPodcasts)
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+    },
+    getFavorites() {
+      const path = import.meta.env.VITE_API_URL + '/favorites'
+
+      const axiosConfig = {
+        withCredentials: true
+      }
+
+      axios.get(path, axiosConfig)
+        .then((res) => {
+          this.favoriteList = res.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+    },
+    getWatchLater() {
+      const path = import.meta.env.VITE_API_URL + '/stream_later'
+
+      const axiosConfig = {
+        withCredentials: true
+      }
+
+      axios.get(path, axiosConfig)
+        .then((res) => {
+          this.watchLaterList = res.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
     },
     updateBio() {
       const path = import.meta.env.VITE_API_URL + '/user/bio'
 
       var formData = new FormData();
-      
+
       formData.append('bio', this.user.bio);
 
       const axiosConfig = {
@@ -132,12 +170,12 @@ export default {
       }
 
       axios.put(path, formData, axiosConfig, headers)
-      .then((res) => {
-        console.log("Bio updated", res.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        .then((res) => {
+          console.log("Bio updated", res.data)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
 
     }
   },
@@ -149,7 +187,7 @@ export default {
     // Uncomment when endpoints are ready
     this.getUserInfo()
 
-    
+
   }
 }
 </script>
