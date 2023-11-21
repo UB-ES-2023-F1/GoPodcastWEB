@@ -138,6 +138,8 @@ export default {
                 console.log(parameters)
 
                 const path = import.meta.env.VITE_API_URL + '/user'
+
+                console.log(path);
                 
                 axios.post(path, parameters)
                     .then((res) => {
