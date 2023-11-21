@@ -18,6 +18,11 @@ jobs:
     runs-on: ubuntu-latest
  
     steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+        lfs: false
+    
     - name: Make envfile
       uses: SpicyPizza/create-envfile@v2.0
       with:
@@ -34,10 +39,6 @@ jobs:
       url: $FRONTEND_URL_DEV
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-          lfs: false
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
