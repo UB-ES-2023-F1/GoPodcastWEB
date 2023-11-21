@@ -1,8 +1,8 @@
-name: Continuous Deployment in Development
+name: Continuous Deployment in Production
 on:
   push:
     branches:
-      - dev
+      - main
   workflow_dispatch:
 
 env:
