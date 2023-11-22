@@ -32,7 +32,7 @@ const routes = [
     }
   },
   {
-    path: '/publish/episode',
+    path: '/publish/episode/:id',
     name: 'PublishEpisode',
     component: () => import('../views/PublishEpisode.vue'),
     beforeEnter: (to, from, next) => {

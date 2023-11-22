@@ -80,7 +80,6 @@ export default {
       description: "",
       tags: [],
       audio: null,
-      podcastId: '4375bc80-362e-4869-acd8-800f313e8b38', // TODO: get podcast id from url
       tagInput: null
     };
   },
@@ -101,7 +100,7 @@ export default {
       }
 
       // formData.append('episodeImage', this.episodeImage);
-      const path = import.meta.env.VITE_API_URL + '/podcasts/' + this.podcastId + '/episodes' 
+      const path = import.meta.env.VITE_API_URL + '/podcasts/' + this.$route.params.id + '/episodes' 
       
       axios.post(path, formData, axiosConfig, {
         headers: {
