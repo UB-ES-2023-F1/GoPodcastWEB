@@ -13,7 +13,8 @@
                     <!-- Info section -->
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="contenedor-reducido mb-5">
-                            <div class="row mt-4 ps-4 mr-4">
+                            <!-- Normal visualization -->
+                            <div class="row mt-4 ps-4 mr-4" v-if="!editting">
                                 <div class="col-12 col-sm-4 col-md-4 col-lg-4">
                                     <img :src="episode.img" alt="Imagen" class="reduced-image mb-4" />
                                 </div>
@@ -35,7 +36,8 @@
                                     </div>
                                     <p></p>
                                     <div class="in-same-line">
-                                        <h6><a :href="'/visualize/' + episode.id_podcast">{{ episode.podcast_name }}</a></h6>
+                                        <h6><a :href="'/visualize/' + episode.id_podcast">{{ episode.podcast_name }}</a>
+                                        </h6>
                                         <span class="separation">&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;</span>
                                         <h6><a :href="'/profile/' + episode.id_author">{{ episode.author_name }}</a></h6>
                                     </div>
@@ -53,6 +55,58 @@
                                     -->
                                     <p>{{ episode.description }}</p>
                                 </div>
+                            </div>
+
+                            <!-- Editting visualization -->
+                            <div class="row mt-4 ps-4 mr-4" v-else>
+                                <div class="col-12 col-sm-4 col-md-4 col-lg-4">
+                                    <img :src="episode.img" alt="Imagen" class="reduced-image mb-4" />
+                                </div>
+                                <div class="col-12 col-sm-7 col-md-7 col-lg-7 ">
+                                    <input type="text" v-model="episode_edited.title" placeholder="Episode name">
+                                    <div class="row">
+                                        <div style="margin-top: 15px; width: auto;">
+                                            <input type="file" class="form-control" ref="audio" id="audio"
+                                                @change="onFileChange" required />
+                                        </div>
+                                        <div class="col-3 col-sm-1 col-md-1 col-lg-1"></div>
+                                        <!-- Like button. Only when logged in and if not author -->
+                                        <div class="col-3 col-sm-1 col-md-1 col-lg-1 mt-3" v-if="!isAuthor">
+                                            <button class="like-button" @click="toggleLike()">
+                                                <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                    <div class="in-same-line">
+                                        <h6><a :href="'/visualize/' + episode.id_podcast">{{ episode.podcast_name }}</a>
+                                        </h6>
+                                        <span class="separation">&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;</span>
+                                        <h6><a :href="'/profile/' + episode.id_author">{{ episode.author_name }}</a></h6>
+                                    </div>
+
+
+                                    <!-- Tag section. Not implemented for the moment -->
+                                    <!--
+                                    <div>
+                                        <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
+                                            :style="{ backgroundColor: randomColor(tag) }">
+                                            {{ tag }}
+                                        </div>
+
+                                    </div>
+                                    -->
+                                    <textarea v-model="episode.description" placeholder="Episode description"></textarea>>
+                                </div>
+                            </div>
+
+                            <!-- Config buttons -->
+                            <div style="margin-top: 10px; margin-left: 20px;" v-if="isAuthor">
+                                <button class="btn btn-success me-2" @click="editting = true" v-if="!editting">Edit</button>
+                                <button class="btn btn-success me-2" @click="updateEpisode()" v-if="editting">Save</button>
+                                <button class="btn btn-success me-2" @click="editting = false"
+                                    v-if="editting">Cancel</button>
+                                <button class="btn btn-danger me-2" @click="deletePodcast()">Delete</button>
                             </div>
                         </div>
                     </div>
@@ -136,7 +190,11 @@ export default {
             // currentEpisode: null,
             // tagColors: {},
             episode: {},
-            streamLater: []
+            episode_edited: {},
+            audio_edited: null,
+            streamLater: [],
+            editting: false,
+            isAuthor: false
         };
 
     },
@@ -254,13 +312,32 @@ export default {
             const pathEpisode = import.meta.env.VITE_API_URL + `/episodes/${episodeId}`;
 
             axios.get(pathEpisode).then((resEpisode) => {
-                this.episode = resEpisode.data;
+                this.episode = JSON.parse(JSON.stringify(resEpisode.data));
+                this.episode_edited = JSON.parse(JSON.stringify(resEpisode.data));
+                if (this.$store.state.userIsLoggedIn) {
+                    this.getId()
+                }
                 console.log(this.episode)
                 this.getCover()
             })
                 .catch((error) => {
                     console.error(error);
                 });
+        },
+        getId() {
+            const pathID = import.meta.env.VITE_API_URL + '/protected';
+
+            const axiosConfig = {
+                withCredentials: true
+            }
+
+            axios.get(pathID, axiosConfig)
+                .then((res) => {
+                    console.log(res)
+                    if (res.data.logged_in_as == this.episode.id_author) {
+                        this.isAuthor = true
+                    }
+                })
         },
         getCover() {
             const pathCovers = import.meta.env.VITE_API_URL + '/podcasts/' + this.episode.id_podcast + '/cover'
@@ -282,6 +359,60 @@ export default {
                 reader.readAsDataURL(blob)
             })
         },
+        updateEpisode() {
+            const pathUpdate = import.meta.env.VITE_API_URL + "/episodes/" + this.$route.params.id
+
+            const axiosConfig = {
+                withCredentials: true
+            }
+
+            var formData = new FormData();
+            
+            formData.append("audio", this.audio_edited);
+            formData.append("title", this.episode_edited.title)
+            formData.append("description", this.episode_edited.description)
+
+            const headers = {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+
+            axios.put(pathUpdate, formData, axiosConfig, headers)
+                .then((res) => {
+                    console.log(res.data)
+                    alert("Cambios realizados")
+                    this.episode.audio_url = this.audio_edited
+                    this.episode.title = this.episode_edited.title
+                    this.episode.description = this.episode_edited.description
+                    this.editting = false
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        },
+        deletePodcast() {
+            if (confirm("Do you really want to delete this episode?")) {
+                const pathDelete = import.meta.env.VITE_API_URL + "/episodes/" + this.$route.params.id
+
+                const axiosConfig = {
+                    withCredentials: true
+                }
+
+                axios.delete(pathDelete, axiosConfig)
+                    .then((res) => {
+                        console.log("Episode deleted", res.data)
+                        alert("The episode have been deleted succesfully")
+                        this.$router.push('/visualize/' + this.episode.id_podcast)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            }
+        },
+        onFileChange() {
+            this.audio_edited = this.$refs.audio.files[0]
+        },
     },
     created() {
         // Descomentar cuando tengamos los endpoints listos
@@ -295,7 +426,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .contenedor-reducido h1 {
     word-wrap: break-word;
 }
@@ -466,6 +597,14 @@ ul {
 .follow-button:hover:not(.following) {
     background-color: #fff;
     color: #000;
+}
+
+.btn-success,
+.btn-danger,
+.btn-dark {
+    border-radius: 50px;
+    font-size: 16px;
+    margin: 0px 10px 0px 10px;
 }
 </style>
 
