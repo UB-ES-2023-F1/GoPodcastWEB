@@ -76,16 +76,12 @@ export default {
                 password: this.password
             }
 
-            // const axiosConfig = {
-            //     withCredentials: true
-            // }
-
-            const headers = {
-                'Access-Control-Allow-Credentials': true
+            const axiosConfig = {
+                withCredentials: true
             }
 
             const path = import.meta.env.VITE_API_URL + '/login'
-            axios.post(path, parameters, headers)
+            axios.post(path, parameters, axiosConfig)
             .then((res) => {
                 this.$store.commit('setUserIsLoggedIn', false);
                 this.setUserIsLoggedIn(true)

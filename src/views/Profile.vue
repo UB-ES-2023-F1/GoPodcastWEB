@@ -95,12 +95,9 @@ export default {
       const axiosConfig = {
         withCredentials: true
       }
-      
-      const headers = {
-          'Access-Control-Allow-Credentials': true
-      }
 
-      axios.get(userPath, headers).then((res) => {
+
+      axios.get(userPath, axiosConfig).then((res) => {
         this.myId = res.data.logged_in_as;
         if (this.myId === this.userId) {
           this.isMyProfile = true;
