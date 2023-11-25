@@ -29,9 +29,11 @@
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1"></div>
                                         <!-- Like button. Only when logged in -->
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1 mt-3">
+                                            <!--
                                             <button class="like-button" @click="toggleLike()">
                                                 <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
                                             </button>
+                                            -->
                                         </div>
                                     </div>
                                     <p></p>
@@ -72,9 +74,11 @@
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1"></div>
                                         <!-- Like button. Only when logged in and if not author -->
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1 mt-3" v-if="!isAuthor">
+                                            <!--
                                             <button class="like-button" @click="toggleLike()">
                                                 <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
                                             </button>
+                                            -->
                                         </div>
                                     </div>
                                     <p></p>
@@ -103,9 +107,9 @@
                             <!-- Config buttons -->
                             <div style="margin-top: 10px; margin-left: 20px;" v-if="isAuthor">
                                 <button class="btn btn-success me-2" @click="editting = true" v-if="!editting">Edit</button>
-                                <button class="btn btn-success me-2" @click="updateEpisode()" v-if="editting">Save</button>
-                                <button class="btn btn-success me-2" @click="editting = false"
+                                <button class="btn btn-secondary me-2" @click="editting = false"
                                     v-if="editting">Cancel</button>
+                                <button class="btn btn-success me-2" @click="updateEpisode()" v-if="editting">Save</button>
                                 <button class="btn btn-danger me-2" @click="deletePodcast()">Delete</button>
                             </div>
                         </div>
@@ -436,11 +440,6 @@ export default {
     align-items: baseline;
 }
 
-.vert {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
 .like-button {
     background: transparent;
@@ -530,11 +529,7 @@ h6 {
     font-size: 18px;
 }
 
-.centrado {
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-}
+
 
 .contenedor-reducido {
     text-align: justify;
@@ -554,54 +549,15 @@ h2 {
     margin-bottom: 20px;
 }
 
-.featured {
-    margin-top: 30px;
-    margin-bottom: 35px;
-    width: inherit;
-}
+
 
 ul {
     list-style-type: none;
 }
 
-.follow-button {
-    width: 9vw;
-    height: 30px;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 50px;
-    transition: all 0.35s ease-in-out;
-}
-
-.follow-button.following {
-    background-color: #fff;
-    border: 1px solid #000;
-    color: #000;
-}
-
-.follow-button:not(.following) {
-    background-color: transparent;
-    border: 1px solid #fff;
-    color: #fff;
-}
-
-.follow-button:hover.following {
-    background-color: transparent;
-    color: #fff;
-    border: 1px solid #fff;
-
-}
-
-.follow-button:hover:not(.following) {
-    background-color: #fff;
-    color: #000;
-}
-
 .btn-success,
 .btn-danger,
-.btn-dark {
+.btn-secondary {
     border-radius: 50px;
     font-size: 16px;
     margin: 0px 10px 0px 10px;
