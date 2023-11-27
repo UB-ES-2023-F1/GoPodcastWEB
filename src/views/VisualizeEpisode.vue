@@ -112,17 +112,24 @@
                     </div>
 
                     <!-- Comment section -->
-                    <!--
                     <div class="row">
                         <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
                         <div class="col-12 col-sm-8 col-md-8 col-lg-8">
                             <h2>Comments:</h2>
-                            <Comment v-for="comment in episode.listOfComments" :key="comment.id" :comment="comment"
-                                @toggle-like="toggleLike" />
+                            <div>
+                                
+                                <CommentForm @add-comment="handleAddComment"/>
+                            </div>
+                            <!-- Check if there are comments -->
+                            <div v-if="episode.listOfComments && episode.listOfComments.length > 0">
+                                <Comment v-for="comment in episode.listOfComments" :key="comment.id" :comment="comment"
+                                    @toggle-like="toggleLike" />
+                            </div>
+                            
+                            
                         </div>
                         <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
                     </div>
-                    -->
                 </div>
             </div>
         </div>
@@ -135,6 +142,7 @@
 <script>
 import Sidebar from '../components/Sidebar.vue';
 import Comment from '../components/Comment.vue';
+import CommentForm from '../components/CommentForm.vue';
 import TopBar from '../components/TopBar.vue';
 import ProgressBar from '../components/ProgressBar.vue';
 import axios from 'axios'
@@ -143,6 +151,7 @@ export default {
     components: {
         Sidebar,
         Comment,
+        CommentForm,
         ProgressBar,
         TopBar,
     },
@@ -319,6 +328,7 @@ export default {
                 }
                 console.log(this.episode)
                 this.getCover()
+                console.log("COMENTARIOS: ", this.episode.listOfComments)
             })
                 .catch((error) => {
                     console.error(error);
@@ -413,6 +423,9 @@ export default {
         onFileChange() {
             this.audio_edited = this.$refs.audio.files[0]
         },
+        handleAddComment(newComment) {
+            this.episode.listOfComments.push(newComment);
+        }
     },
     created() {
         // Descomentar cuando tengamos los endpoints listos

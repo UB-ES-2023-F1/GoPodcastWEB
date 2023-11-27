@@ -1,11 +1,11 @@
 <template>
     <div class="comment" :style="{ marginLeft: isReply ? '20px' : '0' }">
       <div class="comment-header">
-        <!--<span class="comment-author">{{ comment.author }}</span>-->
-        <span class="comment-date">{{ formatDate(comment.date) }}</span>
+        <span class="comment-username">{{ comment.user.username }}</span>
+        <span class="comment-date">{{ comment.created_at }}</span>
       </div>
       <div class="comment-content">
-        <p>{{ comment.text }}</p>
+        <p>{{ comment.content }}</p>
       </div>
 
       <div class="row">
@@ -62,13 +62,14 @@
         return date.toDateString();
       },
       onSubmit() {
+        
         if (this.newReplyText.trim() === '') {
           // Evitar agregar respuestas vacías
           return;
         }
         const newReply = {
-          date: new Date(),
-          text: this.newReplyText,
+          created_at: new Date(),
+          content: this.newReplyText,
           replies: [], // No hay respuestas para la respuesta inicialmente
         };
   
@@ -107,12 +108,10 @@
     justify-content: space-between;
     margin-bottom: 5px;
   }
-  /*
-  .comment-author {
+  .comment-username {
     font-weight: bold;
     color: #bbb;
   }
-  */
   
   .comment-date {
     font-size: 0.8em;
