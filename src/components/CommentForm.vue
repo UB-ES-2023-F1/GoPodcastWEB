@@ -11,7 +11,6 @@
   
   <script>
   import axios from 'axios'
-  import { useToast } from 'vue-toast-notification';
 
   export default {
     name: 'CommentForm',
@@ -52,8 +51,6 @@
           console.log("Comentario enviado con éxito!")
           this.episode.comments.push(res.data);
 
-          const toast = useToast();
-          toast.success('Comment submitted successfully!', { duration: 2000 });
         })
         .catch((error) => {
           console.error(error)
