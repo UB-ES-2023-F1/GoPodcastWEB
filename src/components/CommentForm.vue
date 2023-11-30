@@ -2,9 +2,9 @@
     <div class="comment-form">
       <form @submit.prevent="onSubmit" class="publish-form">
         <div class="form-group">
-          <textarea class="form-control" v-model="newCommentText" placeholder="Add a comment" style="width: 100%;"></textarea>
+          <textarea class="form-control" v-model="newCommentText" placeholder="Add a comment..." style="width: 100%;" @keyup.enter="onSubmit"></textarea>
         </div>
-        <button type="submit" class="btn-submit btn btn-dark mt-3">Add Comment</button>
+        <button type="submit" class="btn-submit btn btn-dark mt-3">Comment</button>
       </form>
     </div>
   </template>

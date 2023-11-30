@@ -11,9 +11,9 @@
       <div class="row">
         <form @submit.prevent="onSubmit" class="publish-form" v-if="!isReply">
           <div class="form-group">
-            <textarea class="form-control" id="new_reply" v-model="newReplyText" placeholder="Add a reply" style="width: 100%;"></textarea>
+            <textarea class="form-control" id="new_reply" v-model="newReplyText" placeholder="Add an answer..." style="width: 100%;" @keyup.enter="onSubmit"></textarea>
           </div>
-          <button type="submit" class="btn-submit btn btn-dark mt-3">Add Reply</button>
+          <button type="submit" class="btn-submit btn btn-dark mt-3">Reply</button>
         </form>
       </div>
 
