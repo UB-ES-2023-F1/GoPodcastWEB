@@ -12,6 +12,7 @@
   <script>
   import axios from 'axios'
   import { useToast } from 'vue-toast-notification';
+
   export default {
     name: 'CommentForm',
     data() {
@@ -38,6 +39,7 @@
           content: this.newCommentText,
           replies: [],
         };
+        
 
         const episodeId = this.$route.params.id;
         const path = import.meta.env.VITE_API_URL + `/episodes/${episodeId}/comments`
@@ -48,7 +50,7 @@
 
         axios.post(path, newComment, axiosConfig).then((res) => {
           console.log("Comentario enviado con éxito!")
-          this.episode.listOfComments.push(res.data);
+          this.episode.comments.push(res.data);
 
           const toast = useToast();
           toast.success('Comment submitted successfully!', { duration: 2000 });
@@ -57,8 +59,8 @@
           console.error(error)
           alert('Comment not submitted!')
         })
-        //this.episode.listOfComments.push(newComment);
-        //this.$emit('add-comment', newComment);
+        this.episode.comments.push(newComment);
+        this.$emit('add-comment');
         
         this.newCommentText = '';
       },
@@ -105,6 +107,7 @@
       this.getEpisode()
       this.getUser()
     },
+    
   };
 </script>
   

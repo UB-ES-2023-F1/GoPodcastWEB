@@ -9,7 +9,7 @@
       </div>
 
       <div class="row">
-        <form @submit.prevent="onSubmit" class="publish-form">
+        <form @submit.prevent="onSubmit" class="publish-form" v-if="!isReply">
           <div class="form-group">
             <textarea class="form-control" id="new_reply" v-model="newReplyText" placeholder="Add a reply" style="width: 100%;"></textarea>
           </div>
@@ -17,33 +17,32 @@
         </form>
       </div>
 
-      <!--
-      <div class="comment-actions">
-        <button @click="toggleLike">
-          {{ comment.liked ? 'Unlike' : 'Like' }}
-        </button>
-      </div>
-      -->
+      
   
       <div class="comment-replies">
         <template v-if="comment.replies && comment.replies.length > 0">
-          <Comment
-            v-for="reply in comment.replies"
-            :comment="reply"
-            @toggle-like-reply="toggleLikeReply"
-            :is-reply="true"
-          />
+          <div v-for="reply in comment.replies" :key="reply.id" class="reply">
+            <div class="comment-header">
+              <span class="comment-username">{{ reply.user && reply.user.username }}</span>
+              <span class="comment-date">{{ reply.created_at }}</span>
+            </div>
+            <div class="comment-content">
+              <p>{{ reply.content }}</p>
+            </div>
+          </div>
         </template>
       </div>
     </div>
   </template>
   
   <script>
+  import axios from 'axios'
   export default {
     name: 'Comment',
     data() {
       return {
         newReplyText: '',
+        user: {},
       };
     },
     props: {
@@ -58,35 +57,84 @@
     },
 
     methods: {
-      formatDate(date) {
-        return date.toDateString();
-      },
       onSubmit() {
-        
         if (this.newReplyText.trim() === '') {
           // Evitar agregar respuestas vacías
           return;
         }
         const newReply = {
-          created_at: new Date(),
+          created_at: new Date().toDateString(),
           content: this.newReplyText,
-          replies: [], // No hay respuestas para la respuesta inicialmente
+          user: {
+            id: this.user.id, // Reemplaza con el ID de usuario apropiado
+            username: this.user.username, // Reemplaza con el nombre de usuario apropiado
+          },
         };
-  
-        this.comment.replies.push(newReply);
-        this.newReplyText = ''; // Limpiar el campo de entrada después de agregar una respuesta
+        const episodeId = this.$route.params.id;
+        const path = import.meta.env.VITE_API_URL + `/comments/${this.comment.id}/replies`
+
+        const axiosConfig = {
+          withCredentials: true
+        }
+
+        axios.post(path, newReply, axiosConfig).then((res) => {
+          console.log("Respuesta añadida con éxito!")
+          this.comment.replies.push(res.data);
+        })
+        .catch((error) => {
+          console.error(error)
+          alert('Reply not submitted!')
+        })
+        
+        //this.comment.replies.push(newReply);
+        this.$emit('add-reply');
+        
+        this.newReplyText = '';
       },
-    /*
-      toggleLike() {
-        this.$emit('toggle-like', this.comment.id);
+      getUser(){
+        const userPath = import.meta.env.VITE_API_URL + '/protected'
+
+        const axiosConfig = {
+          withCredentials: true
+        }
+
+        axios.get(userPath, axiosConfig).then((res) => {
+          this.userId = res.data.logged_in_as;
+          console.log("USER ID OF USER INCIAL CODE:",this.userId);
+          const pathUser = import.meta.env.VITE_API_URL + `/user/${this.userId}`;
+          console.log("PATH USER: ",pathUser)
+          axios.get(pathUser).then((resUser) => {
+            this.user = resUser.data;
+            console.log(this.user)
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       },
-    */
+    },
+    created() {
+      this.getUser()
     },
   };
   </script>
   
   <style scoped>
   .comment {
+    background-color: #333;
+    border: 1px solid #a1a1a1;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    padding: 15px;
+    margin: 15px 0;
+    transition: background-color 0.3s ease;
+    text-align: justify;
+  }
+  .reply {
     background-color: #333;
     border: 1px solid #a1a1a1;
     border-radius: 8px;
