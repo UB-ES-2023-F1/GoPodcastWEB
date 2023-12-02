@@ -3,13 +3,14 @@
     <h2>Browse Categories</h2>
     <div class="categories">
       <div v-for="category in categories" :key="category.title" class="category" ref="categoriesContainer"
-        @click="currentCategory = category.title ; updatePodcasts()">
+        @click="this.currentCategory = category.title ; updatePodcasts()">
         <img :src="category.img" :alt="category.title">
         <span class="name text-center">{{ category.title }}</span>
       </div>
     </div>
   </div>
   <div class="podcasts-container" v-if="currentCategory">
+    <h4>{{ currentCategory }}</h4>
     <div class="podcasts">
       <div v-for="podcast in podcastsCategory" :key="podcast.title" class="podcast">
         <img :src="podcast.img" :alt="podcast.title">
@@ -25,14 +26,59 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      categories: [],
-      podcasts: [],
+      categories: [
+        // {
+        //   title: 'Sports',
+        //   img: null
+        // },
+        // {
+        //   title: 'News',
+        //   img: null
+        // },
+        // {
+        //   title: 'Music',
+        //   img: null
+        // }
+      ],
+      podcasts: [
+        // {
+        //   title: 'Podcast 1',
+        //   category: 'Sports',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 2',
+        //   category: 'News',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 3',
+        //   category: 'News',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 4',
+        //   category: 'Music',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 5',
+        //   category: 'Music',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 6',
+        //   category: 'Music',
+        //   img: null
+        // }
+      ],
       podcastsCategory: [],
       currentCategory: null,
     };
   },
   methods: {
     async getCategories() {
+      console.log('Getting categories')
       const pathCategories = import.meta.env.VITE_API_URL + '/categories'
 
       try {
@@ -44,6 +90,7 @@ export default {
       this.getCovers()
     },
     getCovers() {
+      console.log('Getting covers')
       this.categories.forEach(category => {
         const pathCover = import.meta.env.VITE_API_URL + category.image_url
 
@@ -65,6 +112,7 @@ export default {
       })
     },
     getPodcasts() {
+      console.log('Getting podcasts')
       const pathPodcasts = import.meta.env.VITE_API_URL + '/podcasts'
 
       axios.get(pathPodcasts)
@@ -76,6 +124,7 @@ export default {
         })
     },
     updatePodcasts() {
+      console.log('Updating podcasts by category: ' + this.currentCategory)
       this.podcastsCategory = this.podcasts.filter(podcast => podcast.category === this.currentCategory)
     }
   },
