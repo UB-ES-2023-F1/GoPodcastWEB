@@ -12,9 +12,11 @@
   <div class="podcasts-container" v-if="currentCategory">
     <h4>{{ currentCategory }}</h4>
     <div class="podcasts">
-      <div v-for="podcast in podcastsCategory" :key="podcast.title" class="podcast">
-        <img :src="podcast.img" :alt="podcast.title">
-        <span class="name text-center">{{ podcast.title }}</span>
+      <div v-for="podcast in podcastsCategory" :key="podcast.id" class="podcast">
+        <a :href="'/visualize/' + podcast.id">
+          <img :src="podcast.img" :alt="podcast.name"  v-if="podcast.img">
+        </a>
+        <span class="name text-center">{{ podcast.name }}</span>
       </div>
     </div>
   </div>
@@ -104,6 +106,19 @@ export default {
           })
       })
     },
+    getCover(podcast) {
+      const pathCover = import.meta.env.VITE_API_URL + '/podcasts/' + podcast.id + '/cover'
+
+      axios.get(pathCover, { responseType: "blob" })
+        .then(async (res) => {
+            const base64data = await this.blobToData(res.data)
+            podcast.img = base64data
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+
+    },
     blobToData(blob) {
       return new Promise((resolve) => {
         const reader = new FileReader()
@@ -118,6 +133,7 @@ export default {
       axios.get(pathPodcasts)
         .then((res) => {
           this.podcasts = res.data
+          console.log(this.podcasts)
         })
         .catch((error) => {
           console.log(error)
@@ -126,6 +142,11 @@ export default {
     updatePodcasts() {
       console.log('Updating podcasts by category: ' + this.currentCategory)
       this.podcastsCategory = this.podcasts.filter(podcast => podcast.category === this.currentCategory)
+      if(this.podcastsCategory.length != 0){
+        for(let podcast of Object.values(this.podcastsCategory)){
+          this.getCover(podcast)
+        }
+      }
     }
   },
   created() {
