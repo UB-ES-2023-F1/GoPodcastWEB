@@ -2,9 +2,21 @@
   <div class="categories-container">
     <h2>Browse Categories</h2>
     <div class="categories">
-      <div v-for="category in categories" :key="category.title" class="category" ref="categoriesContainer">
+      <div v-for="category in categories" :key="category.title" class="category" ref="categoriesContainer"
+        @click="this.currentCategory = category.title ; updatePodcasts()">
         <img :src="category.img" :alt="category.title">
         <span class="name text-center">{{ category.title }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="podcasts-container" v-if="currentCategory">
+    <h4>{{ currentCategory }}</h4>
+    <div class="podcasts">
+      <div v-for="podcast in podcastsCategory" :key="podcast.id" class="podcast">
+        <a :href="'/visualize/' + podcast.id">
+          <img :src="podcast.img" :alt="podcast.name"  v-if="podcast.img">
+        </a>
+        <span class="name text-center">{{ podcast.name }}</span>
       </div>
     </div>
   </div>
@@ -16,11 +28,59 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      categories: [],
+      categories: [
+        // {
+        //   title: 'Sports',
+        //   img: null
+        // },
+        // {
+        //   title: 'News',
+        //   img: null
+        // },
+        // {
+        //   title: 'Music',
+        //   img: null
+        // }
+      ],
+      podcasts: [
+        // {
+        //   title: 'Podcast 1',
+        //   category: 'Sports',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 2',
+        //   category: 'News',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 3',
+        //   category: 'News',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 4',
+        //   category: 'Music',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 5',
+        //   category: 'Music',
+        //   img: null
+        // },
+        // {
+        //   title: 'Podcast 6',
+        //   category: 'Music',
+        //   img: null
+        // }
+      ],
+      podcastsCategory: [],
+      currentCategory: null,
     };
   },
   methods: {
     async getCategories() {
+      console.log('Getting categories')
       const pathCategories = import.meta.env.VITE_API_URL + '/categories'
 
       try {
@@ -32,6 +92,7 @@ export default {
       this.getCovers()
     },
     getCovers() {
+      console.log('Getting covers')
       this.categories.forEach(category => {
         const pathCover = import.meta.env.VITE_API_URL + category.image_url
 
@@ -44,18 +105,18 @@ export default {
             console.log(error)
           })
       })
-      // this.podcastList.forEach(podcast => {
-      //   const pathCovers = import.meta.env.VITE_API_URL + '/podcasts/' + podcast.id + '/cover'
+    },
+    getCover(podcast) {
+      const pathCover = import.meta.env.VITE_API_URL + '/podcasts/' + podcast.id + '/cover'
 
-      //   axios.get(pathCovers, { responseType: "blob" })
-      //     .then(async (res) => {
-      //       const base64data = await this.blobToData(res.data)
-      //       podcast.img = base64data
-      //     })
-      //     .catch((error) => {
-      //       console.error(error)
-      //     })
-      // });
+      axios.get(pathCover, { responseType: "blob" })
+        .then(async (res) => {
+            const base64data = await this.blobToData(res.data)
+            podcast.img = base64data
+        })
+        .catch((error) => {
+            console.error(error)
+        })
 
     },
     blobToData(blob) {
@@ -65,10 +126,33 @@ export default {
         reader.readAsDataURL(blob)
       })
     },
+    getPodcasts() {
+      console.log('Getting podcasts')
+      const pathPodcasts = import.meta.env.VITE_API_URL + '/podcasts'
+
+      axios.get(pathPodcasts)
+        .then((res) => {
+          this.podcasts = res.data
+          console.log(this.podcasts)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    updatePodcasts() {
+      console.log('Updating podcasts by category: ' + this.currentCategory)
+      this.podcastsCategory = this.podcasts.filter(podcast => podcast.category === this.currentCategory)
+      if(this.podcastsCategory.length != 0){
+        for(let podcast of Object.values(this.podcastsCategory)){
+          this.getCover(podcast)
+        }
+      }
+    }
   },
   created() {
     // Descomentar cuando tengamos los endpoints listos
     this.getCategories()
+    this.getPodcasts()
   }
 };
 </script>
