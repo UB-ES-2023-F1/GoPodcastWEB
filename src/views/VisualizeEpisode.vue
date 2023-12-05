@@ -112,17 +112,23 @@
                     </div>
 
                     <!-- Comment section -->
-                    <!--
                     <div class="row">
                         <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
                         <div class="col-12 col-sm-8 col-md-8 col-lg-8">
                             <h2>Comments:</h2>
-                            <Comment v-for="comment in episode.listOfComments" :key="comment.id" :comment="comment"
-                                @toggle-like="toggleLike" />
+                            <div>
+                                
+                                <CommentForm @add-comment="handleAddComment"/>
+                            </div>
+                            <!-- Check if there are comments -->
+                            <div v-if="episode.comments && episode.comments.length > 0">
+                                <Comment v-for="comment in episode.comments" :key="comment.id" :comment="comment" @add-reply="handleAddComment"/>
+                            </div>
+                            
+                            
                         </div>
                         <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
                     </div>
-                    -->
                 </div>
             </div>
         </div>
@@ -135,6 +141,7 @@
 <script>
 import Sidebar from '../components/Sidebar.vue';
 import Comment from '../components/Comment.vue';
+import CommentForm from '../components/CommentForm.vue';
 import TopBar from '../components/TopBar.vue';
 import ProgressBar from '../components/ProgressBar.vue';
 import axios from 'axios'
@@ -143,6 +150,7 @@ export default {
     components: {
         Sidebar,
         Comment,
+        CommentForm,
         ProgressBar,
         TopBar,
     },
@@ -155,7 +163,7 @@ export default {
             //     description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", 
             //     audio_url: '/src/assets/audio/Moonlight_audio.mp3', 
             //     tags: ["Intro", "Cruzzi", "Moonlight"], 
-            //     listOfComments: [
+            //     comments: [
             //     {
             //         date: new Date(),
             //         text: "¡Este episodio fue increíblemente informativo! Me encantó cómo los anfitriones profundizaron en el tema y proporcionaron datos detallados que realmente ampliaron mi comprensión. ¡Aprendí mucho en solo unos minutos!",
@@ -194,7 +202,7 @@ export default {
             audio_edited: null,
             streamLater: [],
             editting: false,
-            isAuthor: false
+            isAuthor: false,
         };
 
     },
@@ -319,6 +327,7 @@ export default {
                 }
                 console.log(this.episode)
                 this.getCover()
+                
             })
                 .catch((error) => {
                     console.error(error);
@@ -413,6 +422,21 @@ export default {
         onFileChange() {
             this.audio_edited = this.$refs.audio.files[0]
         },
+        handleAddComment() {
+            const episodeId = this.$route.params.id;
+            const pathComments = import.meta.env.VITE_API_URL + `/episodes/${episodeId}/comments`;
+
+            axios.get(pathComments).then((resComments) => {
+                this.episode.comments = resComments.data;
+                console.log(this.episode.comments)
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        },
+        obtainCertainComment(commentId){
+
+        }
     },
     created() {
         // Descomentar cuando tengamos los endpoints listos
