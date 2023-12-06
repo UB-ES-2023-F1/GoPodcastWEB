@@ -242,9 +242,11 @@ export default {
       axios.put(path, formData, axiosConfig, headers)
         .then((res) => {
           console.log("Bio updated", res.data)
+          alert("Bio Updated Successfully!")
         })
         .catch((error) => {
           console.log(error)
+          alert("Error Updating Bio!")
         })
     },
     
