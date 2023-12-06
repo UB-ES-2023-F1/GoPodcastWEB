@@ -53,6 +53,9 @@
                   <!-- <image-cropper v-model="episodeImage" /> -->
 
                   <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;" :disabled="loading">Post Episode</button>
+                  <div v-if="loading" class="loading-overlay">
+                    <img src="/src/assets/kOnzy.gif" alt="Loading..." style="width: 2em; height: 2em;"/>
+                  </div>
                 </form>
               </div>
             </div>
@@ -192,6 +195,19 @@ export default {
   padding: 4px 8px;
   font-size: 0.9rem;
   cursor: pointer;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
   
