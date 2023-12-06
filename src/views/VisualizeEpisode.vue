@@ -6,9 +6,22 @@
             <!-- Main content-->
             <div class="visualize-content col-lg-10 col-md-9 col-sm-12 p-0  ">
                 <div class="row w-100 p-5">
-                    <TopBar />
+                    <TopBar @search="search"/>
                 </div>
-                <div class="row p-5 w-100">
+                <!-- If user is searching -->
+                <div v-if="searching">
+                    <h1 class="ps-5">Search results. <a @click="searching=false" style="color: rgb(206, 206, 206); cursor: pointer;">Go back.</a></h1>
+                    <div class="featured">
+                        <h2 class="ps-5">Podcasts</h2>
+                        <PodcastList :podcastList="podcastSearchList" />
+                    </div>
+                    <div class="featured">
+                        <h2 class="ps-5">Authors</h2>
+                        <UserList :userList="userSearchList" />
+                    </div>
+                </div>
+
+                <div v-else class="row p-5 w-100">
 
                     <!-- Info section -->
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
@@ -148,6 +161,8 @@ import Comment from '../components/Comment.vue';
 import CommentForm from '../components/CommentForm.vue';
 import TopBar from '../components/TopBar.vue';
 import ProgressBar from '../components/ProgressBar.vue';
+import UserList from '../components/UserList.vue';
+import PodcastList from '../components/PodcastList.vue';
 import axios from 'axios'
 
 export default {
@@ -157,60 +172,63 @@ export default {
         CommentForm,
         ProgressBar,
         TopBar,
+        PodcastList,
+        UserList,
     },
     data() {
         return {
-            // episode:{ 
-            //     id: 1, 
-            //     title: 'Intro', 
-            //     episodeImage: "/src/assets/podcasts/MMCD.jpg", 
-            //     description: "Pequeño speech de Cruzzi hablando de la luna, y de la importancia de las Palmas al haberse criado allí.", 
-            //     audio_url: '/src/assets/audio/Moonlight_audio.mp3', 
-            //     tags: ["Intro", "Cruzzi", "Moonlight"], 
-            //     comments: [
-            //     {
-            //         date: new Date(),
-            //         text: "¡Este episodio fue increíblemente informativo! Me encantó cómo los anfitriones profundizaron en el tema y proporcionaron datos detallados que realmente ampliaron mi comprensión. ¡Aprendí mucho en solo unos minutos!",
-            //         replies: [
-            //             {
-            //             date: new Date(),
-            //             text: "La calidad del sonido en este episodio es excepcional. La producción está muy bien hecha, lo que hizo que la experiencia auditiva fuera muy agradable. ¡Se nota el esfuerzo que pusieron en la edición para garantizar una excelente calidad!",
-            //             replies: [
-            //                 {
-            //                 date: new Date(),
-            //                 text: "Teneis razón ambos, me encantó el episodio!!",
-            //                 replies: [],
-            //                 },
-            //             ],
-            //             },
-            //             {
-            //             date: new Date(),
-            //             text: "Tienes razón este episodio es un 10!",
-            //             replies: [],
-            //             },
-            //         ]},
-            //         {
-            //         date: new Date(),
-            //         text: "Los invitados en este episodio aportaron perspectivas fascinantes. Me encantó escuchar diferentes voces y opiniones sobre el tema. Fue genial ver cómo los anfitriones facilitaron la conversación de manera que todos pudieron expresar sus ideas de manera clara y concisa.",
-            //         replies: [],
-            //         },
-            //     ],
-            //     author: "Cruz Cafuné",
-            //     audioElement: null, 
-            //     isLiked: false 
-            // },
-            // currentEpisode: null,
-            // tagColors: {},
             episode: {},
             episode_edited: {},
             audio_edited: null,
             streamLater: [],
             editting: false,
             isAuthor: false,
+            podcastSearchList: [],
+            userSearchList: [],
+            searching: false
         };
 
     },
     methods: {
+        search(nameQuery, authorQuery) {
+            console.log(nameQuery, authorQuery)
+            if (nameQuery) {
+                this.getName(nameQuery)
+            } else {
+                this.podcastSearchList = []
+            }
+            if (authorQuery) {
+                this.getAuthor(authorQuery)
+            } else {
+                this.userSearchList = []
+            }
+                
+            this.searching = true;
+        },
+        getName(nameQuery) {
+            const pathSearch = import.meta.env.VITE_API_URL + "/search/podcast/" + nameQuery
+
+            axios.get(pathSearch)
+            .then((res) => {
+                this.podcastSearchList = res.data
+            })
+            .catch((error) => {
+                this.podcastSearchList = []
+                console.error(error)
+            })
+        },
+        getAuthor(authorQuery) {
+            const pathSearch = import.meta.env.VITE_API_URL + "/search/user/" + authorQuery
+
+            axios.get(pathSearch)
+            .then((res) => {
+                this.userSearchList = res.data
+            })
+            .catch((error) => {
+                this.userSearchList = []
+                console.error(error)
+            })
+        },
         togglePlayback(episode) {
             if (this.currentEpisode === episode) {
                 // Si el mismo episodio está en reproducción, detén la reproducción
