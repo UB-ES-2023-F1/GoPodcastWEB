@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       user: null,
-      userId: null,
+      userIdLooking: null,
       myId: null,
       isMyProfile: false,
       myPodcasts: [],
@@ -128,11 +128,23 @@ export default {
         })
     },
     getUserInfo() {
-      const path = import.meta.env.VITE_API_URL + '/user/' + this.userId
+      
+      // Reiniciar variables relacionadas con el perfil
+      this.user = null;
+      this.isMyProfile = false;
+      this.myPodcasts = [];
+      this.favoriteList = [];
+      this.watchLaterList = [];
+
+      this.getIdProfile()
+      const path = import.meta.env.VITE_API_URL + '/user/' + this.userIdLooking
 
       const axiosConfig = {
         withCredentials: true
       }
+
+      
+      
 
       axios.get(path)
         .then(response => {
@@ -152,14 +164,14 @@ export default {
       const axiosConfig = {
         withCredentials: true
       }
-
-
       axios.get(userPath, axiosConfig).then((res) => {
         this.myId = res.data.logged_in_as;
-        if (this.myId === this.userId) {
+        if (this.myId === this.userIdLooking) {
           this.isMyProfile = true;
           this.getFavorites()
           this.getWatchLater()
+        }else{
+          this.isMyProfile = false;
         }
       })
         .catch((error) => {
@@ -167,7 +179,7 @@ export default {
         });
     },
     getMyPodcasts() {
-      const path = import.meta.env.VITE_API_URL + '/user/created_podcasts/' + this.userId
+      const path = import.meta.env.VITE_API_URL + '/user/created_podcasts/' + this.userIdLooking
 
       axios.get(path)
         .then((res) => {
@@ -234,17 +246,24 @@ export default {
         .catch((error) => {
           console.log(error)
         })
-
+    },
+    
+  },
+  watch: {
+    '$route.params.id': function (newId, oldId) {
+      // Se llama cuando el parámetro de la ruta cambia
+      this.userIdLooking = newId;
+      this.getUserInfo();
     }
   },
-  
   created() {
-    this.userId = this.$route.params.id;
+    this.userIdLooking = this.$route.params.id;
     if (this.$store.state.userIsLoggedIn) {
       this.getIdProfile()
+      this.getUserInfo()
     }
     // Uncomment when endpoints are ready
-    this.getUserInfo()
+    
 
 
   }
