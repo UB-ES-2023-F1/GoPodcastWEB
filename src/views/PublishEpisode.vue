@@ -52,7 +52,7 @@
 
                   <!-- <image-cropper v-model="episodeImage" /> -->
 
-                  <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;">Post Episode</button>
+                  <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;" :disabled="loading">Post Episode</button>
                 </form>
               </div>
             </div>
@@ -80,11 +80,17 @@ export default {
       description: "",
       tags: [],
       audio: null,
-      tagInput: null
+      tagInput: null,
+      loading: false
     };
   },
   methods: {
     onSubmit() {
+      if (this.loading){
+        return;
+      }
+
+      this.loading = true;
       const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
       console.log('Etiquetas:', tags);
 
@@ -102,17 +108,17 @@ export default {
       // formData.append('episodeImage', this.episodeImage);
       const path = import.meta.env.VITE_API_URL + '/podcasts/' + this.$route.params.id + '/episodes' 
       
-      axios.post(path, formData, axiosConfig, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      axios.post(path, formData, axiosConfig)
         .then((response) => {
           console.log(response);
           alert('Episode published successfully');
+          this.backToHome()
         })
         .catch((error) => {
           console.log(error);
+        })
+        .finally(() => {
+          this.loading = false; 
         });
     },
     onFileChange() {
@@ -121,6 +127,9 @@ export default {
     handleTagInput() {
       const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
       this.tags = tags;
+    },
+    backToHome() {
+      this.$router.push('/')
     },
   },
 };

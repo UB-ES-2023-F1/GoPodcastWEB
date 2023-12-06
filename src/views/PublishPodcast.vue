@@ -35,25 +35,36 @@
                                     </div>
                                     <div class="mb-3"></div>
                                 
-                                    <div class="form-group">
-                                        <label for="etiquetas" class="label">Tags</label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            id="tags"
-                                            v-model="tagInput"
-                                            @input="handleTagInput"
-                                        />
-                                        <div class="mb-3"></div>
-                                        <div class="tags-container">
-                                        <div class="tag" v-for="(tag, index) in tags" :key="index" >
-                                            {{ tag }}
+                                    
+                                    <!--
+                                    <div>
+                                        <h2>Selecciona una categoría</h2>
+                                        <div class="categorias-container">
+                                        <div v-for="categoria in this.categories" :key="categoria.title">
+                                            <button :class="{ 'selected': categoria.title === category }"  @click="seleccionarCategoria(categoria.title)" >
+                                                {{ categoria.title }}
+                                            </button>
                                         </div>
+                                        </div>
+                                        <p>Categoría seleccionada: {{ this.category }}</p>
+                                    </div>
+                                -->
+                                    <div>
+                                        <h2>Selecciona una categoría</h2>
+                                        <div class="categorias-container">
+                                            <button class="btn-category"
+                                                v-for="categoria in categories"
+                                                :key="categoria.title"
+                                                :class="{ 'selected': categoria.title === this.category }"
+                                                @click="seleccionarCategoria(categoria.title)"
+                                            >
+                                                {{ categoria.title }}
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="mb-3"></div>
                                 
-                                    <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;"  @click="onSubmit">Publish Podcast</button>
+                                    <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;"  @click="onSubmit" :disabled="loading">Publish Podcast</button>
                                 </form>
                             </div>
                         </div>
@@ -79,8 +90,11 @@ export default {
             title: null,
             summary: null,
             description: null,
-            tags: [],
-            tagInput: null
+            category: null,
+            categories: [],
+            loading: false,
+            //tags: [],
+            //tagInput: null
         };
     },
     methods: {
@@ -88,8 +102,13 @@ export default {
             this.image_url = blob;
         },
         onSubmit() {
-            const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
-            console.log('Etiquetas:', tags);
+            //const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
+            //console.log('Etiquetas:', tags);
+            if (this.loading){
+                return;
+            }
+
+            this.loading = true;
 
             var formData = new FormData();
 
@@ -97,14 +116,16 @@ export default {
             formData.append("name", this.title)
             formData.append("summary", this.summary)
             formData.append("description", this.description)
-            formData.append("tags", this.tags)
+            //formData.append("tags", this.tags)
+            formData.append("category", this.category)
 
             const parameters = {
                 cover: this.image_url,
                 name: this.title,
                 summary: this.summary,
                 descripcion: this.description,
-                tags: this.tags
+                //tags: this.tags
+                category: this.category
             }
 
 
@@ -127,6 +148,9 @@ export default {
                     alert('Error posting podcast')
                     console.error(error)
                 })
+                .finally(() => {
+                    this.loading = false; 
+                });
         },
         handleTagInput() {
             const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
@@ -134,7 +158,23 @@ export default {
         },
         backToHome() {
             this.$router.push('/')
-        }
+        },
+        getCategories() {
+            const path = import.meta.env.VITE_API_URL + '/categories'
+            axios.get(path).then((res) => {
+                this.categories = res.data
+            })
+            .catch((error)=> {
+                alert('Error getting categories')
+                console.error(error)
+            })
+        },
+        seleccionarCategoria(tituloCategoria) {
+            this.category = tituloCategoria;
+        },
+    },
+    created(){
+        this.getCategories()
     }
 };
 </script>
@@ -158,6 +198,48 @@ export default {
   padding: 4px 8px;
   font-size: 0.9rem;
   cursor: pointer;
+}
+/*
+.btn-category {
+  padding: 0.6rem 2.5rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  background-color: var(--category-color);
+  border: 1px solid var(--category-border-color);
+  color: var(--category-text-color);
+  cursor: pointer;
+  font-weight: normal; 
+}
+
+
+.btn-category.selected {
+  background-color: var(--category-selected-color);
+  color: #fff;
+}
+*/
+
+.btn-category {
+  padding: 0.25rem 0.85rem; 
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #e0e0e0; 
+  border: 1px solid #ccc;
+  color: #333;
+  cursor: pointer;
+  font-weight: normal;
+  margin: 0.1rem;
+}
+
+.btn-category.selected {
+  background-color: #646cff;
+  color: #fff; 
+}
+.categorias-container {
+  text-align: center; /* Centra los botones */
+}
+
+.categorias-container button {
+  margin: 7px; /* Agrega un pequeño margen entre los botones */
 }
 </style>
 
