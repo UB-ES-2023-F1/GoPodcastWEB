@@ -6,9 +6,22 @@
             <!-- Main content-->
             <div class="visualize-content col-lg-10 col-md-9 col-sm-12 p-0  ">
                 <div class="row w-100 p-5">
-                    <TopBar />
+                    <TopBar @search="search"/>
                 </div>
-                <div class="row p-5 w-100">
+                <!-- If user is searching -->
+                <div v-if="searching">
+                    <h1 class="ps-5">Search results. <a @click="searching=false" style="color: rgb(206, 206, 206); cursor: pointer;">Go back.</a></h1>
+                    <div class="featured">
+                        <h2 class="ps-5">Podcasts</h2>
+                        <PodcastList :podcastList="podcastSearchList" />
+                    </div>
+                    <div class="featured">
+                        <h2 class="ps-5">Authors</h2>
+                        <UserList :userList="userSearchList" />
+                    </div>
+                </div>
+
+                <div v-else class="row p-5 w-100">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="contenedor-reducido mb-5">
 
@@ -86,6 +99,8 @@ import Sidebar from '../components/Sidebar.vue';
 import Episode from '../components/Episode.vue';
 import ProgressBar from '../components/ProgressBar.vue';
 import TopBar from '../components/TopBar.vue';
+import UserList from '../components/UserList.vue';
+import PodcastList from '../components/PodcastList.vue';
 import axios from 'axios'
 
 export default {
@@ -94,16 +109,60 @@ export default {
         Episode,
         ProgressBar,
         TopBar,
+        PodcastList,
+        UserList,
     },
     data() {
         return {
             podcast: {},
             podcast_edited: {},
             isAuthor: false,
-            editting: false
+            editting: false,
+            searching: false,
+            podcastSearchList: [],
+            userSearchList: [],
         };
     },
     methods: {
+        search(nameQuery, authorQuery) {
+            console.log(nameQuery, authorQuery)
+            if (nameQuery) {
+                this.getName(nameQuery)
+            } else {
+                this.podcastSearchList = []
+            }
+            if (authorQuery) {
+                this.getAuthor(authorQuery)
+            } else {
+                this.userSearchList = []
+            }
+                
+            this.searching = true;
+        },
+        getName(nameQuery) {
+            const pathSearch = import.meta.env.VITE_API_URL + "/search/podcast/" + nameQuery
+
+            axios.get(pathSearch)
+            .then((res) => {
+                this.podcastSearchList = res.data
+            })
+            .catch((error) => {
+                this.podcastSearchList = []
+                console.error(error)
+            })
+        },
+        getAuthor(authorQuery) {
+            const pathSearch = import.meta.env.VITE_API_URL + "/search/user/" + authorQuery
+
+            axios.get(pathSearch)
+            .then((res) => {
+                this.userSearchList = res.data
+            })
+            .catch((error) => {
+                this.userSearchList = []
+                console.error(error)
+            })
+        },
         getPodcast() {
             const podcastId = this.$route.params.id;
             const pathPodcast = import.meta.env.VITE_API_URL + `/podcasts/${podcastId}`;
@@ -163,7 +222,7 @@ export default {
             axios.get(pathEpisodes)
                 .then((res) => {
                     this.podcast.episodes = res.data
-                    console.log(this.podcast)
+                    console.log("TAGS:",this.podcast.episodes[1].tags)
                 })
                 .catch((error) => {
                     console.log(error)

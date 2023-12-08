@@ -5,9 +5,22 @@
       <div class="publish col-lg-10 col-md-9 col-sm-12 p-0">
         <div class="profile-content p-5">
           <div class="row w-80">
-            <TopBar />
+            <TopBar @search="search"/>
+        </div>
+        <!-- If user is searching -->
+        <div v-if="searching">
+          <h1 class="ps-5">Search results. <a @click="searching=false" style="color: rgb(206, 206, 206); cursor: pointer;">Go back.</a></h1>
+          <div class="featured">
+            <h2 class="ps-5">Podcasts</h2>
+            <PodcastList :podcastList="podcastSearchList" />
           </div>
-          <div class="profile-info" v-if="user">
+          <div class="featured">
+            <h2 class="ps-5">Authors</h2>
+            <UserList :userList="userSearchList" />
+          </div>
+        </div>
+
+          <div v-else class="profile-info" v-if="user">
             <img src="../assets/redpanda.jpg" alt="profile" class="profile-img rounded-circle"
               style="width: 15vw; max-width: 15em;" />
             <div style="display: inline-block;" class="ms-4">
@@ -49,6 +62,7 @@ import Sidebar from '../components/Sidebar.vue'
 import EpisodeList from '../components/EpisodeList.vue'
 import PodcastList from '../components/PodcastList.vue'
 import TopBar from '../components/TopBar.vue'
+import UserList from '../components/UserList.vue'
 import axios from 'axios'
 
 export default {
@@ -56,26 +70,81 @@ export default {
     Sidebar,
     EpisodeList,
     PodcastList,
+    UserList,
     TopBar
   },
   data() {
     return {
       user: null,
-      userId: null,
+      userIdLooking: null,
       myId: null,
       isMyProfile: false,
       myPodcasts: [],
       favoriteList: [],
-      watchLaterList: []
+      watchLaterList: [],
+      searching: false,
+      podcastSearchList: [],
+      userSearchList: [],
     }
   },
   methods: {
+    search(nameQuery, authorQuery) {
+      console.log(nameQuery, authorQuery)
+      if (nameQuery) {
+        this.getName(nameQuery)
+      } else {
+        this.podcastSearchList = []
+      }
+      if (authorQuery) {
+        this.getAuthor(authorQuery)
+      } else {
+        this.userSearchList = []
+      }
+        
+      this.searching = true;
+    },
+    getName(nameQuery) {
+      const pathSearch = import.meta.env.VITE_API_URL + "/search/podcast/" + nameQuery
+
+      axios.get(pathSearch)
+        .then((res) => {
+          this.podcastSearchList = res.data
+        })
+        .catch((error) => {
+          this.podcastSearchList = []
+          console.error(error)
+        })
+    },
+    getAuthor(authorQuery) {
+      const pathSearch = import.meta.env.VITE_API_URL + "/search/user/" + authorQuery
+
+      axios.get(pathSearch)
+        .then((res) => {
+          this.userSearchList = res.data
+        })
+        .catch((error) => {
+          this.userSearchList = []
+          console.error(error)
+        })
+    },
     getUserInfo() {
-      const path = import.meta.env.VITE_API_URL + '/user/' + this.userId
+      
+      // Reiniciar variables relacionadas con el perfil
+      this.user = null;
+      this.isMyProfile = false;
+      this.myPodcasts = [];
+      this.favoriteList = [];
+      this.watchLaterList = [];
+
+      this.getIdProfile()
+      const path = import.meta.env.VITE_API_URL + '/user/' + this.userIdLooking
 
       const axiosConfig = {
         withCredentials: true
       }
+
+      
+      
 
       axios.get(path)
         .then(response => {
@@ -95,14 +164,14 @@ export default {
       const axiosConfig = {
         withCredentials: true
       }
-
-
       axios.get(userPath, axiosConfig).then((res) => {
         this.myId = res.data.logged_in_as;
-        if (this.myId === this.userId) {
+        if (this.myId === this.userIdLooking) {
           this.isMyProfile = true;
           this.getFavorites()
           this.getWatchLater()
+        }else{
+          this.isMyProfile = false;
         }
       })
         .catch((error) => {
@@ -110,7 +179,7 @@ export default {
         });
     },
     getMyPodcasts() {
-      const path = import.meta.env.VITE_API_URL + '/user/created_podcasts/' + this.userId
+      const path = import.meta.env.VITE_API_URL + '/user/created_podcasts/' + this.userIdLooking
 
       axios.get(path)
         .then((res) => {
@@ -173,20 +242,30 @@ export default {
       axios.put(path, formData, axiosConfig, headers)
         .then((res) => {
           console.log("Bio updated", res.data)
+          alert("Bio Updated Successfully!")
         })
         .catch((error) => {
           console.log(error)
+          alert("Error Updating Bio!")
         })
-
+    },
+    
+  },
+  watch: {
+    '$route.params.id': function (newId, oldId) {
+      // Se llama cuando el parámetro de la ruta cambia
+      this.userIdLooking = newId;
+      this.getUserInfo();
     }
   },
   created() {
-    this.userId = this.$route.params.id;
+    this.userIdLooking = this.$route.params.id;
     if (this.$store.state.userIsLoggedIn) {
       this.getIdProfile()
+      this.getUserInfo()
     }
     // Uncomment when endpoints are ready
-    this.getUserInfo()
+    
 
 
   }

@@ -52,7 +52,10 @@
 
                   <!-- <image-cropper v-model="episodeImage" /> -->
 
-                  <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;">Post Episode</button>
+                  <button type="submit" class="btn-submit-bold btn btn-dark mt-3" style="width: 100%;" :disabled="loading">Post Episode</button>
+                  <div v-if="loading" class="loading-overlay">
+                    <img src="/src/assets/kOnzy.gif" alt="Loading..." style="width: 2em; height: 2em;"/>
+                  </div>
                 </form>
               </div>
             </div>
@@ -80,11 +83,17 @@ export default {
       description: "",
       tags: [],
       audio: null,
-      tagInput: null
+      tagInput: null,
+      loading: false
     };
   },
   methods: {
     onSubmit() {
+      if (this.loading){
+        return;
+      }
+
+      this.loading = true;
       const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
       console.log('Etiquetas:', tags);
 
@@ -102,17 +111,17 @@ export default {
       // formData.append('episodeImage', this.episodeImage);
       const path = import.meta.env.VITE_API_URL + '/podcasts/' + this.$route.params.id + '/episodes' 
       
-      axios.post(path, formData, axiosConfig, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      axios.post(path, formData, axiosConfig)
         .then((response) => {
           console.log(response);
           alert('Episode published successfully');
+          this.backToHome()
         })
         .catch((error) => {
           console.log(error);
+        })
+        .finally(() => {
+          this.loading = false; 
         });
     },
     onFileChange() {
@@ -121,6 +130,9 @@ export default {
     handleTagInput() {
       const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
       this.tags = tags;
+    },
+    backToHome() {
+      this.$router.push('/')
     },
   },
 };
@@ -183,6 +195,19 @@ export default {
   padding: 4px 8px;
   font-size: 0.9rem;
   cursor: pointer;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
   
