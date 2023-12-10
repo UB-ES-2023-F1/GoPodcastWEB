@@ -11,6 +11,9 @@
             <p class="text-center mt-5" :style="{ fontSize: '1.2rem' }">Sign up to listen to your favorite podcasts
             </p>
             <form @submit.prevent="onSubmit()" class="register-form col-xl-7 mx-auto mt-4">
+                <image-cropper v-model="image_url" @image-cropped="handleImageCropped" />
+                <div class="mb-3"></div>
+
                 <div class="form-group mb-2">
                     <label for="username">Username</label>
                     <input type="username" class="form-control" id="username" aria-describedby="usernameHelp"
@@ -49,11 +52,16 @@
 
 <script>
 import axios from 'axios'
+import CropImage from '/src/components/CropImage.vue';
 
 export default {
     name: 'Register',
+    components: {
+        'image-cropper': CropImage,
+    },
     data() {
         return {
+            image_url: null,
             username: null,
             email: null,
             password: null,
@@ -61,6 +69,9 @@ export default {
         }
     },
     methods: {
+        handleImageCropped(blob) {
+            this.image_url = blob;
+        },
         validatePassword() {
             // The password must be at least 6 characters long
             if (this.password.length < 6) {
@@ -131,6 +142,7 @@ export default {
         onSubmit() {
             if (this.validatePassword() && this.validateEmail()) {
                 const parameters = {
+                    image_url: this.image_url,
                     username: this.username,
                     email: this.email,
                     password: this.password

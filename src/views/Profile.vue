@@ -21,8 +21,7 @@
         </div>
 
           <div v-else class="profile-info" v-if="user">
-            <img src="../assets/redpanda.jpg" alt="profile" class="profile-img rounded-circle"
-              style="width: 15vw; max-width: 15em;" />
+            <img :src="user.image_url" alt="profile" class="profile-img rounded-circle" style="width: 15vw; max-width: 15em;" />
             <div style="display: inline-block;" class="ms-4">
               <h1 class="profile-name mt-1">{{ user.name }}</h1>
               <p class="type opacity-50">{{ user.type }}</p>
