@@ -75,11 +75,10 @@
                             <div style="margin-top: 10px; margin-left: 40px;" v-if="isAuthor">
                                 <button class="btn btn-success me-2" @click="editting = true" v-if="!editting">Edit</button>
                                 <button class="btn btn-success me-2" @click="updatePodcast()" v-if="editting">Save</button>
-                                <button class="btn btn-success me-2" @click="editting = false"
-                                    v-if="editting">Cancel</button>
+                                <button class="btn btn-dark me-2" @click="editting = false" v-if="editting">Cancel</button>
                                 <button class="btn btn-danger me-2" @click="deletePodcast()">Delete</button>
                                 <button class="btn btn-dark me-2"
-                                    @click="$router.push('/publish/episode/' + this.$route.params.id)">New Episode</button>
+                                    @click="$router.push('/publish/episode/' + this.$route.params.id)" v-if="!editting">New Episode</button>
                             </div>
                             <div class="row mt-3 align-items-center ps-5">
                                 <Episode :episodes="podcast.episodes" :podcastImage="podcast.img"
