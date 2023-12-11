@@ -95,11 +95,10 @@ export default {
 
       this.loading = true;
 
-      for (let i = 0; i < this.tags.length; i++) {
-        if (i !== 0) {
-          this.tags[i] = '#' + this.tags[i];
-        }
+      for (let i = 1; i < this.tags.length; i++) {
+        this.tags[i] = '#' + this.tags[i];
       }
+      this.tags = [this.tags.join('')]
       console.log("TAGS", this.tags)
 
       var formData = new FormData();
