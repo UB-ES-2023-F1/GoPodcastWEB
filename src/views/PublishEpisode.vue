@@ -94,8 +94,13 @@ export default {
       }
 
       this.loading = true;
-      const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
-      console.log('Etiquetas:', tags);
+
+      for (let i = 0; i < this.tags.length; i++) {
+        if (i !== 0) {
+          this.tags[i] = '#' + this.tags[i];
+        }
+      }
+      console.log("TAGS", this.tags)
 
       var formData = new FormData();
       
