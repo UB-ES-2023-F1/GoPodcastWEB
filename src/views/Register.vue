@@ -11,7 +11,7 @@
             <p class="text-center mt-5" :style="{ fontSize: '1.2rem' }">Sign up to listen to your favorite podcasts
             </p>
             <form @submit.prevent="onSubmit()" class="register-form col-xl-7 mx-auto mt-4">
-                <image-cropper v-model="image_url" @image-cropped="handleImageCropped" />
+                <image-cropper v-model="image" @image-cropped="handleImageCropped" />
                 <div class="mb-3"></div>
 
                 <div class="form-group mb-2">
@@ -61,8 +61,8 @@ export default {
     },
     data() {
         return {
-            image_url: null,
             username: null,
+            image: null,
             email: null,
             password: null,
             confirmPassword: null
@@ -70,7 +70,7 @@ export default {
     },
     methods: {
         handleImageCropped(blob) {
-            this.image_url = blob;
+            this.image = blob;
         },
         validatePassword() {
             // The password must be at least 6 characters long
@@ -142,20 +142,18 @@ export default {
         onSubmit() {
             if (this.validatePassword() && this.validateEmail()) {
                 const parameters = {
-                    image_url: this.image_url,
                     username: this.username,
+                    image: this.image,
                     email: this.email,
                     password: this.password
                 }
                 console.log(parameters)
 
                 const path = import.meta.env.VITE_API_URL + '/user'
-
-                console.log(path);
-                
+                console.log("USUARIO Parameters",parameters)
                 axios.post(path, parameters)
                     .then((res) => {
-                        console.log(res)
+                        console.log("USUARIO",res)
                         alert('Account created')
                         this.backToLogin()
                     })
