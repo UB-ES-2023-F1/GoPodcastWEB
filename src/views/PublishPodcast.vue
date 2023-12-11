@@ -14,7 +14,7 @@
                             <div class="col-md-6 mx-auto">
                                 <form @submit.prevent="publicarPodcast" class="publish-form">
                                 
-                                    <image-cropper v-model="image_url" @image-cropped="handleImageCropped" />
+                                    <image-cropper v-model="image" @image-cropped="handleImageCropped" />
                                     <div class="mb-3"></div>
                                 
                                     <div class="form-group">
@@ -88,7 +88,7 @@ export default {
     },
     data() {
         return {
-            image_url: null,
+            image: null,
             title: null,
             summary: null,
             description: null,
@@ -101,7 +101,7 @@ export default {
     },
     methods: {
         handleImageCropped(blob) {
-            this.image_url = blob;
+            this.image = blob;
         },
         onSubmit() {
             //const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
@@ -114,7 +114,7 @@ export default {
 
             var formData = new FormData();
 
-            formData.append("cover", this.image_url);
+            formData.append("cover", this.image);
             formData.append("name", this.title)
             formData.append("summary", this.summary)
             formData.append("description", this.description)
@@ -122,7 +122,7 @@ export default {
             formData.append("category", this.category)
 
             const parameters = {
-                cover: this.image_url,
+                cover: this.image,
                 name: this.title,
                 summary: this.summary,
                 descripcion: this.description,

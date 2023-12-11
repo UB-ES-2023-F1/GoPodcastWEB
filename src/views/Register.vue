@@ -141,17 +141,32 @@ export default {
         },
         onSubmit() {
             if (this.validatePassword() && this.validateEmail()) {
+                var formData = new FormData();
+
+                formData.append("username", this.username);
+                formData.append("image", this.image)
+                formData.append("email", this.email)
+                formData.append("password", this.password)
+
                 const parameters = {
                     username: this.username,
                     image: this.image,
                     email: this.email,
                     password: this.password
                 }
+
+                const axiosConfig = {
+                    withCredentials: true
+                }
                 console.log(parameters)
 
                 const path = import.meta.env.VITE_API_URL + '/user'
                 console.log("USUARIO Parameters",parameters)
-                axios.post(path, parameters)
+                axios.post(path, formData, axiosConfig, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
                     .then((res) => {
                         console.log("USUARIO",res)
                         alert('Account created')
@@ -159,7 +174,7 @@ export default {
                     })
                     .catch((error) => {
                         alert('Error creating account')
-                        console.error(error)
+                        console.error(error) 
                     })
             }
 
