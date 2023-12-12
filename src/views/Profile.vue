@@ -21,7 +21,7 @@
         </div>
 
           <div v-else class="profile-info" v-if="user">
-            <img v-if="user.image_url !== undefined && user.image_url !== undefined" :src="user.image_url" alt="profile" class="profile-img rounded-circle" style="width: 15vw; max-width: 15em;" />
+            <img v-if="user.image_url !== undefined && user.image_url !== null && `${user.image_url}` !== 'data:image/jpeg;base64,'" :src="user.image_url" alt="profile" class="profile-img rounded-circle" style="width: 15vw; max-width: 15em;" />
             <img v-else src="../assets/redpanda.jpg" alt="profile" class="profile-img rounded-circle" style="width: 15vw; max-width: 15em;" />
             <div style="display: inline-block;" class="ms-4">
               <h1 class="profile-name mt-1">{{ user.name }}</h1>
@@ -35,19 +35,19 @@
               </div>
             </div>
           </div>
-          <div class="favorite-podcasts" v-if="isMyProfile">
+          <div class="favorite-podcasts" v-if="isMyProfile && !searching">
             <h2 class="mt-5 mb-3">Favorite Podcasts</h2>
             <PodcastList :podcastList="favoriteList" v-if="favoriteList.length > 0" />
             <h4 class="label" v-else>It looks like you don't have any favorite podcast. <a :href="'/'">Go add some!</a>
             </h4>
           </div>
-          <div class="streamlater-podcasts" v-if="isMyProfile">
+          <div class="streamlater-podcasts" v-if="isMyProfile && !searching">
             <h2 class="mt-5 mb-3">Watch Later</h2>
             <EpisodeList :podcastList="watchLaterList" v-if="watchLaterList.length > 0" />
             <h3 class="label" v-else>It looks like you don't have any episode in stream later. <a :href="'/'">Go add
                 some!</a></h3>
           </div>
-          <div class="my-podcasts">
+          <div class="my-podcasts" v-if="!searching">
             <h2 class="mt-5 mb-3">User's Podcasts</h2>
             <PodcastList :podcastList="myPodcasts" />
           </div>
@@ -115,17 +115,46 @@ export default {
           console.error(error)
         })
     },
+    
     getAuthor(authorQuery) {
       const pathSearch = import.meta.env.VITE_API_URL + "/search/user/" + authorQuery
 
       axios.get(pathSearch)
         .then((res) => {
           this.userSearchList = res.data
+          this.getProfileImgSearch()
         })
         .catch((error) => {
           this.userSearchList = []
           console.error(error)
         })
+    },
+    blobToDataSearch(blob) {
+      return new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(blob)
+      })
+    },
+    getProfileImgSearch() {
+      this.userSearchList.forEach(user => {
+        console.log("Usuario:", user.id, user.username, user.image_url)
+        const pathProfileImg = import.meta.env.VITE_API_URL + '/users/' + user.id + '/image'
+
+        axios.get(pathProfileImg, { responseType: "blob" })
+          .then(async (res) => {
+            const base64data = await this.blobToData(res.data)
+            user.image_url = base64data
+            console.log("IMAGE_URL ACTUALIZADO:",user.image_url)
+            if(user.image_url === "data:image/jpeg;base64"){
+              user.image_url = null
+            }
+            
+          })
+          .catch((error) => {
+            console.error(error)
+          })
+      })
     },
     getUserInfo() {
       
@@ -142,17 +171,16 @@ export default {
       const axiosConfig = {
         withCredentials: true
       }
-
-      
-      
-
       axios.get(path)
         .then(response => {
           this.user = response.data
           console.log(this.user)
+          console.log("IMG perfil",this.user.image_url)
           if (this.user.type === 'author') {
             this.getMyPodcasts()
           }
+          this.getProfileImg()
+          
         })
         .catch(error => {
           console.log(error)
@@ -173,6 +201,7 @@ export default {
         }else{
           this.isMyProfile = false;
         }
+        
       })
         .catch((error) => {
           console.error(error);
@@ -249,6 +278,26 @@ export default {
           alert("Error Updating Bio!")
         })
     },
+    blobToData(blob) {
+      return new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(blob)
+      })
+    },
+    getProfileImg() {
+      const pathProfileImg = import.meta.env.VITE_API_URL + '/users/' + this.userIdLooking + '/image'
+
+      axios.get(pathProfileImg, { responseType: "blob" })
+        .then(async (res) => {
+          const base64data = await this.blobToData(res.data)
+          this.user.image_url = base64data
+        })
+        .catch((error) => {
+          console.error(error)
+        })
+
+    },
     
   },
   watch: {
@@ -256,6 +305,7 @@ export default {
       // Se llama cuando el parámetro de la ruta cambia
       this.userIdLooking = newId;
       this.getUserInfo();
+      //this.getProfileImg();
     }
   },
   created() {
@@ -263,6 +313,8 @@ export default {
     if (this.$store.state.userIsLoggedIn) {
       this.getIdProfile()
       this.getUserInfo()
+      
+      
     }
     // Uncomment when endpoints are ready
     
