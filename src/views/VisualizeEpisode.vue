@@ -42,11 +42,9 @@
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1"></div>
                                         <!-- Like button. Only when logged in -->
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1 mt-3">
-                                            <!--
-                                            <button class="like-button" @click="toggleLike()">
+                                            <button class="like-button" id="like_button" @click="toggleLike()">
                                                 <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
                                             </button>
-                                            -->
                                         </div>
                                     </div>
                                     <p></p>
@@ -57,9 +55,6 @@
                                         <h6><a :href="'/profile/' + episode.id_author">{{ episode.author_name }}</a></h6>
                                     </div>
 
-
-                                    <!-- Tag section. Not implemented for the moment -->
-                                    <!--
                                     <div>
                                         <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
                                             :style="{ backgroundColor: randomColor(tag) }">
@@ -67,7 +62,6 @@
                                         </div>
 
                                     </div>
-                                    -->
                                     <p>{{ episode.description }}</p>
                                 </div>
                             </div>
@@ -87,11 +81,9 @@
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1"></div>
                                         <!-- Like button. Only when logged in and if not author -->
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1 mt-3" v-if="!isAuthor">
-                                            <!--
                                             <button class="like-button" @click="toggleLike()">
                                                 <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
                                             </button>
-                                            -->
                                         </div>
                                     </div>
                                     <p></p>
@@ -312,32 +304,66 @@ export default {
                 return `${Math.floor(seconds)} s`;
             }
         },
+        getWatchLater() {
+            const podcastId = this.episode.id;
+            const path = import.meta.env.VITE_API_URL + `/stream_later/${podcastId}`;
+
+            const axiosConfig = {
+                withCredentials: true
+            }
+
+            axios.get(path, axiosConfig)
+            .then((response) =>{
+                this.episode.isLiked = response.data.is_liked
+            })
+            .catch((error) => {
+                this.episode.isLiked = false
+                console.error(`Error al querer ver si el podcast esta en favorito`, error)
+            })
+        },
         toggleLike() {
+            let likeButton = document.getElementById('like_button')
+            likeButton.disabled = true
             if (!this.$store.state.userIsLoggedIn) {
-                console.log("Going to login");
                 this.$router.push({ name: 'Login' })
                 return
             }
 
             const episodeId = this.episode.id;
-            const path = import.meta.env.VITE_API_URL + `/stream_later/${episodeId}`;
+            const axiosConfig = {
+                withCredentials: true
+            }
 
             if (this.episode.isLiked) {
-                axios.delete(path).then(response => {
+                const path = import.meta.env.VITE_API_URL + `/stream_later/${episodeId}`;
+                axios.delete(path, axiosConfig)
+                .then(response => {
                     this.episode.isLiked = false;
                     console.log(response.data);
                 })
-                    .catch(error => {
-                        console.error('Error al eliminar el like: ', error);
-                    });
+                .catch(error => {
+                    console.error('Error al quitar el like: ', error);
+                })
+                .finally(() => {
+                    likeButton.disabled = false
+                });
             } else {
-                axios.post(path).then(response => {
+                const path = import.meta.env.VITE_API_URL + `/stream_later`;
+                const parameters = {
+                    id: this.episode.id
+                }
+                axios.post(path, parameters, axiosConfig)
+                .then(response => {
                     this.episode.isLiked = true;
                     console.log(response.data);
                 })
-                    .catch(error => {
-                        console.error('Error al dar like: ', error);
-                    });
+                .catch(error => {
+                    likeButton.disabled = false
+                    console.error('Error al dar like: ', error);
+                })
+                .finally(() => {
+                    likeButton.disabled = false
+                });
             }
         },
         randomColor(tag) {
@@ -395,6 +421,9 @@ export default {
                     console.log(res)
                     if (res.data.logged_in_as == this.episode.id_author) {
                         this.isAuthor = true
+                    }
+                    else {
+                        this.getWatchLater()
                     }
                 })
         },
@@ -628,6 +657,10 @@ ul {
     border-radius: 50px;
     font-size: 16px;
     margin: 0px 10px 0px 10px;
+}
+
+.disabled {
+  pointer-events: none;
 }
 </style>
 
