@@ -80,6 +80,10 @@ export default {
   align-items: center;
   padding-top: 25px;
   padding-bottom: 20px;
+  justify-content: flex-start;
+  width: 80%; /* Ajusta según tus necesidades */
+  overflow: auto;
+  white-space: nowrap;
   /* width: 80vw; */
 }
 
@@ -95,6 +99,8 @@ export default {
   /* align-items: center;
     justify-content: center; */
   margin-left: 45px;
+  text-align: center;
+  align-items: center;
 }
 
 .podcast img {
