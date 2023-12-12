@@ -56,11 +56,10 @@
                                     </div>
 
                                     <div>
-                                        <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
+                                        <div v-for="(tag, index) in this.tags" :key="index" class="tag row"
                                             :style="{ backgroundColor: randomColor(tag) }">
                                             {{ tag }}
                                         </div>
-
                                     </div>
                                     <p>{{ episode.description }}</p>
                                 </div>
@@ -93,18 +92,6 @@
                                         <span class="separation">&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;</span>
                                         <h6><a :href="'/profile/' + episode.id_author">{{ episode.author_name }}</a></h6>
                                     </div>
-
-
-                                    <!-- Tag section. Not implemented for the moment -->
-                                    <!--
-                                    <div>
-                                        <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
-                                            :style="{ backgroundColor: randomColor(tag) }">
-                                            {{ tag }}
-                                        </div>
-
-                                    </div>
-                                    -->
                                     <textarea v-model="episode.description" placeholder="Episode description"></textarea>>
                                 </div>
                             </div>
@@ -141,9 +128,10 @@
                 </div>
             </div>
         </div>
-        <!-- <div v-if="currentEpisode">
-            <ProgressBar ref="progressBar" />
-        </div> -->
+        
+    </div>
+    <div v-if="currentEpisode">
+        <ProgressBar ref="progressBar" :url="episode.audio_url" :coverImg="episode.img" :titlePodcast="episode.podcast_name" :titleEpisode="episode.title" />
     </div>
 </template>
 
@@ -169,6 +157,8 @@ export default {
     },
     data() {
         return {
+            tags:[],
+            tagColors: {},
             episode: {},
             episode_edited: {},
             audio_edited: null,
@@ -177,11 +167,13 @@ export default {
             isAuthor: false,
             podcastSearchList: [],
             userSearchList: [],
-            searching: false
+            searching: false,
+            currentEpisode: null,
         };
 
     },
     methods: {
+        
         search(nameQuery, authorQuery) {
             console.log(nameQuery, authorQuery)
             if (nameQuery) {
@@ -249,61 +241,86 @@ export default {
                 })
             })
         },
+        
         togglePlayback(episode) {
             if (this.currentEpisode === episode) {
                 // Si el mismo episodio está en reproducción, detén la reproducción
-                this.stopPlayback(episode);
+                // this.stopPlayback(episode);
                 this.currentEpisode = null;
             } else {
                 // Si se selecciona un nuevo episodio, detén la reproducción actual y comienza el nuevo episodio
-                this.stopCurrentPlayback();
+                // this.stopCurrentPlayback();
                 this.playEpisode(episode);
             }
         },
+        // TODO: Descomentar y linkear con el componente ProgressBar
         playEpisode(episode) {
-            const audioElement = new Audio(episode.audio_url);
-            episode.audioElement = audioElement;
-            this.currentEpisode = episode;
-            audioElement.addEventListener("loadedmetadata", () => {
-                const duration = audioElement.duration;
-                episode.duration = this.formatDuration(duration);
-                audioElement.play();
-            });
-            if (episode !== episode) {
-                this.stopPlayback(ep);
-            }
-            this.preloadAudioDuration(ep);
-        },
-        stopPlayback(episode) {
-            if (episode.audioElement) {
-                episode.audioElement.pause();
-            }
-        },
-        stopCurrentPlayback() {
-            if (this.currentEpisode) {
-                this.stopPlayback(this.currentEpisode);
-            }
-        },
-        preloadAudioDuration(episode) {
-            const audioElement = new Audio(episode.audio_url);
-            audioElement.addEventListener("loadedmetadata", () => {
-                const duration = audioElement.duration;
-                episode.duration = this.formatDuration(duration);
+            this.currentEpisode = episode
+            this.$nextTick(() => {
+                // Use $nextTick to wait for the ProgressBar component to be mounted
+                const progressBar = this.$refs.progressBar;
+
+                // if (progressBar) {
+                //     this.$refs.progressBar.setAudioUrl(episode.audio_url);
+                //     this.$refs.progressBar.setCoverUrl(this.podcastImage);
+                //     this.$refs.progressBar.setTitlePodcast(this.podcastName);
+                //     this.$refs.progressBar.setTitleEpisode(episode.title)
+                //     this.$refs.progressBar.play();
+                //     this.$refs.progressBar.initSlider();
+                // } else {
+                //     console.error('ProgressBar component or setAudioUrl method not found.');
+                // }
             });
         },
-        formatDuration(seconds) {
-            if (seconds >= 3600) {
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                return `${hours} h ${minutes} min`;
-            } else if (seconds >= 60) {
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = Math.floor(seconds % 60);
-                return `${minutes} min ${remainingSeconds} s`;
-            } else {
-                return `${Math.floor(seconds)} s`;
-            }
+        // playEpisode(episode) {
+        //     const audioElement = new Audio(episode.audio_url);
+        //     episode.audioElement = audioElement;
+        //     this.currentEpisode = episode;
+        //     audioElement.addEventListener("loadedmetadata", () => {
+        //         const duration = audioElement.duration;
+        //         episode.duration = this.formatDuration(duration);
+        //         audioElement.play();
+        //     });
+        //     this.episodes.forEach((ep) => {
+        //         if (ep !== episode) {
+        //             this.stopPlayback(ep);
+        //         }
+        //         this.preloadAudioDuration(ep);
+        //     });
+        // },
+        // stopPlayback(episode) {
+        //     if (episode.audioElement) {
+        //         episode.audioElement.pause();
+        //     }
+        // },
+        // stopCurrentPlayback() {
+        //     if (this.currentEpisode) {
+        //         this.stopPlayback(this.currentEpisode);
+        //     }
+        // },
+        getAudioData() {
+            const pathAudio = import.meta.env.VITE_API_URL + '/episodes/' + this.episode.id + '/audio'
+            this.episode.audio_url = pathAudio
+            // this.preloadAudioDuration(this.episode)
+            // axios.get(pathAudio, { responseType: 'blob' })
+            //     .then((res) => {
+            //         this.episode.audio_url = URL.createObjectURL(res.data)
+            //         this.preloadAudioDuration(this.episode)
+            //     })
         },
+        // formatDuration(seconds) {
+        //     if (seconds >= 3600) {
+        //         const hours = Math.floor(seconds / 3600);
+        //         const minutes = Math.floor((seconds % 3600) / 60);
+        //         return `${hours} h ${minutes} min`;
+        //     } else if (seconds >= 60) {
+        //         const minutes = Math.floor(seconds / 60);
+        //         const remainingSeconds = Math.floor(seconds % 60);
+        //         return `${minutes} min ${remainingSeconds} s`;
+        //     } else {
+        //         return `${Math.floor(seconds)} s`;
+        //     }
+        // },
         getWatchLater() {
             const podcastId = this.episode.id;
             const path = import.meta.env.VITE_API_URL + `/stream_later/${podcastId}`;
@@ -396,21 +413,23 @@ export default {
             const pathEpisode = import.meta.env.VITE_API_URL + `/episodes/${episodeId}`;
 
             axios.get(pathEpisode).then((resEpisode) => {
-                this.episode = JSON.parse(JSON.stringify(resEpisode.data));
-                this.episode_edited = JSON.parse(JSON.stringify(resEpisode.data));
-                if (this.$store.state.userIsLoggedIn) {
-                    this.getId()
-                }
-                console.log(this.episode)
-                this.getCover()
-                
+            this.episode = JSON.parse(JSON.stringify(resEpisode.data));
+            this.episode_edited = JSON.parse(JSON.stringify(resEpisode.data));
+            if (this.$store.state.userIsLoggedIn) {
+                this.getId()
+            }
+            console.log(this.episode)
+            this.getCover()
+            this.tags = this.episode.tags
+            this.getAudioData()
+            
             })
-                .catch((error) => {
-                    console.error(error);
-                });
+            .catch((error) => {
+                console.error(error)
+            })
         },
         getId() {
-            const pathID = import.meta.env.VITE_API_URL + '/protected';
+            const pathID = import.meta.env.VITE_API_URL + '/protected'
 
             const axiosConfig = {
                 withCredentials: true
@@ -440,7 +459,7 @@ export default {
                 })
 
         },
-        blobToData(blob) {
+        blobToData(blob){
             return new Promise((resolve) => {
                 const reader = new FileReader()
                 reader.onloadend = () => resolve(reader.result)
@@ -520,10 +539,10 @@ export default {
     },
     mounted() {
         // Precargar la duración al cargar la página
-        this.preloadAudioDuration(this.episode);
+        // this.preloadAudioDuration(this.episode);
     },
 
-};
+    };
 </script>
 
 <style scoped>
@@ -590,6 +609,13 @@ export default {
     overflow: hidden;
     align-items: start;
     justify-content: flex-start;
+}
+.tag {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    color: white;
 }
 
 title {
