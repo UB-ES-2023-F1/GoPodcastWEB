@@ -72,18 +72,21 @@ export default {
     },
     methods: {
         initSlider() {
+            console.log("initSlider");
             var audio = this.$refs.player;
             if (audio) {
                 this.audioDuration = Math.round(audio.duration);
             }
         },
         convertTime(seconds) {
+            console.log("convertTime");
             const format = val => `0${Math.floor(val)}`.slice(-2);
             var hours = seconds / 3600;
             var minutes = (seconds % 3600) / 60;
             return [minutes, seconds % 60].map(format).join(":");
         },
         totalTime() {
+            console.log("totalTime");
             var audio = this.$refs.player;
             if (audio) {
                 var seconds = audio.duration;
@@ -93,6 +96,7 @@ export default {
             }
         },
         elapsedTime() {
+            console.log("elapsedTime");
             var audio = this.$refs.player;
             if (audio) {
                 var seconds = audio.currentTime;
@@ -102,28 +106,34 @@ export default {
             }
         },
         playbackListener(e) {
+            console.log("playbackListener");
+            this.playbackTime = e.target.currentTime;
             var audio = this.$refs.player;
             this.playbackTime = audio.currentTime;
             audio.addEventListener("ended", this.endListener);
             audio.addEventListener("pause", this.pauseListener);
         },
         pauseListener() {
+            console.log("pauseListener");
             this.isPlaying = false;
             this.listenerActive = false;
             this.cleanupListeners();
         },
         endListener() {
+            console.log("endListener");
             this.isPlaying = false;
             this.listenerActive = false;
             this.cleanupListeners();
         },
         cleanupListeners() {
+            console.log("cleanupListeners");
             var audio = this.$refs.player;
             audio.removeEventListener("timeupdate", this.playbackListener);
             audio.removeEventListener("ended", this.endListener);
             audio.removeEventListener("pause", this.pauseListener);
         },
         toggleAudio() {
+            console.log("toggleAudio");
             var audio = this.$refs.player;
             if (audio.paused) {
                 audio.play();
@@ -134,6 +144,7 @@ export default {
             }
         },
         play() {
+            console.log("play");
             var audio = this.$refs.player;
             audio.play();
             this.isPlaying = true;
@@ -141,15 +152,7 @@ export default {
     },
     mounted: function () {
         this.$nextTick(function () {
-            var audio = this.$refs.player;
-            this.isPlaying = true;
-            audio.play();
-            audio.addEventListener("loadedmetadata", function (e) {
-                this.initSlider();
-            }.bind(this));
-            audio.addEventListener("canplay", function (e) {
-                this.audioLoaded = true;
-            }.bind(this));
+            
             this.$watch("isPlaying", function () {
                 if (this.isPlaying) {
                     var audio = this.$refs.player;
@@ -169,6 +172,15 @@ export default {
                 this.isPlaying = true;
                 this.$refs.player.play();
             });
+            var audio = this.$refs.player;
+            this.isPlaying = true;
+            audio.play();
+            audio.addEventListener("loadedmetadata", function (e) {
+                this.initSlider();
+            }.bind(this));
+            audio.addEventListener("canplay", function (e) {
+                this.audioLoaded = true;
+            }.bind(this));
         });
     }
 };
