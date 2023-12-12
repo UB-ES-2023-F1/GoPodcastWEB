@@ -131,7 +131,7 @@
         
     </div>
     <div v-if="currentEpisode">
-        <ProgressBar ref="progressBar" />
+        <ProgressBar ref="progressBar" :url="episode.audio_url" :coverImg="episode.img" :titlePodcast="episode.podcast_name" :titleEpisode="episode.title" />
     </div>
 </template>
 
@@ -245,11 +245,11 @@ export default {
         togglePlayback(episode) {
             if (this.currentEpisode === episode) {
                 // Si el mismo episodio está en reproducción, detén la reproducción
-                this.stopPlayback(episode);
+                // this.stopPlayback(episode);
                 this.currentEpisode = null;
             } else {
                 // Si se selecciona un nuevo episodio, detén la reproducción actual y comienza el nuevo episodio
-                this.stopCurrentPlayback();
+                // this.stopCurrentPlayback();
                 this.playEpisode(episode);
             }
         },
@@ -260,16 +260,16 @@ export default {
                 // Use $nextTick to wait for the ProgressBar component to be mounted
                 const progressBar = this.$refs.progressBar;
 
-                if (progressBar) {
-                    this.$refs.progressBar.setAudioUrl(episode.audio_url);
-                    this.$refs.progressBar.setCoverUrl(this.podcastImage);
-                    this.$refs.progressBar.setTitlePodcast(this.podcastName);
-                    this.$refs.progressBar.setTitleEpisode(episode.title)
-                    this.$refs.progressBar.play();
-                    this.$refs.progressBar.initSlider();
-                } else {
-                    console.error('ProgressBar component or setAudioUrl method not found.');
-                }
+                // if (progressBar) {
+                //     this.$refs.progressBar.setAudioUrl(episode.audio_url);
+                //     this.$refs.progressBar.setCoverUrl(this.podcastImage);
+                //     this.$refs.progressBar.setTitlePodcast(this.podcastName);
+                //     this.$refs.progressBar.setTitleEpisode(episode.title)
+                //     this.$refs.progressBar.play();
+                //     this.$refs.progressBar.initSlider();
+                // } else {
+                //     console.error('ProgressBar component or setAudioUrl method not found.');
+                // }
             });
         },
         // playEpisode(episode) {
@@ -288,45 +288,39 @@ export default {
         //         this.preloadAudioDuration(ep);
         //     });
         // },
-        stopPlayback(episode) {
-            if (episode.audioElement) {
-                episode.audioElement.pause();
-            }
-        },
-        stopCurrentPlayback() {
-            if (this.currentEpisode) {
-                this.stopPlayback(this.currentEpisode);
-            }
-        },
+        // stopPlayback(episode) {
+        //     if (episode.audioElement) {
+        //         episode.audioElement.pause();
+        //     }
+        // },
+        // stopCurrentPlayback() {
+        //     if (this.currentEpisode) {
+        //         this.stopPlayback(this.currentEpisode);
+        //     }
+        // },
         getAudioData() {
             const pathAudio = import.meta.env.VITE_API_URL + '/episodes/' + this.episode.id + '/audio'
-            
-            axios.get(pathAudio, { responseType: 'blob' })
-                .then((res) => {
-                    this.episode.audio_url = URL.createObjectURL(res.data)
-                    this.preloadAudioDuration(this.episode)
-                })
+            this.episode.audio_url = pathAudio
+            // this.preloadAudioDuration(this.episode)
+            // axios.get(pathAudio, { responseType: 'blob' })
+            //     .then((res) => {
+            //         this.episode.audio_url = URL.createObjectURL(res.data)
+            //         this.preloadAudioDuration(this.episode)
+            //     })
         },
-        preloadAudioDuration(episode) {
-            const audioElement = new Audio(episode.audio_url);
-            audioElement.addEventListener("loadedmetadata", () => {
-                const duration = audioElement.duration;
-                episode.duration = this.formatDuration(duration);
-            });
-        },
-        formatDuration(seconds) {
-            if (seconds >= 3600) {
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                return `${hours} h ${minutes} min`;
-            } else if (seconds >= 60) {
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = Math.floor(seconds % 60);
-                return `${minutes} min ${remainingSeconds} s`;
-            } else {
-                return `${Math.floor(seconds)} s`;
-            }
-        },
+        // formatDuration(seconds) {
+        //     if (seconds >= 3600) {
+        //         const hours = Math.floor(seconds / 3600);
+        //         const minutes = Math.floor((seconds % 3600) / 60);
+        //         return `${hours} h ${minutes} min`;
+        //     } else if (seconds >= 60) {
+        //         const minutes = Math.floor(seconds / 60);
+        //         const remainingSeconds = Math.floor(seconds % 60);
+        //         return `${minutes} min ${remainingSeconds} s`;
+        //     } else {
+        //         return `${Math.floor(seconds)} s`;
+        //     }
+        // },
         getWatchLater() {
             const podcastId = this.episode.id;
             const path = import.meta.env.VITE_API_URL + `/stream_later/${podcastId}`;
@@ -545,7 +539,7 @@ export default {
     },
     mounted() {
         // Precargar la duración al cargar la página
-        this.preloadAudioDuration(this.episode);
+        // this.preloadAudioDuration(this.episode);
     },
 
     };
