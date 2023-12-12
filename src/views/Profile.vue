@@ -35,19 +35,19 @@
               </div>
             </div>
           </div>
-          <div class="favorite-podcasts" v-if="isMyProfile">
+          <div class="favorite-podcasts" v-if="isMyProfile && !searching">
             <h2 class="mt-5 mb-3">Favorite Podcasts</h2>
             <PodcastList :podcastList="favoriteList" v-if="favoriteList.length > 0" />
             <h4 class="label" v-else>It looks like you don't have any favorite podcast. <a :href="'/'">Go add some!</a>
             </h4>
           </div>
-          <div class="streamlater-podcasts" v-if="isMyProfile">
+          <div class="streamlater-podcasts" v-if="isMyProfile && !searching">
             <h2 class="mt-5 mb-3">Watch Later</h2>
             <EpisodeList :podcastList="watchLaterList" v-if="watchLaterList.length > 0" />
             <h3 class="label" v-else>It looks like you don't have any episode in stream later. <a :href="'/'">Go add
                 some!</a></h3>
           </div>
-          <div class="my-podcasts">
+          <div class="my-podcasts" v-if="!searching">
             <h2 class="mt-5 mb-3">User's Podcasts</h2>
             <PodcastList :podcastList="myPodcasts" />
           </div>
