@@ -20,8 +20,8 @@
                             Estos son nuestros valores</h4>
                         <div class="row mt-4">
                             <div class="col-md-6">
-                                <img src="../assets/redpanda.jpg" alt="about-us" class="img-fluid"
-                                    style="width: 100%; max-height: 300px;">
+                                <img src="../assets/aboutus/contenido.jpeg" alt="about-us" class="img-fluid"
+                                    style="width: 100%; height: 250px; object-fit: cover;">
                             </div>
                             <div class="col-md-6">
                                 <h5 style="color: rgb(85, 50, 255);">Contenido</h5>
@@ -38,21 +38,21 @@
                                 <button class="btn mt-3" @click="$router.push('/');">Ver Podcasts</button>
                             </div>
                             <div class="col-md-6">
-                                <img src="../assets/redpanda.jpg" alt="about-us" class="img-fluid"
-                                    style="width: 100%; max-height: 300px;">
+                                <img src="../assets/aboutus/accesibilidad.jpeg" alt="about-us" class="img-fluid"
+                                    style="width: 100%; height: 250px; object-fit: cover;">
                             </div>
                         </div>
                         <div class="row mt-5">
                             <div class="col-md-6">
-                                <img src="../assets/redpanda.jpg" alt="about-us" class="img-fluid"
-                                    style="width: 100%; max-height: 300px;">
+                                <img src="../assets/aboutus/transparencia.jpeg" alt="about-us" class="img-fluid"
+                                    style="width: 100%; height: 250px; object-fit: cover;">
                             </div>
                             <div class="col-md-6">
                                 <h5 style="color: rgb(85, 50, 255);">Transparencia</h5>
                                 <p>¡Lo que ves es lo que hay! No comercializamos con tus datos ni usamos cookies para rastrear tu comportamiento en la web. Nos comprometemos a ser abiertos y honestos en cuanto a nuestras políticas, prácticas y decisiones.</p>
 
                                 <!-- BUtton to Explore -->
-                                <button class="btn mt-3" @click="$router.push('/');">Publicar Episodio</button>
+                                <button class="btn mt-3" @click="$router.push('/login');">Publicar Episodio</button>
                             </div>
                         </div>
                         <div class="row mt-5">
@@ -62,8 +62,8 @@
                                 <button class="btn mt-3" @click="$router.push('/');">Descubre artistas</button>
                             </div>
                             <div class="col-md-6">
-                                <img src="../assets/redpanda.jpg" alt="about-us" class="img-fluid"
-                                    style="width: 100%; max-height: 300px;">
+                                <img src="../assets/aboutus/comunidad.jpeg" alt="about-us" class="img-fluid"
+                                    style="width: 100%; height: 250px; object-fit: cover;">
                             </div>
                         </div>
                     </div>
