@@ -3,7 +3,7 @@
         <div id="audio-player-root w-100 p-0 m-0">
             <div>
                 <audio style="display:none" ref="player" :id="playerid">
-                    <source :src="audioUrl" type="audio/mpeg" />
+                    <source :src="url" type="audio/mpeg" />
                 </audio>
             </div>
             <div class="player-content w-full rounded-lg shadow-lg m-0 p-0">
@@ -64,36 +64,13 @@ export default {
             audioLoaded: false,
             isPlaying: false,
             episodeToken: "",
-            audioUrl: "../src/assets/audio/episodes/episode1.mp3",
+            // audioUrl: "../src/assets/audio/episodes/episode1.mp3",
             titlePodcast: "",
             titleEpisode: "",
             coverImg: null
         };
     },
     methods: {
-        consoleLogTest() {
-            console.log("Test");
-        },
-        setAudioUrl(audioUrl) {
-            this.audioUrl = audioUrl;
-        },
-        setCoverUrl(coverUrl) {
-            this.coverImg = coverUrl;
-        },
-        setTitlePodcast(title) {
-            this.titlePodcast = title;
-        },
-        setTitleEpisode(title) {
-            this.titleEpisode = title;
-        },
-        fetchAudio() {
-            axios.get('/api/episodes/' + this.episodeToken + '/audio').then((response) => {
-                this.audioUrl = response.data.url;
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        },
         initSlider() {
             var audio = this.$refs.player;
             if (audio) {
@@ -163,9 +140,10 @@ export default {
         }
     },
     mounted: function () {
-        //this.fetchAudio(); // TODO: Descomentar cuando esté la parte de backend preparada
         this.$nextTick(function () {
             var audio = this.$refs.player;
+            this.isPlaying = true;
+            audio.play();
             audio.addEventListener("loadedmetadata", function (e) {
                 this.initSlider();
             }.bind(this));
@@ -176,18 +154,20 @@ export default {
                 if (this.isPlaying) {
                     var audio = this.$refs.player;
                     this.initSlider();
-                    if (!this.listenerActive) {
-                        this.listenerActive = true;
-                        audio.addEventListener("timeupdate", this.playbackListener);
-                    }
+                    this.listenerActive = true;
+                    audio.addEventListener("timeupdate", this.playbackListener);
                 }
             });
             this.$watch("playbackTime", function () {
-                var audio = this.$refs.player;
                 var diff = Math.abs(this.playbackTime - this.$refs.player.currentTime);
                 if (diff > 0.01) {
                     this.$refs.player.currentTime = this.playbackTime;
                 }
+            });
+            this.$watch("url", function () {
+                this.$refs.player.load();
+                this.isPlaying = true;
+                this.$refs.player.play();
             });
         });
     }
