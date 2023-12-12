@@ -161,9 +161,22 @@ export default {
                 return `${Math.floor(seconds)} s`;
             }
         },
+
+        getPodcast() {
+            const podcastId = this.$route.params.id;
+            const pathPodcast = `https://gopodcastapi.azurewebsites.net/podcasts/${podcastId}`;
+
+            axios.get(pathPodcast).then((resPodcast) => {
+                this.podcast = resPodcast.data;
+            })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
         toggleLike(episode) {
             const episodeId = episode.id;
             const path = import.meta.env.VITE_API_URL + `/likeEpisode/${episodeId}`;
+
 
             if (episode.isLiked) {
                 axios.delete(path).then(response => {
