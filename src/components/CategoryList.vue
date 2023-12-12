@@ -1,10 +1,22 @@
 <template>
   <div class="categories-container">
     <h2>Browse Categories</h2>
-    <div class="categories">
-      <div v-for="category in categories" :key="category.title" class="category" ref="categoriesContainer">
+    <div class="categories overflow-x-auto overflow-x-hidden" ref="categoriesContainer">
+      <div v-for="category in categories" :key="category.title" class="category"
+        @click="this.currentCategory = category.title ; updatePodcasts()">
         <img :src="category.img" :alt="category.title">
         <span class="name text-center">{{ category.title }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="podcasts-container" v-if="currentCategory">
+    <h4>{{ currentCategory }}</h4>
+    <div class="podcasts">
+      <div v-for="podcast in podcastsCategory" :key="podcast.id" class="podcast">
+        <a :href="'/visualize/' + podcast.id">
+          <img :src="podcast.img" :alt="podcast.name"  v-if="podcast.img">
+        </a>
+        <span class="name text-center">{{ podcast.name }}</span>
       </div>
     </div>
   </div>
@@ -17,10 +29,14 @@ export default {
   data() {
     return {
       categories: [],
+      podcasts: [],
+      podcastsCategory: [],
+      currentCategory: null,
     };
   },
   methods: {
     async getCategories() {
+      console.log('Getting categories')
       const pathCategories = import.meta.env.VITE_API_URL + '/categories'
 
       try {
@@ -32,6 +48,7 @@ export default {
       this.getCovers()
     },
     getCovers() {
+      console.log('Getting covers')
       this.categories.forEach(category => {
         const pathCover = import.meta.env.VITE_API_URL + category.image_url
 
@@ -44,18 +61,18 @@ export default {
             console.log(error)
           })
       })
-      // this.podcastList.forEach(podcast => {
-      //   const pathCovers = import.meta.env.VITE_API_URL + '/podcasts/' + podcast.id + '/cover'
+    },
+    getCover(podcast) {
+      const pathCover = import.meta.env.VITE_API_URL + '/podcasts/' + podcast.id + '/cover'
 
-      //   axios.get(pathCovers, { responseType: "blob" })
-      //     .then(async (res) => {
-      //       const base64data = await this.blobToData(res.data)
-      //       podcast.img = base64data
-      //     })
-      //     .catch((error) => {
-      //       console.error(error)
-      //     })
-      // });
+      axios.get(pathCover, { responseType: "blob" })
+        .then(async (res) => {
+            const base64data = await this.blobToData(res.data)
+            podcast.img = base64data
+        })
+        .catch((error) => {
+            console.error(error)
+        })
 
     },
     blobToData(blob) {
@@ -65,11 +82,44 @@ export default {
         reader.readAsDataURL(blob)
       })
     },
+    getPodcasts() {
+      console.log('Getting podcasts')
+      const pathPodcasts = import.meta.env.VITE_API_URL + '/podcasts'
+
+      axios.get(pathPodcasts)
+        .then((res) => {
+          this.podcasts = res.data
+          console.log(this.podcasts)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    updatePodcasts() {
+      console.log('Updating podcasts by category: ' + this.currentCategory)
+      this.podcastsCategory = this.podcasts.filter(podcast => podcast.category === this.currentCategory)
+      if(this.podcastsCategory.length != 0){
+        for(let podcast of Object.values(this.podcastsCategory)){
+          this.getCover(podcast)
+        }
+      }
+    }
   },
   created() {
     // Descomentar cuando tengamos los endpoints listos
     this.getCategories()
-  }
+    this.getPodcasts()
+  },
+  mounted() {
+    const categoriesContainer = this.$refs.categoriesContainer;
+    categoriesContainer.addEventListener('wheel', (e) => {
+      console.log('DeltaX:', e.deltaX);
+      if (e.deltaX !== 0) {
+        categoriesContainer.scrollLeft += e.deltaX;
+        e.preventDefault();
+      }
+    });
+  },
 };
 </script>
 
@@ -77,16 +127,16 @@ export default {
 .categories {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-top: 25px;
-  padding-bottom: 20px;
-  padding-left: 30px;
-  padding-right: 30px;
-  width: 80vw;
-  height: 180px;
-  overflow: hidden;
-  flex-flow: row wrap;
-  /* width: 80vw; */
+  justify-content: flex-start;
+  padding: 25px 30px; 
+  width: 80%;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.categories-container {
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .category {
@@ -95,7 +145,8 @@ export default {
   flex-direction: column;
   /* margin-left: 30px; */
   margin-right: 30px;
-  padding-bottom: 5em;
+  padding-bottom: 10px;
+  align-items: center;
 }
 
 .category img {

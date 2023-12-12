@@ -11,6 +11,9 @@
             <p class="text-center mt-5" :style="{ fontSize: '1.2rem' }">Sign up to listen to your favorite podcasts
             </p>
             <form @submit.prevent="onSubmit()" class="register-form col-xl-7 mx-auto mt-4">
+                <image-cropper v-model="image" @image-cropped="handleImageCropped" />
+                <div class="mb-3"></div>
+
                 <div class="form-group mb-2">
                     <label for="username">Username</label>
                     <input type="username" class="form-control" id="username" aria-describedby="usernameHelp"
@@ -49,18 +52,26 @@
 
 <script>
 import axios from 'axios'
+import CropImage from '/src/components/CropImage.vue';
 
 export default {
     name: 'Register',
+    components: {
+        'image-cropper': CropImage,
+    },
     data() {
         return {
             username: null,
+            image: null,
             email: null,
             password: null,
             confirmPassword: null
         }
     },
     methods: {
+        handleImageCropped(blob) {
+            this.image = blob;
+        },
         validatePassword() {
             // The password must be at least 6 characters long
             if (this.password.length < 6) {
@@ -130,26 +141,40 @@ export default {
         },
         onSubmit() {
             if (this.validatePassword() && this.validateEmail()) {
+                var formData = new FormData();
+
+                formData.append("username", this.username);
+                formData.append("image", this.image)
+                formData.append("email", this.email)
+                formData.append("password", this.password)
+
                 const parameters = {
                     username: this.username,
+                    image: this.image,
                     email: this.email,
                     password: this.password
+                }
+
+                const axiosConfig = {
+                    withCredentials: true
                 }
                 console.log(parameters)
 
                 const path = import.meta.env.VITE_API_URL + '/user'
-
-                console.log(path);
-                
-                axios.post(path, parameters)
+                console.log("USUARIO Parameters",parameters)
+                axios.post(path, formData, axiosConfig, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
                     .then((res) => {
-                        console.log(res)
+                        console.log("USUARIO",res)
                         alert('Account created')
                         this.backToLogin()
                     })
                     .catch((error) => {
                         alert('Error creating account')
-                        console.error(error)
+                        console.error(error) 
                     })
             }
 

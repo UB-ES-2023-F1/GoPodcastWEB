@@ -3,7 +3,8 @@
         <div class="users overflow-x-auto flex-nowrap overflow-x-hidden" ref="usersContainer">
             <div v-for="user in userList" :key="user.id" class="user">
                 <a :href="'/profile/' + user.id">
-                    <img :src="'https://api.iconify.design/iconamoon/profile-fill.svg'">
+                    <img v-if="user.image_url !== undefined && user.image_url !== null" :src="user.image_url" alt="profile" class="profile-img rounded-circle" style="width: 120%; height: 120%;"/>
+                    <img v-else src="https://api.iconify.design/iconamoon/profile-fill.svg" alt="profile" class="profile-img rounded-circle" style="width: 120%; height: 120%;"/>
                 </a>
                 <span class="name">{{ user.username }}</span>
             </div>
