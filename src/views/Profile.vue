@@ -43,7 +43,7 @@
           </div>
           <div class="streamlater-podcasts" v-if="isMyProfile && !searching">
             <h2 class="mt-5 mb-3">Watch Later</h2>
-            <EpisodeList :podcastList="watchLaterList" v-if="watchLaterList.length > 0" />
+            <EpisodeList :episodesList="watchLaterList" v-if="watchLaterList.length > 0" />
             <h3 class="label" v-else>It looks like you don't have any episode in stream later. <a :href="'/'">Go add
                 some!</a></h3>
           </div>
@@ -245,6 +245,7 @@ export default {
       axios.get(path, axiosConfig)
         .then((res) => {
           this.watchLaterList = res.data
+          console.log(this.watchLaterList)
         })
         .catch((error) => {
           console.log(error)
