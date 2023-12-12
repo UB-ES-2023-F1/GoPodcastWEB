@@ -1,8 +1,8 @@
 <template>
   <div class="categories-container">
     <h2>Browse Categories</h2>
-    <div class="categories">
-      <div v-for="category in categories" :key="category.title" class="category" ref="categoriesContainer"
+    <div class="categories overflow-x-auto overflow-x-hidden" ref="categoriesContainer">
+      <div v-for="category in categories" :key="category.title" class="category"
         @click="this.currentCategory = category.title ; updatePodcasts()">
         <img :src="category.img" :alt="category.title">
         <span class="name text-center">{{ category.title }}</span>
@@ -28,52 +28,8 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      categories: [
-        // {
-        //   title: 'Sports',
-        //   img: null
-        // },
-        // {
-        //   title: 'News',
-        //   img: null
-        // },
-        // {
-        //   title: 'Music',
-        //   img: null
-        // }
-      ],
-      podcasts: [
-        // {
-        //   title: 'Podcast 1',
-        //   category: 'Sports',
-        //   img: null
-        // },
-        // {
-        //   title: 'Podcast 2',
-        //   category: 'News',
-        //   img: null
-        // },
-        // {
-        //   title: 'Podcast 3',
-        //   category: 'News',
-        //   img: null
-        // },
-        // {
-        //   title: 'Podcast 4',
-        //   category: 'Music',
-        //   img: null
-        // },
-        // {
-        //   title: 'Podcast 5',
-        //   category: 'Music',
-        //   img: null
-        // },
-        // {
-        //   title: 'Podcast 6',
-        //   category: 'Music',
-        //   img: null
-        // }
-      ],
+      categories: [],
+      podcasts: [],
       podcastsCategory: [],
       currentCategory: null,
     };
@@ -153,7 +109,17 @@ export default {
     // Descomentar cuando tengamos los endpoints listos
     this.getCategories()
     this.getPodcasts()
-  }
+  },
+  mounted() {
+    const categoriesContainer = this.$refs.categoriesContainer;
+    categoriesContainer.addEventListener('wheel', (e) => {
+      console.log('DeltaX:', e.deltaX);
+      if (e.deltaX !== 0) {
+        categoriesContainer.scrollLeft += e.deltaX;
+        e.preventDefault();
+      }
+    });
+  },
 };
 </script>
 
@@ -161,16 +127,16 @@ export default {
 .categories {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-top: 25px;
-  padding-bottom: 20px;
-  padding-left: 30px;
-  padding-right: 30px;
-  width: 80vw;
-  height: 180px;
-  overflow: hidden;
-  flex-flow: row wrap;
-  /* width: 80vw; */
+  justify-content: flex-start;
+  padding: 25px 30px; 
+  width: 80%;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.categories-container {
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .category {
@@ -179,7 +145,8 @@ export default {
   flex-direction: column;
   /* margin-left: 30px; */
   margin-right: 30px;
-  padding-bottom: 5em;
+  padding-bottom: 10px;
+  align-items: center;
 }
 
 .category img {
