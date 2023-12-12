@@ -241,6 +241,7 @@ export default {
                 })
             })
         },
+        
         togglePlayback(episode) {
             if (this.currentEpisode === episode) {
                 // Si el mismo episodio está en reproducción, detén la reproducción
