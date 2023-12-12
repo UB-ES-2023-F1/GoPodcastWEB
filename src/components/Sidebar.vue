@@ -33,9 +33,6 @@
                 <a href="#" class="nav-link opacity-50">
                     About us
                 </a>
-                <a href="#" class="nav-link opacity-50" v-if="this.userIsLoggedIn" @click="$router.push('/publish/episode');">
-                    New Episode
-                    </a>
             </li>
         </ul>
     </div>

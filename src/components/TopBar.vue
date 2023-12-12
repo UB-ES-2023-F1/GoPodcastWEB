@@ -1,9 +1,8 @@
 <template>
   <div class="col-12 d-flex justify-content-between align-items-start">
     <div class="search col-6">
-      <input type="text" v-model="nameQuery" placeholder="Search by name">
-      <input type="text" v-model="authorQuery" placeholder="Search by author" style="border-bottom-left-radius: 0%; border-top-left-radius: 0%; border-left: 2px solid rgba(136, 136, 136, 0.555);">
-      <button @click="$emit('search', nameQuery, authorQuery)">Search</button>
+      <input type="text" v-model="query" placeholder="Search Podcast or Author" @keyup.enter="handleSearch">
+      <button @click="handleSearch">Search</button>
     </div>
 
     <div class="d-flex align-items-center">
@@ -35,8 +34,7 @@ export default {
   emits: ["search"],
   data() {
     return {
-      authorQuery: '',
-      nameQuery: '',
+      query: '',
       userId: null
     }
   },
@@ -62,7 +60,10 @@ export default {
       .catch((error) => {
           console.error(error);
       });
-  },
+    },
+    handleSearch() {
+      this.$emit('search', this.query, this.query);
+    }
   },
   components: {
   },
