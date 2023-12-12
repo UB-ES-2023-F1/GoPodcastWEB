@@ -60,6 +60,11 @@ const routes = [
     component: () => import('../views/Profile.vue')
   },
   {
+    path: '/discover',
+    name: 'Discover',
+    component: () => import('../views/AllPodcasts.vue')
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import('../views/AboutUs.vue')
