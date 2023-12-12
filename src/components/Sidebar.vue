@@ -30,7 +30,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link opacity-50">
+                <a href="#" class="nav-link opacity-50" @click="$router.push('/about');">
                     About us
                 </a>
             </li>
