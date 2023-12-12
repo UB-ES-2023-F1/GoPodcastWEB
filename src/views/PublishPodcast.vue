@@ -34,21 +34,6 @@
                                         <textarea class="form-control" id="descripcion" v-model="description" required style="width: 100%;"></textarea>
                                     </div>
                                     <div class="mb-3"></div>
-                                
-                                    
-                                    <!--
-                                    <div>
-                                        <h2>Selecciona una categoría</h2>
-                                        <div class="categorias-container">
-                                        <div v-for="categoria in this.categories" :key="categoria.title">
-                                            <button :class="{ 'selected': categoria.title === category }"  @click="seleccionarCategoria(categoria.title)" >
-                                                {{ categoria.title }}
-                                            </button>
-                                        </div>
-                                        </div>
-                                        <p>Categoría seleccionada: {{ this.category }}</p>
-                                    </div>
-                                -->
                                     <div>
                                         <h2>Selecciona una categoría</h2>
                                         <div class="categorias-container">
@@ -95,8 +80,6 @@ export default {
             category: null,
             categories: [],
             loading: false,
-            //tags: [],
-            //tagInput: null
         };
     },
     methods: {
@@ -104,8 +87,6 @@ export default {
             this.image = blob;
         },
         onSubmit() {
-            //const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
-            //console.log('Etiquetas:', tags);
             if (this.loading){
                 return;
             }
@@ -118,7 +99,6 @@ export default {
             formData.append("name", this.title)
             formData.append("summary", this.summary)
             formData.append("description", this.description)
-            //formData.append("tags", this.tags)
             formData.append("category", this.category)
 
             const parameters = {
@@ -126,7 +106,6 @@ export default {
                 name: this.title,
                 summary: this.summary,
                 descripcion: this.description,
-                //tags: this.tags
                 category: this.category
             }
 
@@ -147,17 +126,21 @@ export default {
                     this.backToHome()
                 })
                 .catch((error) => {
-                    alert('Error posting podcast')
-                    console.error(error)
+                    if(parameters.cover == null){
+                        alert('Añadir imagen de podcast')
+                        console.error(error)
+                    }else{
+                        alert('Error posting podcast')
+                        console.error(error)
+                    }
+
+                    
                 })
                 .finally(() => {
                     this.loading = false; 
                 });
         },
-        handleTagInput() {
-            const tags = this.tagInput.split(/[, ]+/).filter(tag => tag.trim() !== '');
-            this.tags = tags;
-        },
+
         backToHome() {
             this.$router.push('/')
         },

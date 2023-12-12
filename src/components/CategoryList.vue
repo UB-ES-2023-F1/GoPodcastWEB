@@ -113,7 +113,6 @@ export default {
   mounted() {
     const categoriesContainer = this.$refs.categoriesContainer;
     categoriesContainer.addEventListener('wheel', (e) => {
-      console.log('DeltaX:', e.deltaX);
       if (e.deltaX !== 0) {
         categoriesContainer.scrollLeft += e.deltaX;
         e.preventDefault();

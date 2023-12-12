@@ -111,12 +111,41 @@ export default {
       axios.get(pathSearch)
         .then((res) => {
           this.userSearchList = res.data
+          this.getProfileImg()
         })
         .catch((error) => {
           this.userSearchList = []
           console.error(error)
         })
     },
+    blobToData(blob) {
+      return new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(blob)
+      })
+    },
+    getProfileImg() {
+      this.userSearchList.forEach(user => {
+        console.log("Usuario:", user.id, user.username, user.image_url)
+        const pathProfileImg = import.meta.env.VITE_API_URL + '/users/' + user.id + '/image'
+
+        axios.get(pathProfileImg, { responseType: "blob" })
+          .then(async (res) => {
+            const base64data = await this.blobToData(res.data)
+            user.image_url = base64data
+            console.log("IMAGE_URL ACTUALIZADO:",user.image_url)
+            if(user.image_url === "data:image/jpeg;base64"){
+              user.image_url = null
+            }
+            
+          })
+          .catch((error) => {
+            console.error(error)
+          })
+      })
+    },
+
     getPodcasts() {
       console.log("Getting podcasts")
       const pathPodcasts = import.meta.env.VITE_API_URL + "/podcasts"

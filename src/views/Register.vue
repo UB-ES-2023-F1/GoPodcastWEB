@@ -173,8 +173,13 @@ export default {
                         this.backToLogin()
                     })
                     .catch((error) => {
-                        alert('Error creating account')
-                        console.error(error) 
+                        if(parameters.image == null){
+                            alert('Añadir imagen de perfil')
+                            console.error(error)
+                        }else{
+                            alert('Error posting podcast')
+                            console.error(error)
+                        }
                     })
             }
 
