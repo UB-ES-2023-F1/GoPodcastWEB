@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: 'production'
-      url: $FRONTEND_URL
+      url: $FRONTEND_URL_PROD
       
     steps:
     - name: Checkout code
