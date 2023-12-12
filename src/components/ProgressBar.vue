@@ -9,7 +9,8 @@
             <div class="player-content w-full rounded-lg shadow-lg m-0 p-0">
                 <div id="player-row" class="row flex-wrap w-full max-w-5xl">
                     <div class="episode-cover d-inline col-4 col-md-4 ">
-                        <img :src="coverImg" alt="cover" class="cover p-0 d-none d-lg-inline" style="width: 8vw; max-width: 8em;"/>
+                        <img :src="coverImg" alt="cover" class="cover p-0 d-none d-lg-inline"
+                            style="width: 8vw; max-width: 8em;" />
                         <div class="nowrap" style="display: inline-block;">
                             <h6 class="text-white ps-3 d-block">{{ titlePodcast }} </h6>
                             <h6 class="opacity-50 ps-3 pe-5">{{ titleEpisode }}</h6>
@@ -36,10 +37,9 @@
                     <div id="progress-bar" class="col-8 d-flex align-items-center">
                         <span>{{ elapsedTime() }}</span>
                         <div class="overlay-container h-full d-inline px-2" style="width: 100%">
-                            <input v-model="playbackTime" type="range" min="0" :max="audioDuration" class="slider h-full w-100"
-                                id="position" name="position" />
-                            <div v-show="!audioLoaded"
-                                class="absolute top-0 bottom-0 right-0 left-0 pointer-events-none"
+                            <input v-model="playbackTime" type="range" min="0" :max="audioDuration"
+                                class="slider h-full w-100" id="position" name="position" />
+                            <div v-show="!audioLoaded" class="absolute top-0 bottom-0 right-0 left-0 pointer-events-none"
                                 style="color: #94bcec">
                                 Loading please wait...
                             </div>
@@ -53,8 +53,10 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-    props: ["url", "playerid", "coverImg", "titlePodcast", "titleEpisode"],
+    props: ["url", "playerid", "coverImg", "titlePodcast", "titleEpisode", "idEpisode"],
     data() {
         return {
             playbackTime: 0,
@@ -98,6 +100,23 @@ export default {
             var audio = this.$refs.player;
             if (audio) {
                 var seconds = audio.currentTime;
+                const axiosConfig = {
+                    withCredentials: true
+                }
+                const path = import.meta.env.VITE_API_URL + '/update_current_sec/' + this.idEpisode
+                axios.put(path, { current_sec: seconds }, axiosConfig, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then((res) => {
+                        console.log("UPDATE CURRENT SEC", res)
+                    })
+                    .catch((error) => {
+                        console.log("UPDATE CURRENT SEC ERROR", error)
+                        console.error(error)
+                    })
+
                 return this.convertTime(seconds);
             } else {
                 return '00:00';
@@ -150,7 +169,7 @@ export default {
     },
     mounted: function () {
         this.$nextTick(function () {
-            
+
             this.$watch("isPlaying", function () {
                 if (this.isPlaying) {
                     var audio = this.$refs.player;
@@ -171,6 +190,23 @@ export default {
                 this.$refs.player.play();
             });
             var audio = this.$refs.player;
+            const axiosConfig = {
+                withCredentials: true
+            }
+            const path = import.meta.env.VITE_API_URL + '/get_current_sec/' + this.idEpisode
+            axios.get(path, axiosConfig, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then((res) => {
+                    console.log("GET CURRENT SEC", res)
+                    this.playbackTime = res.data.current_sec
+                })
+                .catch((error) => {
+                    console.log("GET CURRENT SEC ERROR", error)
+                    console.error(error)
+                })
             this.isPlaying = true;
             audio.play();
             audio.addEventListener("loadedmetadata", function (e) {
