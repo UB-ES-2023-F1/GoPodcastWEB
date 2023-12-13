@@ -177,7 +177,7 @@ export default {
                             alert('Añadir imagen de perfil')
                             console.error(error)
                         }else{
-                            alert('Error posting podcast')
+                            alert('Error creating account')
                             console.error(error)
                         }
                     })
