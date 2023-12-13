@@ -29,7 +29,7 @@
                             <!-- Normal visualization -->
                             <div class="row mt-4 ps-4 mr-4" v-if="!editting">
                                 <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                                    <img :src="episode.img" alt="Imagen" class="reduced-image mb-4" />
+                                    <img :src="episode.img" alt="Imagen" class="reduced-image mb-4"  v-if="episode"/>
                                 </div>
                                 <div class="col-12 col-sm-7 col-md-7 col-lg-7 ">
                                     <title>{{ episode.title }}</title>
@@ -125,6 +125,9 @@
                         </div>
                         <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
                     </div>
+                    <div v-if="loading" class="loading-overlay">
+                        <img src="/src/assets/kOnzy.gif" alt="Loading..." style="width: 2em; height: 2em;"/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -169,6 +172,7 @@ export default {
             userSearchList: [],
             searching: false,
             currentEpisode: null,
+            loading: false
         };
 
     },
@@ -326,7 +330,7 @@ export default {
             const path = import.meta.env.VITE_API_URL + `/stream_later/${podcastId}`;
 
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
 
             axios.get(path, axiosConfig)
@@ -348,7 +352,7 @@ export default {
 
             const episodeId = this.episode.id;
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
 
             if (this.episode.isLiked) {
@@ -409,6 +413,7 @@ export default {
             return brightness > 128;
         },
         getEpisode() {
+            this.loading = true
             const episodeId = this.$route.params.id;
             const pathEpisode = import.meta.env.VITE_API_URL + `/episodes/${episodeId}`;
 
@@ -427,12 +432,15 @@ export default {
             .catch((error) => {
                 console.error(error)
             })
+            .finally(() => {
+                this.loading = false; 
+            });
         },
         getId() {
             const pathID = import.meta.env.VITE_API_URL + '/protected'
 
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
 
             axios.get(pathID, axiosConfig)
@@ -470,7 +478,7 @@ export default {
             const pathUpdate = import.meta.env.VITE_API_URL + "/episodes/" + this.$route.params.id
 
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
 
             var formData = new FormData();
@@ -503,7 +511,7 @@ export default {
                 const pathDelete = import.meta.env.VITE_API_URL + "/episodes/" + this.$route.params.id
 
                 const axiosConfig = {
-                    withCredentials: true
+                    headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
                 }
 
                 axios.delete(pathDelete, axiosConfig)
@@ -687,6 +695,19 @@ ul {
 
 .disabled {
   pointer-events: none;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo semitransparente */
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 

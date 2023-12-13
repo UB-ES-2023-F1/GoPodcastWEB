@@ -37,15 +37,23 @@
           </div>
           <div class="favorite-podcasts" v-if="isMyProfile && !searching">
             <h2 class="mt-5 mb-3">Favorite Podcasts</h2>
-            <PodcastList :podcastList="favoriteList" v-if="favoriteList.length > 0" />
-            <h4 class="label" v-else>It looks like you don't have any favorite podcast. <a :href="'/'">Go add some!</a>
-            </h4>
+            <div class="loading-overlay" v-if="loading_favorites">
+              <img src="/src/assets/kOnzy.gif" alt="Loading..." style="width: 2em; height: 2em;"/>
+            </div>
+            <div v-else>
+              <PodcastList :podcastList="favoriteList" v-if="favoriteList.length > 0" />
+              <h4 class="label" v-else>It looks like you don't have any favorite podcast. <a :href="'/'">Go add some!</a></h4>
+            </div>
           </div>
           <div class="streamlater-podcasts" v-if="isMyProfile && !searching">
-            <h2 class="mt-5 mb-3">Watch Later</h2>
-            <EpisodeList :episodesList="watchLaterList" v-if="watchLaterList.length > 0" />
-            <h3 class="label" v-else>It looks like you don't have any episode in stream later. <a :href="'/'">Go add
-                some!</a></h3>
+            <h2 class="mt-5 mb-3">Liked episodes</h2>
+            <div class="loading-overlay" v-if="loading_watchLater">
+              <img src="/src/assets/kOnzy.gif" alt="Loading..." style="width: 2em; height: 2em;"/>
+            </div>
+            <div v-else>
+              <EpisodeList :episodesList="watchLaterList" v-if="watchLaterList.length > 0" />
+              <h3 class="label" v-else>It looks like you haven't given love to any episode. <a :href="'/'">Go do it!</a></h3>
+            </div>
           </div>
           <div class="my-podcasts" v-if="!searching">
             <h2 class="mt-5 mb-3">User's Podcasts</h2>
@@ -85,6 +93,8 @@ export default {
       searching: false,
       podcastSearchList: [],
       userSearchList: [],
+      loading_favorites: true,
+      loading_watchLater: true,
     }
   },
   methods: {
@@ -169,7 +179,7 @@ export default {
       const path = import.meta.env.VITE_API_URL + '/user/' + this.userIdLooking
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
       axios.get(path)
         .then(response => {
@@ -190,7 +200,7 @@ export default {
       const userPath = import.meta.env.VITE_API_URL + '/protected'
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
       axios.get(userPath, axiosConfig).then((res) => {
         this.myId = res.data.logged_in_as;
@@ -220,26 +230,32 @@ export default {
         })
     },
     getFavorites() {
+      this.loading_favorites = true
       const path = import.meta.env.VITE_API_URL + '/favorites'
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
 
       axios.get(path, axiosConfig)
         .then((res) => {
           this.favoriteList = res.data
+          console.log(res.data)
         })
         .catch((error) => {
           console.log(error)
         })
+        .finally(() => {
+          this.loading_favorites = false
+        });
 
     },
     getWatchLater() {
+      this.loading_watchLater = true
       const path = import.meta.env.VITE_API_URL + '/stream_later'
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
 
       axios.get(path, axiosConfig)
@@ -250,6 +266,9 @@ export default {
         .catch((error) => {
           console.log(error)
         })
+        .finally(() => {
+          this.loading_watchLater = false
+        });
 
     },
     updateBio() {
@@ -260,7 +279,7 @@ export default {
       formData.append('bio', this.user.bio);
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
 
       const headers = {
@@ -401,6 +420,14 @@ export default {
   color: #fff;
   font-size: 12px;
   cursor: pointer;
+}
+
+.loading-overlay {
+  font-size: 25px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin: 20px;
 }
 </style>
   

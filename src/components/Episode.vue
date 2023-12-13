@@ -7,11 +7,6 @@
                         <h4>{{ episode.title }} </h4>
                     </a>
                 </div>
-                <!--
-                <div class="row">
-                    <p>{{ episode.description }}</p>
-                </div>
-            -->
                 <div class="row centrados_elementos">
                     <div class="col-7 col-md-2 col-lg-2">
                         <button class="play-like-button" @click="togglePlayback(episode)">
@@ -22,7 +17,7 @@
                         <p>{{ episode.duration }}</p>
                     </div>
                     <div class="col-7 col-md-2 col-lg-2">
-                        <button class="play-like-button" @click="toggleLike(episode)">
+                        <button v-if="show_liked" class="play-like-button" id="like_button" @click="toggleLike(episode)">
                             <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
                         </button>
                     </div>
@@ -58,6 +53,10 @@ export default {
         podcastName: {
             type: String,
             default: ""
+        },
+        show_liked: {
+            type: Boolean,
+            default: false
         }
     },
     components: {
@@ -175,26 +174,49 @@ export default {
                 });
         },
         toggleLike(episode) {
-            const episodeId = episode.id;
-            const path = import.meta.env.VITE_API_URL + `/likeEpisode/${episodeId}`;
+            if (!this.$store.state.userIsLoggedIn) {
+                this.$router.push({ name: 'Login' })
+                return
+            }
 
+            let likeButton = document.getElementById('like_button')
+            likeButton.disabled = true
+
+            const episodeId = episode.id;
+            const axiosConfig = {
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
+            }
 
             if (episode.isLiked) {
-                axios.delete(path).then(response => {
+                const path = import.meta.env.VITE_API_URL + `/stream_later/${episodeId}`;
+                axios.delete(path, axiosConfig)
+                .then(response => {
                     episode.isLiked = false;
                     console.log(response.data);
                 })
-                    .catch(error => {
-                        console.error('Error al eliminar el like: ', error);
-                    });
+                .catch(error => {
+                    console.error('Error al quitar el like: ', error);
+                })
+                .finally(() => {
+                    likeButton.disabled = false
+                });
             } else {
-                axios.post(path).then(response => {
+                const path = import.meta.env.VITE_API_URL + `/stream_later`;
+                const parameters = {
+                    id: episode.id
+                }
+                axios.post(path, parameters, axiosConfig)
+                .then(response => {
                     episode.isLiked = true;
                     console.log(response.data);
                 })
-                    .catch(error => {
-                        console.error('Error al dar like: ', error);
-                    });
+                .catch(error => {
+                    likeButton.disabled = false
+                    console.error('Error al dar like: ', error);
+                })
+                .finally(() => {
+                    likeButton.disabled = false
+                });
             }
         },
         randomColor(tag) {

@@ -28,7 +28,7 @@
                             <!-- Normal visualization -->
                             <div class="row mt-5 ps-5 mr-5" v-if="!editting">
                                 <div class="col-10 col-sm-4 col-md-4 col-lg-4">
-                                    <img :src="podcast.img" alt="Imagen" class="reduced-image" v-if="podcast.img" />
+                                    <img :src="podcast.img" alt="Imagen" class="reduced-image" v-if="podcast.img"/>
                                 </div>
                                 <div class="col-10 col-sm-7 col-md-7 col-lg-7 ">
                                     <h1>{{ podcast.name }}</h1>
@@ -80,9 +80,12 @@
                                 <button class="btn btn-dark me-2"
                                     @click="$router.push('/publish/episode/' + this.$route.params.id)" v-if="!editting">New Episode</button>
                             </div>
-                            <div class="row mt-3 align-items-center ps-5">
+                            <div v-if="loading" class="loading-overlay">
+                                <img src="/src/assets/kOnzy.gif" alt="Loading..." style="width: 2em; height: 2em;"/>
+                            </div>
+                            <div class="row mt-3 align-items-center ps-5" >
                                 <Episode :episodes="podcast.episodes" :podcastImage="podcast.img"
-                                    :podcastName="podcast.name" v-if="podcast.img" />
+                                    :podcastName="podcast.name" :show_liked="show_liked" v-if="podcast.img" />
                             </div>
                         </div>
                     </div>
@@ -120,6 +123,9 @@ export default {
             searching: false,
             podcastSearchList: [],
             userSearchList: [],
+            loading: false,
+            liked_episodes: [],
+            show_liked: false,
         };
     },
     methods: {
@@ -201,8 +207,8 @@ export default {
                     if (this.$store.state.userIsLoggedIn) {
                         this.getId()
                     }
-                    this.getCover()
                     this.getEpisodes()
+                    this.getCover()
                 })
                 .catch((error) => {
                     console.error(error);
@@ -212,7 +218,7 @@ export default {
             const pathID = import.meta.env.VITE_API_URL + '/protected';
 
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
 
             axios.get(pathID, axiosConfig)
@@ -246,22 +252,53 @@ export default {
             })
         },
         getEpisodes() {
+            this.loading = true
             const pathEpisodes = import.meta.env.VITE_API_URL + '/podcasts/' + this.$route.params.id + '/episodes'
 
             axios.get(pathEpisodes)
                 .then((res) => {
+                    this.getLikedEpisodes()
                     this.podcast.episodes = res.data
-                    console.log("TAGS:",this.podcast.episodes[22].tags)
                 })
                 .catch((error) => {
                     console.log(error)
                 })
+                .finally(() => {
+                    this.loading = false; 
+                });
+        },
+        getLikedEpisodes() {
+            if (! this.$store.state.userIsLoggedIn) {
+                return
+            }
+
+            const path = import.meta.env.VITE_API_URL + '/stream_later'
+            const axiosConfig = {
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
+            }
+            axios.get(path, axiosConfig)
+            .then((res) => {
+                console.log(res.data)
+                const likedEpisodesSet = new Set(res.data.map(episode => episode.id));
+                this.podcast.episodes.forEach(episode => {
+                if (likedEpisodesSet.has(episode.id)) {
+                    episode.isLiked = true;
+                }
+                });
+                this.show_liked = true;
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+            .finally(() => {
+                this.loading = false; 
+            });
         },
         updatePodcast() {
             const pathUpdate = import.meta.env.VITE_API_URL + "/podcasts/" + this.$route.params.id
 
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
 
             var formData = new FormData();
@@ -296,7 +333,7 @@ export default {
                 const pathDelete = import.meta.env.VITE_API_URL + "/podcasts/" + this.$route.params.id
 
                 const axiosConfig = {
-                    withCredentials: true
+                    headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
                 }
 
                 axios.delete(pathDelete, axiosConfig)
@@ -315,7 +352,7 @@ export default {
             const path = import.meta.env.VITE_API_URL + `/favorites/${podcastId}`;
 
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
 
             axios.get(path, axiosConfig)
@@ -327,12 +364,17 @@ export default {
             })
         },
         toggleFollow() {
+            if (!this.$store.state.userIsLoggedIn) {
+                this.$router.push({ name: 'Login' })
+                return
+            }
+
             let toggleButton = document.getElementById('toggleFollow')
             toggleButton.disabled = true
 
             const podcastId = this.podcast.id;
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
 
             if (this.podcast.isFollowing) {
@@ -512,6 +554,13 @@ textarea {
 
 .disabled {
   pointer-events: none;
+}
+
+.loading-overlay {
+  font-size: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 

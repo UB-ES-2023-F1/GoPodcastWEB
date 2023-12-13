@@ -74,7 +74,7 @@
         const path = import.meta.env.VITE_API_URL + `/comments/${this.comment.id}/replies`
 
         const axiosConfig = {
-          withCredentials: true
+          headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
         }
 
         axios.post(path, newReply, axiosConfig).then((res) => {
@@ -95,7 +95,7 @@
         const userPath = import.meta.env.VITE_API_URL + '/protected'
 
         const axiosConfig = {
-          withCredentials: true
+          headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
         }
 
         axios.get(userPath, axiosConfig).then((res) => {
