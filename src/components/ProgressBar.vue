@@ -12,8 +12,8 @@
                         <img :src="coverImg" alt="cover" class="cover p-0 d-none d-lg-inline"
                             style="width: 8vw; max-width: 8em;" />
                         <div class="nowrap" style="display: inline-block;">
-                            <h6 class="text-white ps-3 d-block">{{ titlePodcast }} </h6>
-                            <h6 class="opacity-50 ps-3 pe-5">{{ titleEpisode }}</h6>
+                            <h6 class="text-white ps-3 d-block">{{ titleEpisode }} </h6>
+                            <h6 class="opacity-50 ps-3 pe-5">{{ titlePodcast }}</h6>
                         </div>
 
                         <div id="button-div" class="flex-initial pr-3 ps-md-3" style="display: inline-block;">

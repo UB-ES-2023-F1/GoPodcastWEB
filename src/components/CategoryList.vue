@@ -145,7 +145,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   padding: 25px 30px; 
-  width: 82%;
+  width: 75%;
   overflow: auto;
   white-space: nowrap;
 }
