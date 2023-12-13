@@ -251,7 +251,6 @@ export default {
             axios.get(pathEpisodes)
                 .then((res) => {
                     this.podcast.episodes = res.data
-                    console.log("TAGS:",this.podcast.episodes[22].tags)
                 })
                 .catch((error) => {
                     console.log(error)

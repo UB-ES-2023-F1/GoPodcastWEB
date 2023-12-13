@@ -329,6 +329,7 @@ export default {
 .profile {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.559);
+  overflow-x: hidden;
 }
 
 .profile-content {
