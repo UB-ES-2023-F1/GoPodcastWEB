@@ -166,16 +166,16 @@ export default {
             this.$watch("url", function () {
                 // console.log(this.elapsedTime());
                 const axiosConfig = {
-                    withCredentials: true
+                    // AllowCredentials: true,
+                    headers: {
+                        Authorization: 'Bearer ' + this.$store.state.access_token,
+                        'Content-Type': 'Multipart/form-data'
+                    }
                 }
                 var audio = this.$refs.player;
                 var seconds = audio.currentTime;
                 const path = import.meta.env.VITE_API_URL + '/update_current_sec/' + this.idEpisode
-                axios.put(path, { current_sec: seconds }, axiosConfig, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
+                axios.put(path, { current_sec: seconds }, axiosConfig)
                     .then((res) => {
                         console.log("UPDATE CURRENT SEC", res)
                     })
@@ -189,14 +189,14 @@ export default {
             });
             var audio = this.$refs.player;
             const axiosConfig = {
-                withCredentials: true
+                // AllowCredentials: true,
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.state.access_token,
+                    'Content-Type': 'Multipart/form-data'
+                }
             }
             const path = import.meta.env.VITE_API_URL + '/get_current_sec/' + this.idEpisode
-            axios.get(path, axiosConfig, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
+            axios.get(path, axiosConfig)
                 .then((res) => {
                     console.log("GET CURRENT SEC", res)
                     this.playbackTime = res.data.current_sec

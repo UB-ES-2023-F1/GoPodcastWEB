@@ -111,16 +111,13 @@ export default {
 
 
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
+            // console.log("Token: ", this.$store.state.access_token)
 
             console.log(parameters)
             const path = import.meta.env.VITE_API_URL + '/podcasts'
-            axios.post(path, formData, axiosConfig, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
+            axios.post(path, formData, axiosConfig)
                 .then((res) => {
                     alert('Podcast Posted')
                     this.backToHome()
