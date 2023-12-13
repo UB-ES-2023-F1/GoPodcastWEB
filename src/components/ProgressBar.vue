@@ -9,7 +9,8 @@
             <div class="player-content w-full rounded-lg shadow-lg m-0 p-0">
                 <div id="player-row" class="row flex-wrap w-full max-w-5xl">
                     <div class="episode-cover d-inline col-4 col-md-4 ">
-                        <img :src="coverImg" alt="cover" class="cover p-0 d-none d-lg-inline" style="width: 8vw; max-width: 8em;"/>
+                        <img :src="coverImg" alt="cover" class="cover p-0 d-none d-lg-inline"
+                            style="width: 8vw; max-width: 8em;" />
                         <div class="nowrap" style="display: inline-block;">
                             <h6 class="text-white ps-3 d-block">{{ titlePodcast }} </h6>
                             <h6 class="opacity-50 ps-3 pe-5">{{ titleEpisode }}</h6>
@@ -36,10 +37,9 @@
                     <div id="progress-bar" class="col-8 d-flex align-items-center">
                         <span>{{ elapsedTime() }}</span>
                         <div class="overlay-container h-full d-inline px-2" style="width: 100%">
-                            <input v-model="playbackTime" type="range" min="0" :max="audioDuration" class="slider h-full w-100"
-                                id="position" name="position" />
-                            <div v-show="!audioLoaded"
-                                class="absolute top-0 bottom-0 right-0 left-0 pointer-events-none"
+                            <input v-model="playbackTime" type="range" min="0" :max="audioDuration"
+                                class="slider h-full w-100" id="position" name="position" />
+                            <div v-show="!audioLoaded" class="absolute top-0 bottom-0 right-0 left-0 pointer-events-none"
                                 style="color: #94bcec">
                                 Loading please wait...
                             </div>
@@ -53,8 +53,10 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-    props: ["url", "playerid", "coverImg", "titlePodcast", "titleEpisode"],
+    props: ["url", "playerid", "coverImg", "titlePodcast", "titleEpisode", "idEpisode"],
     data() {
         return {
             playbackTime: 0,
@@ -70,21 +72,18 @@ export default {
     },
     methods: {
         initSlider() {
-            console.log("initSlider");
             var audio = this.$refs.player;
             if (audio) {
                 this.audioDuration = Math.round(audio.duration);
             }
         },
         convertTime(seconds) {
-            console.log("convertTime");
             const format = val => `0${Math.floor(val)}`.slice(-2);
             var hours = seconds / 3600;
             var minutes = (seconds % 3600) / 60;
             return [minutes, seconds % 60].map(format).join(":");
         },
         totalTime() {
-            console.log("totalTime");
             var audio = this.$refs.player;
             if (audio) {
                 var seconds = audio.duration;
@@ -94,7 +93,6 @@ export default {
             }
         },
         elapsedTime() {
-            console.log("elapsedTime");
             var audio = this.$refs.player;
             if (audio) {
                 var seconds = audio.currentTime;
@@ -104,7 +102,7 @@ export default {
             }
         },
         playbackListener(e) {
-            console.log("playbackListener");
+            // console.log("playbackListener");
             this.playbackTime = e.target.currentTime;
             var audio = this.$refs.player;
             this.playbackTime = audio.currentTime;
@@ -112,26 +110,26 @@ export default {
             audio.addEventListener("pause", this.pauseListener);
         },
         pauseListener() {
-            console.log("pauseListener");
+            // console.log("pauseListener");
             this.isPlaying = false;
             this.listenerActive = false;
             this.cleanupListeners();
         },
         endListener() {
-            console.log("endListener");
+            // console.log("endListener");
             this.isPlaying = false;
             this.listenerActive = false;
             this.cleanupListeners();
         },
         cleanupListeners() {
-            console.log("cleanupListeners");
+            // console.log("cleanupListeners");
             var audio = this.$refs.player;
             audio.removeEventListener("timeupdate", this.playbackListener);
             audio.removeEventListener("ended", this.endListener);
             audio.removeEventListener("pause", this.pauseListener);
         },
         toggleAudio() {
-            console.log("toggleAudio");
+            // console.log("toggleAudio");
             var audio = this.$refs.player;
             if (audio.paused) {
                 audio.play();
@@ -142,7 +140,7 @@ export default {
             }
         },
         play() {
-            console.log("play");
+            // console.log("play");
             var audio = this.$refs.player;
             audio.play();
             this.isPlaying = true;
@@ -150,7 +148,7 @@ export default {
     },
     mounted: function () {
         this.$nextTick(function () {
-            
+
             this.$watch("isPlaying", function () {
                 if (this.isPlaying) {
                     var audio = this.$refs.player;
@@ -166,11 +164,47 @@ export default {
                 }
             });
             this.$watch("url", function () {
+                // console.log(this.elapsedTime());
+                const axiosConfig = {
+                    // AllowCredentials: true,
+                    headers: {
+                        Authorization: 'Bearer ' + this.$store.state.access_token,
+                        'Content-Type': 'Multipart/form-data'
+                    }
+                }
+                var audio = this.$refs.player;
+                var seconds = audio.currentTime;
+                const path = import.meta.env.VITE_API_URL + '/update_current_sec/' + this.idEpisode
+                axios.put(path, { current_sec: seconds }, axiosConfig)
+                    .then((res) => {
+                        console.log("UPDATE CURRENT SEC", res)
+                    })
+                    .catch((error) => {
+                        console.log("UPDATE CURRENT SEC ERROR", error)
+                        console.error(error)
+                    })
                 this.$refs.player.load();
                 this.isPlaying = true;
                 this.$refs.player.play();
             });
             var audio = this.$refs.player;
+            const axiosConfig = {
+                // AllowCredentials: true,
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.state.access_token,
+                    'Content-Type': 'Multipart/form-data'
+                }
+            }
+            const path = import.meta.env.VITE_API_URL + '/get_current_sec/' + this.idEpisode
+            axios.get(path, axiosConfig)
+                .then((res) => {
+                    console.log("GET CURRENT SEC", res)
+                    this.playbackTime = res.data.current_sec
+                })
+                .catch((error) => {
+                    console.log("GET CURRENT SEC ERROR", error)
+                    console.error(error)
+                })
             this.isPlaying = true;
             audio.play();
             audio.addEventListener("loadedmetadata", function (e) {
