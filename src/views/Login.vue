@@ -77,7 +77,7 @@ export default {
             }
 
             const axiosConfig = {
-                withCredentials: true
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
             }
 
             const path = import.meta.env.VITE_API_URL + '/login'

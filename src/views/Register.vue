@@ -156,7 +156,7 @@ export default {
                 }
 
                 const axiosConfig = {
-                    withCredentials: true
+                    headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
                 }
                 console.log(parameters)
 

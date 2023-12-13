@@ -169,7 +169,7 @@ export default {
       const path = import.meta.env.VITE_API_URL + '/user/' + this.userIdLooking
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
       axios.get(path)
         .then(response => {
@@ -190,7 +190,7 @@ export default {
       const userPath = import.meta.env.VITE_API_URL + '/protected'
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
       axios.get(userPath, axiosConfig).then((res) => {
         this.myId = res.data.logged_in_as;
@@ -223,7 +223,7 @@ export default {
       const path = import.meta.env.VITE_API_URL + '/favorites'
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
 
       axios.get(path, axiosConfig)
@@ -239,7 +239,7 @@ export default {
       const path = import.meta.env.VITE_API_URL + '/stream_later'
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
 
       axios.get(path, axiosConfig)
@@ -260,7 +260,7 @@ export default {
       formData.append('bio', this.user.bio);
 
       const axiosConfig = {
-        withCredentials: true
+        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
       }
 
       const headers = {
