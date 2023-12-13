@@ -6,17 +6,18 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item align-items-center">
-                <a href="#" class="nav-link active" aria-current="page"  @click="$router.push('/')">
+                <a href="#" class="nav-link" :class="{ active: isHomeActive }" @click="$router.push('/')">
                     <img src="../assets/icons/ic_home.png" alt="home" style="width: 20px; height: 20px;">
                     Home
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link" @click="$router.push('/discover');">
+                <a href="#" class="nav-link" :class="{ active: isLinkActive('/discover') }" @click="$router.push('/discover');">
                     <img src="../assets/icons/ic_discover.png" alt="discover" style="width: 20px; height: 20px;">
                     Discover
                 </a>
             </li>
+            <!--
             <li>
                 <a href="#" class="nav-link" @click="$router.push('/library');">
                     <img src="../assets/icons/ic_vinyl.png" alt="library" style="width: 20px; height: 20px;">
@@ -29,8 +30,9 @@
                     Community
                 </a>
             </li>
+            -->
             <li>
-                <a href="#" class="nav-link opacity-50">
+                <a href="#" class="nav-link opacity-50" @click="$router.push('/about');">
                     About us
                 </a>
             </li>
@@ -43,15 +45,21 @@ import { mapState, mapMutations } from 'vuex';
 
 
 export default {
-    data() {
-        return {
-        };
-    },
-        computed: {
+    computed: {
         ...mapState(['userIsLoggedIn']),
+        currentRoute() {
+            return this.$route.path;
+        },
+        isHomeActive() {
+            return this.currentRoute !== '/discover';
+        },
     },
     methods: {
         ...mapMutations(['setUserIsLoggedIn']),
+
+        isLinkActive(route) {
+            return this.currentRoute === route;
+        },
     },
     beforeCreate() {
         const store = this.$store;

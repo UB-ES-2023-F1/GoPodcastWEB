@@ -56,6 +56,13 @@
   min-height: 100vh;
 }
 
+.about {
+  background: linear-gradient(-30deg, #18002a, #1b003f, #003339, #00023d);
+  background-size: 400% 400%;
+  animation: gradient 20s ease infinite;
+  min-height: 100vh;
+}
+
 @keyframes gradient {
 
   0% {

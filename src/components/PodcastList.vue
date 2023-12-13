@@ -81,9 +81,10 @@ export default {
   padding-top: 25px;
   padding-bottom: 20px;
   justify-content: flex-start;
-  width: 80%; /* Ajusta según tus necesidades */
+  width: 75%; /* Ajusta según tus necesidades */
   overflow: auto;
   white-space: nowrap;
+  
   /* width: 80vw; */
 }
 

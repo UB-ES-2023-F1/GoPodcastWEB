@@ -1,49 +1,44 @@
 <template>
-  <div class="home container-fluid m-0 p-0">
-    <div class="row w-100 m-0">
-      <!-- Sidebar -->
-      <Sidebar />
-      <!-- Main content-->
-      <div class="home-content col-lg-10 col-md-9 col-sm-12 p-0">
-        <div class="row w-100 mt-5 ps-5">
-          <TopBar @search="search"/>
-        </div>
-        <!-- If user is searching -->
-        <div v-if="searching">
-          <h1 class="ps-5">Search results. <a @click="searching=false" style="color: rgb(206, 206, 206); cursor: pointer;">Go back.</a></h1>
-          <div class="featured">
-            <h2 class="ps-5">Podcasts</h2>
-            <PodcastList :podcastList="podcastSearchList" />
+    <div class="home container-fluid m-0 p-0">
+      <div class="row w-100 m-0">
+        <!-- Sidebar -->
+        <Sidebar />
+        <!-- Main content-->
+        <div class="home-content col-lg-10 col-md-9 col-sm-12 p-0">
+          <div class="row w-100 mt-5 ps-5">
+            <TopBar @search="search"/>
           </div>
-          <div class="featured">
-            <h2 class="ps-5">Authors</h2>
-            <UserList :userList="userSearchList" />
+          <!-- If user is searching -->
+          <div v-if="searching">
+            <h1 class="ps-5">Search results. <a @click="searching=false" style="color: rgb(206, 206, 206); cursor: pointer;">Go back.</a></h1>
+            <div class="featured">
+              <h2 class="ps-5">Podcasts</h2>
+              <PodcastList :podcastList="podcastSearchList" />
+            </div>
+            <div class="featured">
+              <h2 class="ps-5">Authors</h2>
+              <UserList :userList="userSearchList" />
+            </div>
           </div>
-        </div>
-
-        <div v-else>
-          <div class="featured">
-            <h2 class="ps-5">Featured Podcasts</h2>
-            <PodcastList :podcastList="podcastsList"/>
-          </div>
-          <div class="more-content ps-5 pt-4">
-            <CategoryList />
-            <div class="mt-5 pt-2">
-              <h2>Most Listened Podcasts</h2>
-              <PodcastList :podcastList="popularList" />
+  
+          <div v-else>
+            <div class="ps-5 pt-4">
+                <div v-for="category in categories" :key="category.title" >
+                    <CategoryAndPodcasts :category="category"/>
+                </div>
+              
             </div>
           </div>
         </div>
       </div>
-    </div>
-
+      
     <!-- Progress bar -->
     <ProgressBar />
   </div>
 </template>
-  
+
 <script>
-import CategoryList from '../components/CategoryList.vue';
+import CategoryAndPodcasts from '../components/CategoryAndPodcasts.vue';
 import PodcastList from '../components/PodcastList.vue';
 import UserList from '../components/UserList.vue';
 import Sidebar from '../components/Sidebar.vue';
@@ -63,7 +58,8 @@ export default {
       popularList: [],
       podcastSearchList: [],
       userSearchList: [],
-      searching: false
+      searching: false,
+      categories: []
     }
   },
   computed: {
@@ -77,6 +73,18 @@ export default {
     signOut() {
       this.setUserIsLoggedIn(false);
       this.$store.commit('setUserIsLoggedIn', false);
+    },
+    getCategories() {
+        console.log('Getting categories')
+        const pathCategories = import.meta.env.VITE_API_URL + '/categories'
+        axios.get(pathCategories)
+            .then((res) => {
+                this.categories = res.data
+                console.log("CATEGORIAS VIEW:", this.categories[0])
+            })
+            .catch((error) => {
+                console.error(error)
+            })
     },
     search(nameQuery, authorQuery) {
       console.log(nameQuery, authorQuery)
@@ -111,41 +119,12 @@ export default {
       axios.get(pathSearch)
         .then((res) => {
           this.userSearchList = res.data
-          this.getProfileImg()
         })
         .catch((error) => {
           this.userSearchList = []
           console.error(error)
         })
     },
-    blobToData(blob) {
-      return new Promise((resolve) => {
-        const reader = new FileReader()
-        reader.onloadend = () => resolve(reader.result)
-        reader.readAsDataURL(blob)
-      })
-    },
-    getProfileImg() {
-      this.userSearchList.forEach(user => {
-        console.log("Usuario:", user.id, user.username, user.image_url)
-        const pathProfileImg = import.meta.env.VITE_API_URL + '/users/' + user.id + '/image'
-
-        axios.get(pathProfileImg, { responseType: "blob" })
-          .then(async (res) => {
-            const base64data = await this.blobToData(res.data)
-            user.image_url = base64data
-            console.log("IMAGE_URL ACTUALIZADO:",user.image_url)
-            if(user.image_url === "data:image/jpeg;base64"){
-              user.image_url = null
-            }
-            
-          })
-          .catch((error) => {
-            console.error(error)
-          })
-      })
-    },
-
     getPodcasts() {
       console.log("Getting podcasts")
       const pathPodcasts = import.meta.env.VITE_API_URL + "/podcasts"
@@ -161,42 +140,15 @@ export default {
           console.error(error)
         })
     },
-    getPopular() {
-      console.log("Getting populars")
-      const pathPopular = import.meta.env.VITE_API_URL + "/populars"
-
-      console.log("Populars path: " + pathPopular);
-      
-      axios.get(pathPopular)
-        .then((res) => {
-          this.popularList = res.data
-        })
-        .catch((error) => {
-          this.popularList = []
-          console.error(error)
-        })
-    }
   },
-  /*
-  beforeRouteEnter(to, from, next) {
-    const store = app.$store;
-    store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
-    next();
-  },
-
-  beforeCreate() {
-    const store = this.$store;
-    store.commit('setUserIsLoggedIn', store.state.userIsLoggedIn);
-  },
-  */
   created() {
-    this.getPopular()
     this.getPodcasts()
+    this.getCategories()
   },
 
   components: {
     PodcastList,
-    CategoryList,
+    CategoryAndPodcasts,
     UserList,
     Sidebar,
     ProgressBar,
@@ -204,7 +156,7 @@ export default {
   },
 };
 </script>
-  
+
 <style>
 .home {
   height: 100%;
@@ -218,16 +170,7 @@ export default {
   justify-content: flex-start;
 }
 
-.home-content .more-content {
-  width: 100%;
-  height: 100%;
-  padding-left: 0px;
-  background-color: #04001d;
-}
 
-.home-content .more-content h2 {
-  color: #525dff;
-}
 
 .search {
   display: flex;
@@ -310,29 +253,6 @@ h2 {
   width: inherit;
 }
 
-/*
-.publish-button {
-  position: fixed;
-  bottom: 50px;
-  z-index: 9999;
-}
 
-
-.publish-button button{
-  width: 7em;
-  height: 7em;
-  border-radius: 50%;
-  background-color: #000000;
-  color: #ffffff;
-  border: none;
-  box-shadow: #d2d5ff 0px 2px 5px 2px;
-}
-
-.publish-button button:hover {
-  background-color: #ffffff;
-  color: #000000;
-  transition: all 0.35s ease-in-out;
-}
-*/
 
 </style>
