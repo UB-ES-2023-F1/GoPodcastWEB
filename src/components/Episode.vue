@@ -36,7 +36,8 @@
     </div>
 
     <div v-if="currentEpisode">
-        <ProgressBar ref="progressBar" />
+        <ProgressBar ref="progressBar" :url="currentEpisode.audio_url" :coverImg="podcastImage"
+            :titlePodcast="podcastName" :titleEpisode="currentEpisode.title" />
     </div>
 </template>
 
@@ -90,21 +91,21 @@ export default {
         // TODO: Descomentar y linkear con el componente ProgressBar
         playEpisode(episode) {
             this.currentEpisode = episode
-            this.$nextTick(() => {
-                // Use $nextTick to wait for the ProgressBar component to be mounted
-                const progressBar = this.$refs.progressBar;
+            // this.$nextTick(() => {
+            //     // Use $nextTick to wait for the ProgressBar component to be mounted
+            //     const progressBar = this.$refs.progressBar;
 
-                if (progressBar) {
-                    this.$refs.progressBar.setAudioUrl(episode.audio_url);
-                    this.$refs.progressBar.setCoverUrl(this.podcastImage);
-                    this.$refs.progressBar.setTitlePodcast(this.podcastName);
-                    this.$refs.progressBar.setTitleEpisode(episode.title)
-                    this.$refs.progressBar.play();
-                    this.$refs.progressBar.initSlider();
-                } else {
-                    console.error('ProgressBar component or setAudioUrl method not found.');
-                }
-            });
+            //     if (progressBar) {
+            //         this.$refs.progressBar.setAudioUrl(episode.audio_url);
+            //         this.$refs.progressBar.setCoverUrl(this.podcastImage);
+            //         this.$refs.progressBar.setTitlePodcast(this.podcastName);
+            //         this.$refs.progressBar.setTitleEpisode(episode.title)
+            //         this.$refs.progressBar.play();
+            //         this.$refs.progressBar.initSlider();
+            //     } else {
+            //         console.error('ProgressBar component or setAudioUrl method not found.');
+            //     }
+            // });
         },
         // playEpisode(episode) {
         //     const audioElement = new Audio(episode.audio_url);

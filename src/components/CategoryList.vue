@@ -3,7 +3,7 @@
     <h2>Browse Categories</h2>
     <div class="categories overflow-x-auto overflow-x-hidden" ref="categoriesContainer">
       <div v-for="category in categories" :key="category.title" class="category"
-        @click="this.currentCategory = category.title ; updatePodcasts()">
+        @click="this.currentCategory = category.title ; getPodcasts()">
         <img :src="category.img" :alt="category.title">
         <span class="name text-center">{{ category.title }}</span>
       </div>
@@ -12,7 +12,7 @@
   <div class="podcasts-container" v-if="currentCategory">
     <h4>{{ currentCategory }}</h4>
     <div class="podcasts">
-      <div v-for="podcast in podcastsCategory" :key="podcast.id" class="podcast">
+      <div v-for="podcast in podcasts" :key="podcast.id" class="podcast">
         <a :href="'/visualize/' + podcast.id">
           <img :src="podcast.img" :alt="podcast.name"  v-if="podcast.img">
         </a>
@@ -82,19 +82,36 @@ export default {
         reader.readAsDataURL(blob)
       })
     },
+    getCoversv2() {
+        console.log('Getting covers')
+        this.podcasts.forEach(podcast => {
+            const pathCover = import.meta.env.VITE_API_URL + podcast.cover
+
+            axios.get(pathCover, { responseType: "blob" })
+            .then(async (res) => {
+                const base64data = await this.blobToData(res.data)
+                podcast.img = base64data
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        })
+    },
     getPodcasts() {
       console.log('Getting podcasts')
-      const pathPodcasts = import.meta.env.VITE_API_URL + '/podcasts'
+      const pathPodcasts = import.meta.env.VITE_API_URL + '/podcasts/categories/' + this.currentCategory
 
       axios.get(pathPodcasts)
         .then((res) => {
           this.podcasts = res.data
           console.log(this.podcasts)
+          this.getCoversv2()
         })
         .catch((error) => {
           console.log(error)
         })
     },
+    /*
     updatePodcasts() {
       console.log('Updating podcasts by category: ' + this.currentCategory)
       this.podcastsCategory = this.podcasts.filter(podcast => podcast.category === this.currentCategory)
@@ -103,7 +120,7 @@ export default {
           this.getCover(podcast)
         }
       }
-    }
+    }*/
   },
   created() {
     // Descomentar cuando tengamos los endpoints listos
@@ -113,7 +130,6 @@ export default {
   mounted() {
     const categoriesContainer = this.$refs.categoriesContainer;
     categoriesContainer.addEventListener('wheel', (e) => {
-      console.log('DeltaX:', e.deltaX);
       if (e.deltaX !== 0) {
         categoriesContainer.scrollLeft += e.deltaX;
         e.preventDefault();
@@ -129,7 +145,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   padding: 25px 30px; 
-  width: 80%;
+  width: 70%;
   overflow: auto;
   white-space: nowrap;
 }

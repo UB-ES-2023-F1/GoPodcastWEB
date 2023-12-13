@@ -33,7 +33,7 @@
                                 <div class="col-10 col-sm-7 col-md-7 col-lg-7 ">
                                     <h1>{{ podcast.name }}</h1>
                                     <div v-if="!isAuthor">
-                                        <button @click="toggleFollow" class="follow-button mt-2 mb-4"
+                                        <button @click="toggleFollow" id="toggleFollow" class="follow-button mt-2 mb-4"
                                             :class="{ following: podcast.isFollowing }">
                                             {{ podcast.isFollowing ? 'Unfollow' : 'Follow' }}
                                         </button>
@@ -154,12 +154,40 @@ export default {
             const pathSearch = import.meta.env.VITE_API_URL + "/search/user/" + authorQuery
 
             axios.get(pathSearch)
-            .then((res) => {
+                .then((res) => {
                 this.userSearchList = res.data
-            })
-            .catch((error) => {
+                this.getProfileImg()
+                })
+                .catch((error) => {
                 this.userSearchList = []
                 console.error(error)
+                })
+        },
+        blobToData(blob) {
+            return new Promise((resolve) => {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result)
+                reader.readAsDataURL(blob)
+            })
+        },
+        getProfileImg() {
+            this.userSearchList.forEach(user => {
+                console.log("Usuario:", user.id, user.username, user.image_url)
+                const pathProfileImg = import.meta.env.VITE_API_URL + '/users/' + user.id + '/image'
+
+                axios.get(pathProfileImg, { responseType: "blob" })
+                .then(async (res) => {
+                    const base64data = await this.blobToData(res.data)
+                    user.image_url = base64data
+                    console.log("IMAGE_URL ACTUALIZADO:",user.image_url)
+                    if(user.image_url === "data:image/jpeg;base64"){
+                    user.image_url = null
+                    }
+                    
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
             })
         },
         getPodcast() {
@@ -192,6 +220,8 @@ export default {
                     console.log(res)
                     if (res.data.logged_in_as == this.podcast.author.id) {
                         this.isAuthor = true
+                    } else {
+                        this.getFollowing()
                     }
                 })
         },
@@ -280,28 +310,61 @@ export default {
                     })
             }
         },
-        toggleFollow() {
-            console.log("TODO Sprint 3");
-            // const podcastId = this.podcast.id;
-            // const path = import.meta.env.VITE_API_URL + `/followPodcast/${podcastId}`;
+        getFollowing() {
+            const podcastId = this.podcast.id;
+            const path = import.meta.env.VITE_API_URL + `/favorites/${podcastId}`;
 
-            // if (this.podcast.isFollowing) {
-            //     axios.delete(path).then(response => {
-            //         this.podcast.isFollowing = false;
-            //         console.log(response.data);
-            //     })
-            //     .catch(error => {
-            //         console.error('Error al dejar de seguir el podcast: ', error);
-            //     });
-            // } else {
-            //     axios.post(path).then(response => {
-            //         this.podcast.isFollowing = true;
-            //         console.log(response.data);
-            //     })
-            //     .catch(error => {
-            //         console.error('Error al seguir el podcast: ', error);
-            //     });
-            // }
+            const axiosConfig = {
+                withCredentials: true
+            }
+
+            axios.get(path, axiosConfig)
+            .then((response) =>{
+                this.podcast.isFollowing = response.data.is_favorite
+            })
+            .catch((error) => {
+                console.error(`Error al querer ver si el podcast esta en favorito`, error)
+            })
+        },
+        toggleFollow() {
+            let toggleButton = document.getElementById('toggleFollow')
+            toggleButton.disabled = true
+
+            const podcastId = this.podcast.id;
+            const axiosConfig = {
+                withCredentials: true
+            }
+
+            if (this.podcast.isFollowing) {
+                const path = import.meta.env.VITE_API_URL + `/favorites/${podcastId}`;
+                axios.delete(path, axiosConfig)
+                .then((response) => {
+                    this.podcast.isFollowing = false;
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.error('Error al dejar de seguir el podcast: ', error);
+                })
+                .finally(() => {
+                    toggleButton.disabled = false
+                });
+            } else {
+                const path = import.meta.env.VITE_API_URL + `/favorites`;
+                const params = {
+                    id: podcastId,
+                }
+                axios.post(path, params, axiosConfig)
+                .then(response => {
+                    this.podcast.isFollowing = true;
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error('Error al seguir el podcast: ', error);
+                })
+                .finally(() => {
+                    toggleButton.disabled = false
+                });;
+            }
         },
 
     },
@@ -386,6 +449,7 @@ ul {
     transition: all 0.35s ease-in-out;
 }
 
+
 .follow-button.following {
     background-color: #fff;
     border: 1px solid #000;
@@ -410,6 +474,23 @@ ul {
     color: #000;
 }
 
+.follow-button:disabled,
+.follow-button:hover:disabled,
+.follow-button[disabled]{
+  border: 1px solid #99999949;
+  color: #99999949;
+  cursor: auto;
+}
+
+.follow-button.following:disabled,
+.follow-button:hover:disabled.following,
+.follow-button.following[disabled]{
+  border: 1px solid #ffffff49;
+  color: #ffffff49;
+    background-color: #ffffff13;
+  cursor: auto;
+}
+
 .btn-success,
 .btn-danger,
 .btn-dark {
@@ -427,7 +508,12 @@ textarea {
     font-size: 18px;
     background-color: rgba(0, 0, 0, 0.625);
     color: #fff;
-}</style>
+}
+
+.disabled {
+  pointer-events: none;
+}
+</style>
 
 
 

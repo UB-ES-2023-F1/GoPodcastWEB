@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   props: {
     episodesList: {
@@ -21,6 +23,7 @@ export default {
   },
   watch: {
     episodesList(newValue, oldValue) {
+      console.log("New episode list", newValue)
       this.getCovers()
     }
   },
@@ -28,7 +31,7 @@ export default {
     getCovers() {
       this.episodesList.forEach(episode => {
         const pathCovers = import.meta.env.VITE_API_URL + '/podcasts/' + episode.id_podcast + '/cover'
-
+        console.log("Getting covers", pathCovers)
         axios.get(pathCovers, { responseType: "blob" })
           .then(async (res) => {
             const base64data = await this.blobToData(res.data)

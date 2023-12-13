@@ -42,11 +42,9 @@
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1"></div>
                                         <!-- Like button. Only when logged in -->
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1 mt-3">
-                                            <!--
-                                            <button class="like-button" @click="toggleLike()">
+                                            <button class="like-button" id="like_button" @click="toggleLike()">
                                                 <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
                                             </button>
-                                            -->
                                         </div>
                                     </div>
                                     <p></p>
@@ -57,17 +55,12 @@
                                         <h6><a :href="'/profile/' + episode.id_author">{{ episode.author_name }}</a></h6>
                                     </div>
 
-
-                                    <!-- Tag section. Not implemented for the moment -->
-                                    <!--
                                     <div>
-                                        <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
+                                        <div v-for="(tag, index) in this.tags" :key="index" class="tag row"
                                             :style="{ backgroundColor: randomColor(tag) }">
                                             {{ tag }}
                                         </div>
-
                                     </div>
-                                    -->
                                     <p>{{ episode.description }}</p>
                                 </div>
                             </div>
@@ -87,11 +80,9 @@
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1"></div>
                                         <!-- Like button. Only when logged in and if not author -->
                                         <div class="col-3 col-sm-1 col-md-1 col-lg-1 mt-3" v-if="!isAuthor">
-                                            <!--
                                             <button class="like-button" @click="toggleLike()">
                                                 <i :class="episode.isLiked ? 'fas fa-heart' : 'far fa-heart'"></i>
                                             </button>
-                                            -->
                                         </div>
                                     </div>
                                     <p></p>
@@ -101,18 +92,6 @@
                                         <span class="separation">&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp;</span>
                                         <h6><a :href="'/profile/' + episode.id_author">{{ episode.author_name }}</a></h6>
                                     </div>
-
-
-                                    <!-- Tag section. Not implemented for the moment -->
-                                    <!--
-                                    <div>
-                                        <div v-for="(tag, index) in episode.tags" :key="index" class="tag row"
-                                            :style="{ backgroundColor: randomColor(tag) }">
-                                            {{ tag }}
-                                        </div>
-
-                                    </div>
-                                    -->
                                     <textarea v-model="episode.description" placeholder="Episode description"></textarea>>
                                 </div>
                             </div>
@@ -149,9 +128,10 @@
                 </div>
             </div>
         </div>
-        <!-- <div v-if="currentEpisode">
-            <ProgressBar ref="progressBar" />
-        </div> -->
+        
+    </div>
+    <div v-if="currentEpisode">
+        <ProgressBar ref="progressBar" :url="episode.audio_url" :coverImg="episode.img" :titlePodcast="episode.podcast_name" :titleEpisode="episode.title" />
     </div>
 </template>
 
@@ -177,6 +157,8 @@ export default {
     },
     data() {
         return {
+            tags:[],
+            tagColors: {},
             episode: {},
             episode_edited: {},
             audio_edited: null,
@@ -185,11 +167,13 @@ export default {
             isAuthor: false,
             podcastSearchList: [],
             userSearchList: [],
-            searching: false
+            searching: false,
+            currentEpisode: null,
         };
 
     },
     methods: {
+        
         search(nameQuery, authorQuery) {
             console.log(nameQuery, authorQuery)
             if (nameQuery) {
@@ -221,95 +205,182 @@ export default {
             const pathSearch = import.meta.env.VITE_API_URL + "/search/user/" + authorQuery
 
             axios.get(pathSearch)
-            .then((res) => {
+                .then((res) => {
                 this.userSearchList = res.data
-            })
-            .catch((error) => {
+                this.getProfileImg()
+                })
+                .catch((error) => {
                 this.userSearchList = []
                 console.error(error)
+                })
+            },
+            blobToData(blob) {
+            return new Promise((resolve) => {
+                const reader = new FileReader()
+                reader.onloadend = () => resolve(reader.result)
+                reader.readAsDataURL(blob)
             })
         },
+        getProfileImg() {
+            this.userSearchList.forEach(user => {
+                console.log("Usuario:", user.id, user.username, user.image_url)
+                const pathProfileImg = import.meta.env.VITE_API_URL + '/users/' + user.id + '/image'
+
+                axios.get(pathProfileImg, { responseType: "blob" })
+                .then(async (res) => {
+                    const base64data = await this.blobToData(res.data)
+                    user.image_url = base64data
+                    console.log("IMAGE_URL ACTUALIZADO:",user.image_url)
+                    if(user.image_url === "data:image/jpeg;base64"){
+                    user.image_url = null
+                    }
+                    
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+            })
+        },
+        
         togglePlayback(episode) {
             if (this.currentEpisode === episode) {
                 // Si el mismo episodio está en reproducción, detén la reproducción
-                this.stopPlayback(episode);
+                // this.stopPlayback(episode);
                 this.currentEpisode = null;
             } else {
                 // Si se selecciona un nuevo episodio, detén la reproducción actual y comienza el nuevo episodio
-                this.stopCurrentPlayback();
+                // this.stopCurrentPlayback();
                 this.playEpisode(episode);
             }
         },
+        // TODO: Descomentar y linkear con el componente ProgressBar
         playEpisode(episode) {
-            const audioElement = new Audio(episode.audio_url);
-            episode.audioElement = audioElement;
-            this.currentEpisode = episode;
-            audioElement.addEventListener("loadedmetadata", () => {
-                const duration = audioElement.duration;
-                episode.duration = this.formatDuration(duration);
-                audioElement.play();
-            });
-            if (episode !== episode) {
-                this.stopPlayback(ep);
-            }
-            this.preloadAudioDuration(ep);
-        },
-        stopPlayback(episode) {
-            if (episode.audioElement) {
-                episode.audioElement.pause();
-            }
-        },
-        stopCurrentPlayback() {
-            if (this.currentEpisode) {
-                this.stopPlayback(this.currentEpisode);
-            }
-        },
-        preloadAudioDuration(episode) {
-            const audioElement = new Audio(episode.audio_url);
-            audioElement.addEventListener("loadedmetadata", () => {
-                const duration = audioElement.duration;
-                episode.duration = this.formatDuration(duration);
+            this.currentEpisode = episode
+            this.$nextTick(() => {
+                // Use $nextTick to wait for the ProgressBar component to be mounted
+                const progressBar = this.$refs.progressBar;
+
+                // if (progressBar) {
+                //     this.$refs.progressBar.setAudioUrl(episode.audio_url);
+                //     this.$refs.progressBar.setCoverUrl(this.podcastImage);
+                //     this.$refs.progressBar.setTitlePodcast(this.podcastName);
+                //     this.$refs.progressBar.setTitleEpisode(episode.title)
+                //     this.$refs.progressBar.play();
+                //     this.$refs.progressBar.initSlider();
+                // } else {
+                //     console.error('ProgressBar component or setAudioUrl method not found.');
+                // }
             });
         },
-        formatDuration(seconds) {
-            if (seconds >= 3600) {
-                const hours = Math.floor(seconds / 3600);
-                const minutes = Math.floor((seconds % 3600) / 60);
-                return `${hours} h ${minutes} min`;
-            } else if (seconds >= 60) {
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = Math.floor(seconds % 60);
-                return `${minutes} min ${remainingSeconds} s`;
-            } else {
-                return `${Math.floor(seconds)} s`;
+        // playEpisode(episode) {
+        //     const audioElement = new Audio(episode.audio_url);
+        //     episode.audioElement = audioElement;
+        //     this.currentEpisode = episode;
+        //     audioElement.addEventListener("loadedmetadata", () => {
+        //         const duration = audioElement.duration;
+        //         episode.duration = this.formatDuration(duration);
+        //         audioElement.play();
+        //     });
+        //     this.episodes.forEach((ep) => {
+        //         if (ep !== episode) {
+        //             this.stopPlayback(ep);
+        //         }
+        //         this.preloadAudioDuration(ep);
+        //     });
+        // },
+        // stopPlayback(episode) {
+        //     if (episode.audioElement) {
+        //         episode.audioElement.pause();
+        //     }
+        // },
+        // stopCurrentPlayback() {
+        //     if (this.currentEpisode) {
+        //         this.stopPlayback(this.currentEpisode);
+        //     }
+        // },
+        getAudioData() {
+            const pathAudio = import.meta.env.VITE_API_URL + '/episodes/' + this.episode.id + '/audio'
+            this.episode.audio_url = pathAudio
+            // this.preloadAudioDuration(this.episode)
+            // axios.get(pathAudio, { responseType: 'blob' })
+            //     .then((res) => {
+            //         this.episode.audio_url = URL.createObjectURL(res.data)
+            //         this.preloadAudioDuration(this.episode)
+            //     })
+        },
+        // formatDuration(seconds) {
+        //     if (seconds >= 3600) {
+        //         const hours = Math.floor(seconds / 3600);
+        //         const minutes = Math.floor((seconds % 3600) / 60);
+        //         return `${hours} h ${minutes} min`;
+        //     } else if (seconds >= 60) {
+        //         const minutes = Math.floor(seconds / 60);
+        //         const remainingSeconds = Math.floor(seconds % 60);
+        //         return `${minutes} min ${remainingSeconds} s`;
+        //     } else {
+        //         return `${Math.floor(seconds)} s`;
+        //     }
+        // },
+        getWatchLater() {
+            const podcastId = this.episode.id;
+            const path = import.meta.env.VITE_API_URL + `/stream_later/${podcastId}`;
+
+            const axiosConfig = {
+                withCredentials: true
             }
+
+            axios.get(path, axiosConfig)
+            .then((response) =>{
+                this.episode.isLiked = response.data.is_liked
+            })
+            .catch((error) => {
+                this.episode.isLiked = false
+                console.error(`Error al querer ver si el podcast esta en favorito`, error)
+            })
         },
         toggleLike() {
+            let likeButton = document.getElementById('like_button')
+            likeButton.disabled = true
             if (!this.$store.state.userIsLoggedIn) {
-                console.log("Going to login");
                 this.$router.push({ name: 'Login' })
                 return
             }
 
             const episodeId = this.episode.id;
-            const path = import.meta.env.VITE_API_URL + `/stream_later/${episodeId}`;
+            const axiosConfig = {
+                withCredentials: true
+            }
 
             if (this.episode.isLiked) {
-                axios.delete(path).then(response => {
+                const path = import.meta.env.VITE_API_URL + `/stream_later/${episodeId}`;
+                axios.delete(path, axiosConfig)
+                .then(response => {
                     this.episode.isLiked = false;
                     console.log(response.data);
                 })
-                    .catch(error => {
-                        console.error('Error al eliminar el like: ', error);
-                    });
+                .catch(error => {
+                    console.error('Error al quitar el like: ', error);
+                })
+                .finally(() => {
+                    likeButton.disabled = false
+                });
             } else {
-                axios.post(path).then(response => {
+                const path = import.meta.env.VITE_API_URL + `/stream_later`;
+                const parameters = {
+                    id: this.episode.id
+                }
+                axios.post(path, parameters, axiosConfig)
+                .then(response => {
                     this.episode.isLiked = true;
                     console.log(response.data);
                 })
-                    .catch(error => {
-                        console.error('Error al dar like: ', error);
-                    });
+                .catch(error => {
+                    likeButton.disabled = false
+                    console.error('Error al dar like: ', error);
+                })
+                .finally(() => {
+                    likeButton.disabled = false
+                });
             }
         },
         randomColor(tag) {
@@ -342,21 +413,23 @@ export default {
             const pathEpisode = import.meta.env.VITE_API_URL + `/episodes/${episodeId}`;
 
             axios.get(pathEpisode).then((resEpisode) => {
-                this.episode = JSON.parse(JSON.stringify(resEpisode.data));
-                this.episode_edited = JSON.parse(JSON.stringify(resEpisode.data));
-                if (this.$store.state.userIsLoggedIn) {
-                    this.getId()
-                }
-                console.log(this.episode)
-                this.getCover()
-                
+            this.episode = JSON.parse(JSON.stringify(resEpisode.data));
+            this.episode_edited = JSON.parse(JSON.stringify(resEpisode.data));
+            if (this.$store.state.userIsLoggedIn) {
+                this.getId()
+            }
+            console.log(this.episode)
+            this.getCover()
+            this.tags = this.episode.tags
+            this.getAudioData()
+            
             })
-                .catch((error) => {
-                    console.error(error);
-                });
+            .catch((error) => {
+                console.error(error)
+            })
         },
         getId() {
-            const pathID = import.meta.env.VITE_API_URL + '/protected';
+            const pathID = import.meta.env.VITE_API_URL + '/protected'
 
             const axiosConfig = {
                 withCredentials: true
@@ -367,6 +440,9 @@ export default {
                     console.log(res)
                     if (res.data.logged_in_as == this.episode.id_author) {
                         this.isAuthor = true
+                    }
+                    else {
+                        this.getWatchLater()
                     }
                 })
         },
@@ -383,7 +459,7 @@ export default {
                 })
 
         },
-        blobToData(blob) {
+        blobToData(blob){
             return new Promise((resolve) => {
                 const reader = new FileReader()
                 reader.onloadend = () => resolve(reader.result)
@@ -456,9 +532,6 @@ export default {
                 console.error(error);
             });
         },
-        obtainCertainComment(commentId){
-
-        }
     },
     created() {
         // Descomentar cuando tengamos los endpoints listos
@@ -466,10 +539,10 @@ export default {
     },
     mounted() {
         // Precargar la duración al cargar la página
-        this.preloadAudioDuration(this.episode);
+        // this.preloadAudioDuration(this.episode);
     },
 
-};
+    };
 </script>
 
 <style scoped>
@@ -537,6 +610,13 @@ export default {
     align-items: start;
     justify-content: flex-start;
 }
+.tag {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 20px;
+    color: white;
+}
 
 title {
     display: block;
@@ -603,6 +683,10 @@ ul {
     border-radius: 50px;
     font-size: 16px;
     margin: 0px 10px 0px 10px;
+}
+
+.disabled {
+  pointer-events: none;
 }
 </style>
 
