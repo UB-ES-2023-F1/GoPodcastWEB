@@ -64,6 +64,7 @@ export default {
             audioLoaded: false,
             isPlaying: false,
             episodeToken: "",
+            pre: 0
             // audioUrl: "../src/assets/audio/episodes/episode1.mp3",
             // titlePodcast: "",
             // titleEpisode: "",
@@ -162,13 +163,14 @@ export default {
                 if (diff > 0.01) {
                     this.$refs.player.currentTime = this.playbackTime;
                 }
-            });
-            this.$watch("url", function () {
-                // console.log(this.elapsedTime());
-                var audio = this.$refs.player;
-                var seconds = audio.currentTime;
+                
+                if ((this.$refs.player.currentTime - this.pre) > 3) {
+                    console.log("miau")
+                    this.pre = this.$refs.player.currentTime
+                    var audio = this.$refs.player;
+                    var seconds = audio.currentTime;
 
-                if (this.$store.state.userIsLoggedIn){
+                    if (this.$store.state.userIsLoggedIn){
                     const axiosConfig = {
                         // AllowCredentials: true,
                         headers: {
@@ -176,8 +178,12 @@ export default {
                             'Content-Type': 'Multipart/form-data'
                         }
                     }
+                    var formData = new FormData();
+
+                    formData.append('current_sec', Math.floor(seconds));
+
                     const path = import.meta.env.VITE_API_URL + '/update_current_sec/' + this.idEpisode
-                    axios.put(path, { current_sec: seconds }, axiosConfig)
+                    axios.put(path, formData, axiosConfig)
                         .then((res) => {
                             console.log("UPDATE CURRENT SEC", res)
                         })
@@ -186,7 +192,10 @@ export default {
                             console.error(error)
                         })
                 }
-
+                }
+            });
+            this.$watch("url", function () {
+                // console.log(this.elapsedTime());
                 this.$refs.player.load();
                 this.isPlaying = true;
                 this.$refs.player.play();
@@ -205,7 +214,8 @@ export default {
                 axios.get(path, axiosConfig)
                     .then((res) => {
                         console.log("GET CURRENT SEC", res)
-                        this.playbackTime = res.data.current_sec
+                        console.log(this.$refs.player);
+                        this.$refs.player.currentTime = parseFloat(res.data.current_sec)
                     })
                     .catch((error) => {
                         console.log("GET CURRENT SEC ERROR", error)

@@ -85,7 +85,7 @@
                             </div>
                             <div class="row mt-3 align-items-center ps-5" >
                                 <Episode :episodes="podcast.episodes" :podcastImage="podcast.img"
-                                    :podcastName="podcast.name" v-if="podcast.img" />
+                                    :podcastName="podcast.name" :show_liked="show_liked" v-if="podcast.img" />
                             </div>
                         </div>
                     </div>
@@ -124,6 +124,8 @@ export default {
             podcastSearchList: [],
             userSearchList: [],
             loading: false,
+            liked_episodes: [],
+            show_liked: false,
         };
     },
     methods: {
@@ -205,8 +207,8 @@ export default {
                     if (this.$store.state.userIsLoggedIn) {
                         this.getId()
                     }
-                    this.getCover()
                     this.getEpisodes()
+                    this.getCover()
                 })
                 .catch((error) => {
                     console.error(error);
@@ -255,8 +257,8 @@ export default {
 
             axios.get(pathEpisodes)
                 .then((res) => {
+                    this.getLikedEpisodes()
                     this.podcast.episodes = res.data
-                    console.log("TAGS:",this.podcast.episodes[22].tags)
                 })
                 .catch((error) => {
                     console.log(error)
@@ -264,6 +266,33 @@ export default {
                 .finally(() => {
                     this.loading = false; 
                 });
+        },
+        getLikedEpisodes() {
+            if (! this.$store.state.userIsLoggedIn) {
+                return
+            }
+
+            const path = import.meta.env.VITE_API_URL + '/stream_later'
+            const axiosConfig = {
+                headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
+            }
+            axios.get(path, axiosConfig)
+            .then((res) => {
+                console.log(res.data)
+                const likedEpisodesSet = new Set(res.data.map(episode => episode.id));
+                this.podcast.episodes.forEach(episode => {
+                if (likedEpisodesSet.has(episode.id)) {
+                    episode.isLiked = true;
+                }
+                });
+                this.show_liked = true;
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+            .finally(() => {
+                this.loading = false; 
+            });
         },
         updatePodcast() {
             const pathUpdate = import.meta.env.VITE_API_URL + "/podcasts/" + this.$route.params.id
