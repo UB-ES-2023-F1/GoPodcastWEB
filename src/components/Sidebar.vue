@@ -17,6 +17,7 @@
                     Discover
                 </a>
             </li>
+            <!--
             <li>
                 <a href="#" class="nav-link" @click="$router.push('/library');">
                     <img src="../assets/icons/ic_vinyl.png" alt="library" style="width: 20px; height: 20px;">
@@ -29,6 +30,7 @@
                     Community
                 </a>
             </li>
+            -->
             <li>
                 <a href="#" class="nav-link opacity-50" @click="$router.push('/about');">
                     About us
