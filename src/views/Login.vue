@@ -84,6 +84,8 @@ export default {
             axios.post(path, parameters, axiosConfig)
             .then((res) => {
                 this.$store.commit('setUserIsLoggedIn', false);
+                this.$store.commit('setAccessToken', res.data.access_token);
+                console.log("Token st: ", this.$store.state.access_token)
                 this.setUserIsLoggedIn(true)
                 this.backToHome()
             })
