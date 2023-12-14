@@ -78,7 +78,7 @@
         }
 
         axios.post(path, newReply, axiosConfig).then((res) => {
-          console.log("Respuesta añadida con éxito!")
+          alert("Respuesta añadida con éxito!")
           this.comment.replies.push(res.data);
         })
         .catch((error) => {
