@@ -11,13 +11,16 @@
   </div>
   <div class="podcasts-container" v-if="currentCategory">
     <h4>{{ currentCategory }}</h4>
-    <div class="podcasts">
+    <div class="podcasts" v-if="podcasts.length !== 0">
       <div v-for="podcast in podcasts" :key="podcast.id" class="podcast">
         <a :href="'/visualize/' + podcast.id">
           <img :src="podcast.img" :alt="podcast.name"  v-if="podcast.img">
         </a>
         <span class="name text-center">{{ podcast.name }}</span>
       </div>
+    </div>
+    <div v-else>
+      <h4 class="fw-lighter">No podcasts found.</h4>
     </div>
   </div>
 </template>
