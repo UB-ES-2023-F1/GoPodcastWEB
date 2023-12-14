@@ -57,7 +57,8 @@
           </div>
           <div class="my-podcasts" v-if="!searching">
             <h2 class="mt-5 mb-3">User's Podcasts</h2>
-            <PodcastList :podcastList="myPodcasts" />
+            <PodcastList :podcastList="myPodcasts" v-if="myPodcasts.length > 0" />
+            <h3 class="fw-lighter" v-else>It looks like this user doesn't have any podcast.</h3>
           </div>
         </div>
       </div>
@@ -348,6 +349,7 @@ export default {
 .profile {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.559);
+  overflow-x: hidden;
 }
 
 .profile-content {

@@ -32,7 +32,7 @@
             </div>
 
             <div class="d-flex justify-content-center mt-4">
-                <p class="text-center">You do not have an account? <router-link to="/register">Sing up</router-link></p>
+                <p class="text-center">You do not have an account? <router-link to="/register">Sign up</router-link></p>
             </div>
         </div>
     </div>
