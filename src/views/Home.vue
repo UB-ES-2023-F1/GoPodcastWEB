@@ -37,8 +37,6 @@
       </div>
     </div>
 
-    <!-- Progress bar -->
-    <ProgressBar />
   </div>
 </template>
   
