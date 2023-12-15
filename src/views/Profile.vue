@@ -67,25 +67,35 @@
           </div>
           <div class="favorite-podcasts" v-if="isMyProfile && !searching">
             <h2 class="mt-5 mb-3">Favorite Podcasts</h2>
-            <PodcastList
-              :podcastList="favoriteList"
-              v-if="favoriteList.length > 0"
-            />
-            <h4 class="label" v-else>
-              It looks like you don't have any favorite podcast.
-              <a :href="'/'">Go add some!</a>
-            </h4>
+            <div v-if="loading_favorites" class="loading-overlay">
+              <img src="/src/assets/kOnzy.gif" alt="Loading..." style="width: 2em; height: 2em;"/>
+            </div>
+            <div v-else>
+              <PodcastList
+                :podcastList="favoriteList"
+                v-if="favoriteList.length > 0"
+              />
+              <h4 class="label" style="margin-bottom: 20px;" v-else>
+                It looks like you don't have any favorite podcast.
+                <a :href="'/'">Go add some!</a>
+              </h4>
+            </div>
           </div>
           <div class="streamlater-podcasts" v-if="isMyProfile && !searching">
-            <h2 class="mt-5 mb-3">Liked Episodes</h2>
-            <EpisodeList
-              :episodesList="watchLaterList"
-              v-if="watchLaterList.length > 0"
-            />
-            <h3 class="label" v-else>
-              It looks like you don't like any episode.
-              <a :href="'/'">Go give some love!</a>
-            </h3>
+            <h2 class="">Liked Episodes</h2>
+            <div v-if="loading_liked" class="loading-overlay">
+              <img src="/src/assets/kOnzy.gif" alt="Loading..." style="width: 2em; height: 2em;"/>
+            </div>
+            <div v-else>
+              <EpisodeList
+                :episodesList="watchLaterList"
+                v-if="watchLaterList.length > 0"
+              />
+              <h3 class="label" style="margin-bottom: 20px;" v-else>
+                It looks like you don't like any episode.
+                <a :href="'/'">Go give some love!</a>
+              </h3>
+            </div>
           </div>
           <div class="my-podcasts" v-if="!searching">
             <h2 class="mt-5 mb-3">User's Podcasts</h2>
@@ -141,6 +151,8 @@ export default {
       searching: false,
       podcastSearchList: [],
       userSearchList: [],
+      loading_favorites: true,
+      loading_liked: true,
     };
   },
   methods: {
@@ -298,6 +310,9 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+        })
+        .finally(() => {
+          this.loading_favorites = false;
         });
     },
     getWatchLater() {
@@ -317,6 +332,9 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+        })
+        .finally(() => {
+          this.loading_liked = false;
         });
     },
     updateBio() {
