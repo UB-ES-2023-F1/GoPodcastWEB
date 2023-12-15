@@ -50,7 +50,9 @@ export default {
       const userPath = import.meta.env.VITE_API_URL + '/protected'
 
       const axiosConfig = {
-          headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
+          headers: {
+              Authorization: "Bearer " + this.$store.state.access_token,
+            },
       }
 
       axios.get(userPath, axiosConfig).then((res) => {

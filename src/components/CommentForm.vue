@@ -4,7 +4,7 @@
         <div class="form-group">
           <textarea class="form-control" v-model="newCommentText" placeholder="Add a comment..." style="width: 100%;" @keyup.enter="onSubmit"></textarea>
         </div>
-        <button type="submit" class="btn-submit btn btn-dark mt-3">Comment</button>
+        <button type="submit" class="btn-submit btn btn-dark mt-3" v-if="this.$store.state.userIsLoggedIn">Comment</button>
       </form>
     </div>
   </template>
@@ -44,7 +44,9 @@
         const path = import.meta.env.VITE_API_URL + `/episodes/${episodeId}/comments`
 
         const axiosConfig = {
-          headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
+          headers: {
+              Authorization: "Bearer " + this.$store.state.access_token,
+            },
         }
 
         axios.post(path, newComment, axiosConfig).then((res) => {
@@ -74,10 +76,15 @@
         });
       },
       getUser(){
+        if (!this.$store.state.userIsLoggedIn) {
+          return
+        }
         const userPath = import.meta.env.VITE_API_URL + '/protected'
 
         const axiosConfig = {
-          headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
+          headers: {
+              Authorization: "Bearer " + this.$store.state.access_token,
+            },
         }
 
         axios.get(userPath, axiosConfig).then((res) => {

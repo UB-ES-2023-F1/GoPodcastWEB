@@ -8,7 +8,7 @@
         <p>{{ comment.content }}</p>
       </div>
 
-      <div class="row">
+      <div class="row" v-if="this.$store.state.userIsLoggedIn">
         <form @submit.prevent="onSubmit" class="publish-form" v-if="!isReply">
           <div class="form-group">
             <textarea class="form-control" id="new_reply" v-model="newReplyText" placeholder="Add an answer..." style="width: 100%;" @keyup.enter="onSubmit"></textarea>
@@ -58,6 +58,9 @@
 
     methods: {
       onSubmit() {
+        if (!this.$store.state.userIsLoggedIn) {
+          return;
+        }
         if (this.newReplyText.trim() === '') {
           // Evitar agregar respuestas vacías
           return;
@@ -74,7 +77,9 @@
         const path = import.meta.env.VITE_API_URL + `/comments/${this.comment.id}/replies`
 
         const axiosConfig = {
-          headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
+          headers: {
+              Authorization: "Bearer " + this.$store.state.access_token,
+            },
         }
 
         axios.post(path, newReply, axiosConfig).then((res) => {
@@ -92,10 +97,15 @@
         this.newReplyText = '';
       },
       getUser(){
+        if (!this.$store.state.userIsLoggedIn){
+          return
+        }
         const userPath = import.meta.env.VITE_API_URL + '/protected'
 
         const axiosConfig = {
-          headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
+          headers: {
+              Authorization: "Bearer " + this.$store.state.access_token,
+            },
         }
 
         axios.get(userPath, axiosConfig).then((res) => {

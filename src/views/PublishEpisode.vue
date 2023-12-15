@@ -109,7 +109,10 @@ export default {
       formData.append('tags', this.tags);
 
       const axiosConfig = {
-        headers: { Authorization: 'Bearer ' + this.$store.state.access_token }
+        headers: {
+              Authorization: "Bearer " + this.$store.state.access_token,
+              "Content-Type": "Multipart/form-data",
+            },
       }
 
       // formData.append('episodeImage', this.episodeImage);
