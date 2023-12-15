@@ -47,7 +47,6 @@ import CategoryList from '../components/CategoryList.vue';
 import PodcastList from '../components/PodcastList.vue';
 import UserList from '../components/UserList.vue';
 import Sidebar from '../components/Sidebar.vue';
-import ProgressBar from '../components/ProgressBar.vue';
 import TopBar from '../components/TopBar.vue';
 
 import { mapState, mapMutations } from 'vuex';
@@ -200,7 +199,6 @@ export default {
     CategoryList,
     UserList,
     Sidebar,
-    ProgressBar,
     TopBar,
     h
 },

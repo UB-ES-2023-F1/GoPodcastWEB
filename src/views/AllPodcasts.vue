@@ -31,9 +31,6 @@
           </div>
         </div>
       </div>
-      
-    <!-- Progress bar -->
-    <ProgressBar />
   </div>
 </template>
 
@@ -42,7 +39,6 @@ import CategoryAndPodcasts from '../components/CategoryAndPodcasts.vue';
 import PodcastList from '../components/PodcastList.vue';
 import UserList from '../components/UserList.vue';
 import Sidebar from '../components/Sidebar.vue';
-import ProgressBar from '../components/ProgressBar.vue';
 import TopBar from '../components/TopBar.vue';
 
 import { mapState, mapMutations } from 'vuex';
@@ -54,8 +50,6 @@ export default {
   name: 'Home',
   data() {
     return {
-      podcastsList: [],
-      popularList: [],
       podcastSearchList: [],
       userSearchList: [],
       searching: false,
@@ -125,24 +119,8 @@ export default {
           console.error(error)
         })
     },
-    getPodcasts() {
-      console.log("Getting podcasts")
-      const pathPodcasts = import.meta.env.VITE_API_URL + "/podcasts"
-
-      console.log("Podcasts path: " + pathPodcasts);
-      
-      axios.get(pathPodcasts)
-        .then((res) => {
-          this.podcastsList = res.data
-        })
-        .catch((error) => {
-          this.podcastsList = []
-          console.error(error)
-        })
-    },
   },
   created() {
-    this.getPodcasts()
     this.getCategories()
   },
 
@@ -151,7 +129,6 @@ export default {
     CategoryAndPodcasts,
     UserList,
     Sidebar,
-    ProgressBar,
     TopBar,
   },
 };

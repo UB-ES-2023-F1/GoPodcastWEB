@@ -1,94 +1,106 @@
 <template>
-    <div class="categories-container">
-        <div :class="{'podcasts-container': podcasts.length !== 0, 'no-spacing-class': podcasts.length === 0}">
-            <h4>{{ category.title }}</h4>
-            <div class="podcasts" :style="{ marginBottom: podcasts.length !== 0 ? '100px' : '0' }">
-                <div v-for="podcast in podcasts" :key="podcast.id" class="podcast">
-                    <a :href="'/visualize/' + podcast.id">
-                        <img :src="podcast.img" :alt="podcast.name" v-if="podcast.img">
-                    </a>
-                    <span class="name text-center">{{ podcast.name }}</span>
-                
-                </div>
-            </div>
+  <div class="categories-container" v-if="podcasts.length > 0">
+    <div
+      :class="{
+        'podcasts-container': podcasts.length !== 0,
+        'no-spacing-class': podcasts.length === 0,
+      }"
+    >
+      <h4>{{ category.title }}</h4>
+      <div
+        class="podcasts"
+        :style="{ marginBottom: podcasts.length !== 0 ? '100px' : '0' }"
+      >
+        <div v-for="podcast in podcasts" :key="podcast.id" class="podcast">
+          <a :href="'/visualize/' + podcast.id">
+            <img :src="podcast.img" :alt="podcast.name" v-if="podcast.img" />
+          </a>
+          <span class="name text-center">{{ podcast.name }}</span>
         </div>
-        <div class="espacio"></div>
+      </div>
     </div>
+    <div class="espacio"></div>
+  </div>
 </template>
 
 <script>
-    import axios from 'axios'
+import axios from "axios";
 
-    export default {
-    props: {
-        category: {
-            type: Object,
-            required: true,
-        },
+export default {
+  props: {
+    category: {
+      type: Object,
+      required: true,
     },
-    data() {
-        return {
-            podcasts: [],
-            //podcastsCategory: [],
-        };
+  },
+  data() {
+    return {
+      podcasts: [],
+    };
+  },
+  methods: {
+    getCovers() {
+      console.log("Getting covers");
+      this.podcasts.forEach((podcast) => {
+        const pathCover = import.meta.env.VITE_API_URL + podcast.cover;
+
+        axios
+          .get(pathCover, { responseType: "blob" })
+          .then(async (res) => {
+            const base64data = await this.blobToData(res.data);
+            podcast.img = base64data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      });
     },
-    methods: {
-        getCovers() {
-            console.log('Getting covers')
-            this.podcasts.forEach(podcast => {
-                const pathCover = import.meta.env.VITE_API_URL + podcast.cover
+    getCover(podcast) {
+      const pathCover =
+        import.meta.env.VITE_API_URL + "/podcasts/" + podcast.id + "/cover";
 
-                axios.get(pathCover, { responseType: "blob" })
-                .then(async (res) => {
-                    const base64data = await this.blobToData(res.data)
-                    podcast.img = base64data
-                })
-                .catch((error) => {
-                    console.log(error)
-                })
-            })
-        },
-        getCover(podcast) {
-            const pathCover = import.meta.env.VITE_API_URL + '/podcasts/' + podcast.id + '/cover'
-
-            axios.get(pathCover, { responseType: "blob" })
-                .then(async (res) => {
-                    const base64data = await this.blobToData(res.data)
-                    podcast.img = base64data
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
-
-        },
-        blobToData(blob) {
-            return new Promise((resolve) => {
-                const reader = new FileReader()
-                reader.onloadend = () => resolve(reader.result)
-                reader.readAsDataURL(blob)
-            })
-        },
-        getPodcasts() {
-            console.log('Getting podcasts')
-            const pathPodcasts = import.meta.env.VITE_API_URL + '/podcasts/categories/' + this.category.title
-
-            axios.get(pathPodcasts)
-                .then((res) => {
-                this.podcasts = res.data
-                this.getCovers()
-                console.log("Podcastssss",this.podcasts)
-                console.log("CATEGORIA",this.podcasts[0])
-                })
-                .catch((error) => {
-                console.log(error)
-                })
-        },
-        
+      axios
+        .get(pathCover, { responseType: "blob" })
+        .then(async (res) => {
+          const base64data = await this.blobToData(res.data);
+          podcast.img = base64data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
-    created() {
-        // Descomentar cuando tengamos los endpoints listos
-        this.getPodcasts()
+    blobToData(blob) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
     },
+    getPodcasts() {
+      console.log("Getting podcasts");
+      const pathPodcasts =
+        import.meta.env.VITE_API_URL +
+        "/podcasts/categories/" +
+        this.category.title;
+
+      axios
+        .get(pathPodcasts)
+        .then((res) => {
+          this.podcasts = res.data;
+          if (this.podcasts.length > 0){
+              this.getCovers();
+          }
+          console.log("Podcastssss", this.podcasts);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+  created() {
+    // Descomentar cuando tengamos los endpoints listos
+    this.getPodcasts();
+  },
 };
 </script>
 
@@ -102,7 +114,7 @@
   width: 75%; /* Ajusta según tus necesidades */
   overflow: auto;
   white-space: nowrap;
-  
+
   /* width: 80vw; */
 }
 
@@ -145,16 +157,12 @@
   box-shadow: 0 0 15px rgba(0, 72, 255, 0.784);
 }
 
-
-
-.espacio{
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+.espacio {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
 }
 
-
-
-.no-spacing-class{
-    padding-top: 30px;
+.no-spacing-class {
+  padding-top: 30px;
 }
 </style>

@@ -156,7 +156,10 @@ export default {
                 }
 
                 const axiosConfig = {
-                    withCredentials: true
+                    headers: {
+              Authorization: "Bearer " + this.$store.state.access_token,
+              "Content-Type": "Multipart/form-data",
+            },
                 }
                 console.log(parameters)
 

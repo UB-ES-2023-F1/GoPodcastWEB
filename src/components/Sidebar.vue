@@ -6,13 +6,13 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item align-items-center">
-                <a href="#" class="nav-link" :class="{ active: isHomeActive }" @click="$router.push('/')">
+                <a class="nav-link" :class="{ active: isHomeActive }" @click="$router.push('/')">
                     <img src="../assets/icons/ic_home.png" alt="home" style="width: 20px; height: 20px;">
                     Home
                 </a>
             </li>
             <li>
-                <a href="#" class="nav-link" :class="{ active: isLinkActive('/discover') }" @click="$router.push('/discover');">
+                <a class="nav-link" :class="{ active: isLinkActive('/discover') }" @click="$router.push('/discover');">
                     <img src="../assets/icons/ic_discover.png" alt="discover" style="width: 20px; height: 20px;">
                     Discover
                 </a>
