@@ -196,7 +196,7 @@ export default {
   },
   mounted() {
     this.$nextTick().then(() => {
-      console.log("chiquimiau");
+      console.log('oink');
       this.$watch("isPlaying", function () {
         if (this.isPlaying) {
           var audio = this.$refs.player;
@@ -212,39 +212,33 @@ export default {
         }
       });
       this.$watch("url", function () {
-        console.log(this.url);
-        console.log("miau?");
-        // console.log(this.elapsedTime());
-
-        if (this.$store.state.userIsLoggedIn) {
-          const axiosConfig = {
-            // AllowCredentials: true,
-            headers: {
-              Authorization: "Bearer " + this.$store.state.access_token,
-            },
-          };
-          const path =
-            import.meta.env.VITE_API_URL + "/get_current_sec/" + this.idEpisode;
-          axios
-            .get(path, axiosConfig)
-            .then((res) => {
-            //   console.log("GET CURRENT SEC", res);
-              this.$refs.player.currentTime = res.data.minute;
-            })
-            .catch((error) => {
-            //   console.log("GET CURRENT SEC ERROR", error);
-              console.error(error);
-            });
-        }
-
         this.$refs.player.load();
         this.isPlaying = true;
         this.$refs.player.play();
       });
 
+      if (this.$store.state.userIsLoggedIn) {
+        const axiosConfig = {
+          // AllowCredentials: true,
+          headers: {
+            Authorization: "Bearer " + this.$store.state.access_token,
+          },
+        };
+        const path =
+          import.meta.env.VITE_API_URL + "/get_current_sec/" + this.idEpisode;
+        axios
+          .get(path, axiosConfig)
+          .then((res) => {
+            //   console.log("GET CURRENT SEC", res);
+            this.$refs.player.currentTime = res.data.minute;
+          })
+          .catch((error) => {
+            //   console.log("GET CURRENT SEC ERROR", error);
+            console.error(error);
+          });
+      }
+
       var audio = this.$refs.player;
-      console.log(audio);
-      console.log(audio.currentTime);
       this.isPlaying = true;
       audio.play();
       audio.addEventListener(
@@ -284,7 +278,7 @@ export default {
         axios
           .put(path, formData, axiosConfig)
           .then((res) => {
-            // console.log("UPDATE CURRENT SEC", res);
+            console.log("UPDATE CURRENT SEC", res);
           })
           .catch((error) => {
             // console.log("UPDATE CURRENT SEC ERROR", error);
