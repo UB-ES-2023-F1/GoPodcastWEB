@@ -1,6 +1,6 @@
 <template>
   <div class="podcasts-container m-0 p-0">
-    <div class="podcasts overflow-x-auto flex-nowrap overflow-x-hidden" ref="podcastsContainer">
+    <div class="podcasts" id="podcasts-container">
       <div v-for="podcast in podcastList" :key="podcast.id" class="podcast">
         <a :href="'/visualize/' + podcast.id">
           <img :src="podcast.img" :alt="podcast.name" v-if="podcast.img">
@@ -57,20 +57,58 @@ export default {
         reader.readAsDataURL(blob)
       })
     },
+    makeDraggable() {
+      const ele = document.getElementById('podcasts-container');
+      ele.style.cursor = 'grab';
+
+      let pos = { top: 0, left: 0, x: 0, y: 0 };
+
+      const mouseDownHandler = function (e) {
+          ele.style.cursor = 'grabbing';
+          ele.style.userSelect = 'none';
+
+          pos = {
+              left: ele.scrollLeft,
+              top: ele.scrollTop,
+              // Get the current mouse position
+              x: e.clientX,
+              y: e.clientY,
+          };
+
+          document.addEventListener('mousemove', mouseMoveHandler);
+          document.addEventListener('mouseup', mouseUpHandler);
+      };
+
+      const mouseMoveHandler = function (e) {
+          // How far the mouse has been moved
+          const dx = e.clientX - pos.x;
+          const dy = e.clientY - pos.y;
+
+          // Scroll the element
+          ele.scrollTop = pos.top - dy;
+          ele.scrollLeft = pos.left - dx;
+      };
+
+      const mouseUpHandler = function () {
+          ele.style.cursor = 'grab';
+          ele.style.removeProperty('user-select');
+
+          document.removeEventListener('mousemove', mouseMoveHandler);
+          document.removeEventListener('mouseup', mouseUpHandler);
+      };
+
+      // Attach the handler
+      ele.addEventListener('mousedown', mouseDownHandler);
+    }
   },
   created() {
     // Descomentar cuando tengamos los endpoints listos
     this.getCovers()
   },
   mounted() {
-    const podcastsContainer = this.$refs.podcastsContainer;
-    podcastsContainer.addEventListener('wheel', (e) => {
-      if (e.deltaX !== 0) {
-        podcastsContainer.scrollLeft += e.deltaX;
-        e.preventDefault();
-      }
-    });
-  },
+    
+    this.makeDraggable()
+  }
 };
 </script>
   
@@ -86,6 +124,10 @@ export default {
   white-space: nowrap;
   
   /* width: 80vw; */
+}
+
+.podcasts::-webkit-scrollbar{
+  display: none;
 }
 
 .podcasts-container {
