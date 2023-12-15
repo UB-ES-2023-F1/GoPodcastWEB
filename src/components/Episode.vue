@@ -164,7 +164,6 @@ export default {
           Math.floor(Math.random() * 256)
             .toString(16)
             .padStart(2, "0");
-
         let color;
         do {
           color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;

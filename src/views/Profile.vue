@@ -472,4 +472,12 @@ export default {
   font-size: 12px;
   cursor: pointer;
 }
+
+.loading-overlay {
+  font-size: 25px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin: 20px;
+}
 </style>

@@ -133,6 +133,9 @@
                         </div>
                         <div class="col-12 col-sm-2 col-md-2 col-lg-2"></div>
                     </div>
+                    <div v-if="loading" class="loading-overlay">
+                        <img src="/src/assets/kOnzy.gif" alt="Loading..." style="width: 2em; height: 2em;"/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -423,6 +426,7 @@ export default {
             return brightness > 128;
         },
         getEpisode() {
+            this.loading = true
             const episodeId = this.$route.params.id;
             const pathEpisode = import.meta.env.VITE_API_URL + `/episodes/${episodeId}`;
 
@@ -444,6 +448,9 @@ export default {
             }).finally(() => {
                 this.loading = false
             })
+            .finally(() => {
+                this.loading = false; 
+            });
         },
         getId() {
             const pathID = import.meta.env.VITE_API_URL + '/protected'
