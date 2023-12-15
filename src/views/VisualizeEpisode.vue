@@ -142,7 +142,7 @@
         
     </div>
     <div v-if="currentEpisode">
-        <ProgressBar ref="progressBar" :url="episode.audio_url" :coverImg="episode.img" :titlePodcast="episode.podcast_name" :titleEpisode="episode.title" />
+        <ProgressBar ref="progressBar" :url="episode.audio_url" :coverImg="episode.img" :titlePodcast="episode.podcast_name" :titleEpisode="episode.title" :idEpisode="episode.id"/>
     </div>
 </template>
 
