@@ -26,13 +26,15 @@
         <div v-else>
           <div class="featured">
             <h2 class="ps-5">Featured Podcasts</h2>
-            <PodcastList :podcastList="podcastsList"/>
+            <PodcastList :podcastList="podcastsList" v-if="podcastsList.length > 0" />
+            <h4 class="ps-5 fw-lighter" v-else>No podcasts found.</h4>
           </div>
           <div class="more-content ps-5 pt-4">
             <CategoryList />
             <div class="mt-5 pt-2">
               <h2>Most Listened Podcasts</h2>
-              <PodcastList :podcastList="popularList" />
+              <PodcastList :podcastList="popularList" v-if="popularList.length > 0" />
+            <h4 class="ps-5 fw-lighter" v-else>No podcasts found.</h4>
             </div>
           </div>
         </div>
