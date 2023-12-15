@@ -51,7 +51,6 @@ export default {
 
 .users-container {
     margin-top: 50px;
-    width: 80%;
     height: 300px;
 }
 
