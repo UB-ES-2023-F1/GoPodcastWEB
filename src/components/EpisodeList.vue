@@ -2,7 +2,7 @@
   <div class="m-0 p-0">
     <div class="podcasts overflow-x-auto flex-nowrap overflow-x-hidden" ref="podcastsContainer">
       <div v-for="episode in episodesList" :key="episode.id" class="podcast" @click="goToPodcast(episode.id)">
-        <a :href="'/visualize/' + episode.id">
+        <a :href="'/visualizeEpisode/' + episode.id">
           <img :src="episode.img" :alt="episode.title" class="podcast-img" v-if="episode.img">
         </a>
         <span class="title">{{ episode.title }}</span>
