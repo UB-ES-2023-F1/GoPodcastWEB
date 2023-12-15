@@ -22,9 +22,12 @@ export default {
     }
   },
   watch: {
-    episodesList(newValue, oldValue) {
-      console.log("New episode list", newValue)
-      this.getCovers()
+    episodesList: {
+      handler(newValue, oldValue) {
+        console.log("New episode list", newValue)
+        this.getCovers()
+      },
+      immediate: true
     }
   },
   methods: {
@@ -50,19 +53,6 @@ export default {
         reader.readAsDataURL(blob)
       })
     },
-  },
-  created() {
-    // Uncomment when endpoints are ready
-    // this.getStreamLater();
-  },
-  mounted() {
-    const podcastsContainer = this.$refs.podcastsContainer;
-    podcastsContainer.addEventListener('wheel', (e) => {
-      if (e.deltaX !== 0) {
-        podcastsContainer.scrollLeft += e.deltaX;
-        e.preventDefault();
-      }
-    });
   },
 }
 </script>
