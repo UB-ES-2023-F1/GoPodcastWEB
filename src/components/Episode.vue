@@ -210,7 +210,6 @@ export default {
       const axiosConfig = {
         headers: {
           Authorization: "Bearer " + this.$store.state.access_token,
-          "Content-Type": "application/json",
         },
       };
 

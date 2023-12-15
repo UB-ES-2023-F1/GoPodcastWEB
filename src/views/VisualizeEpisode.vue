@@ -362,7 +362,6 @@ export default {
             const axiosConfig = {
                 headers: {
               Authorization: "Bearer " + this.$store.state.access_token,
-              "Content-Type": "Multipart/form-data",
             },
             }
 
@@ -452,7 +451,6 @@ export default {
             const axiosConfig = {
                 headers: {
               Authorization: "Bearer " + this.$store.state.access_token,
-              "Content-Type": "Multipart/form-data",
             },
             }
 
@@ -532,7 +530,6 @@ export default {
                 const axiosConfig = {
                     headers: {
               Authorization: "Bearer " + this.$store.state.access_token,
-              "Content-Type": "Multipart/form-data",
             },
                 }
 

@@ -79,7 +79,6 @@
         const axiosConfig = {
           headers: {
               Authorization: "Bearer " + this.$store.state.access_token,
-              "Content-Type": "Multipart/form-data",
             },
         }
 
@@ -106,7 +105,6 @@
         const axiosConfig = {
           headers: {
               Authorization: "Bearer " + this.$store.state.access_token,
-              "Content-Type": "Multipart/form-data",
             },
         }
 

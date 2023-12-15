@@ -50,7 +50,7 @@
                       class="follow-button mt-2 mb-4"
                       :class="{ following: podcast.isFollowing }"
                     >
-                      {{ "Favorite" }}
+                      {{ podcast.isFollowing ? "unFavorite" : "Favorite" }}
                     </button>
                   </div>
                   <div v-else>
@@ -86,7 +86,7 @@
                       class="follow-button mt-2 mb-4"
                       :class="{ following: podcast.isFollowing }"
                     >
-                      {{ "Favorite" }}
+                      {{ podcast.isFollowing ? "unFavorite" : "Favorite" }}
                     </button>
                   </div>
                   <div v-else>
@@ -289,7 +289,6 @@ export default {
       const axiosConfig = {
         headers: {
           Authorization: "Bearer " + this.$store.state.access_token,
-          "Content-Type": "Multipart/form-data",
         },
       };
 
@@ -392,7 +391,6 @@ export default {
         const axiosConfig = {
           headers: {
             Authorization: "Bearer " + this.$store.state.access_token,
-            "Content-Type": "Multipart/form-data",
           },
         };
 
@@ -415,7 +413,6 @@ export default {
       const axiosConfig = {
         headers: {
           Authorization: "Bearer " + this.$store.state.access_token,
-          "Content-Type": "Multipart/form-data",
         },
       };
 
@@ -439,7 +436,6 @@ export default {
       const axiosConfig = {
         headers: {
           Authorization: "Bearer " + this.$store.state.access_token,
-          "Content-Type": "application/json",
         },
       };
 
