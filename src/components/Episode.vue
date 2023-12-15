@@ -51,21 +51,9 @@
       </div>
     </div>
   </div>
-
-  <div v-if="currentEpisode">
-    <ProgressBar
-      ref="progressBar"
-      :url="currentEpisode.audio_url"
-      :coverImg="podcastImage"
-      :titlePodcast="podcastName"
-      :titleEpisode="currentEpisode.title"
-      :idEpisode="currentEpisode.id"
-    />
-  </div>
 </template>
 
 <script>
-import ProgressBar from "../components/ProgressBar.vue";
 import axios from "axios";
 
 export default {
@@ -74,21 +62,9 @@ export default {
       type: Array,
       default: [],
     },
-    podcastImage: {
-      type: String,
-      default: null,
-    },
-    podcastName: {
-      type: String,
-      default: "",
-    },
-  },
-  components: {
-    ProgressBar,
   },
   data() {
     return {
-      currentEpisode: null,
       tagColors: {},
       showLike: false,
     };
@@ -101,73 +77,6 @@ export default {
     },
   },
   methods: {
-    // togglePlayback(episode) {
-    //   if (this.currentEpisode === episode) {
-    //     // Si el mismo episodio está en reproducción, detén la reproducción
-    //     this.stopPlayback(episode);
-    //     this.currentEpisode = null;
-    //   } else {
-    //     // Si se selecciona un nuevo episodio, detén la reproducción actual y comienza el nuevo episodio
-    //     this.stopCurrentPlayback();
-    //     this.playEpisode(episode);
-    //   }
-    // },
-    // playEpisode(episode) {
-    //   this.currentEpisode = episode;
-    // },
-    // stopPlayback(episode) {
-    //   if (episode.audioElement) {
-    //     episode.audioElement.pause();
-    //   }
-    // },
-    // stopCurrentPlayback() {
-    //   if (this.currentEpisode) {
-    //     this.stopPlayback(this.currentEpisode);
-    //   }
-    // },
-    // getAudioData(episode) {
-    //   const pathAudio =
-    //     import.meta.env.VITE_API_URL + "/episodes/" + episode.id + "/audio";
-
-    //   axios.get(pathAudio, { responseType: "blob" }).then((res) => {
-    //     episode.audio_url = URL.createObjectURL(res.data);
-    //     this.preloadAudioDuration(episode);
-    //   });
-    // },
-    // preloadAudioDuration(episode) {
-    //   const audioElement = new Audio(episode.audio_url);
-    //   audioElement.addEventListener("loadedmetadata", () => {
-    //     const duration = audioElement.duration;
-    //     episode.duration = this.formatDuration(duration);
-    //   });
-    // },
-    // formatDuration(seconds) {
-    //   if (seconds >= 3600) {
-    //     const hours = Math.floor(seconds / 3600);
-    //     const minutes = Math.floor((seconds % 3600) / 60);
-    //     return `${hours} h ${minutes} min`;
-    //   } else if (seconds >= 60) {
-    //     const minutes = Math.floor(seconds / 60);
-    //     const remainingSeconds = Math.floor(seconds % 60);
-    //     return `${minutes} min ${remainingSeconds} s`;
-    //   } else {
-    //     return `${Math.floor(seconds)} s`;
-    //   }
-    // },
-    // getPodcast() {
-    //   const podcastId = this.$route.params.id;
-    //   const pathPodcast = `https://gopodcastapi.azurewebsites.net/podcasts/${podcastId}`;
-
-    //   axios
-    //     .get(pathPodcast)
-    //     .then((resPodcast) => {
-    //       this.podcast = resPodcast.data;
-    //     })
-    //     .catch((error) => {
-    //       console.error(error);
-    //     });
-    // },
-
     getLike(episode) {
       const episodeId = episode.id;
       console.log(episodeId);
