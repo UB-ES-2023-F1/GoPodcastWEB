@@ -20,11 +20,13 @@
           </h1>
           <div class="featured">
             <h2 class="ps-5">Podcasts</h2>
-            <PodcastList :podcastList="podcastSearchList" />
+            <PodcastList :podcastList="podcastSearchList" v-if="podcastSearchList.length > 0" />
+            <h4 class="ps-5 fw-lighter" v-else>No podcasts found.</h4>
           </div>
           <div class="featured">
             <h2 class="ps-5">Authors</h2>
-            <UserList :userList="userSearchList" />
+            <UserList :userList="userSearchList" v-if="userSearchList.length > 0" />
+            <h4 class="ps-5 fw-lighter" v-else>No users found.</h4>
           </div>
         </div>
 
